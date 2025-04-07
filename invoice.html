@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visitor Subscription Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+      color: #4CAF50;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: #777;
+    }
+
+    .invoice-details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .invoice-details .date,
+    .invoice-details .invoice-number {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .client-info,
+    .billing-info {
+      width: 48%;
+    }
+
+    .client-info h3,
+    .billing-info h3 {
+      color: #333;
+      margin-top: 0;
+    }
+
+    .client-info p,
+    .billing-info p {
+      margin: 5px 0;
+    }
+
+    .table {
+      width: 100%;
+      margin: 30px 0;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .total-row td {
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .footer a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>Visitor Subscription Invoice</h1>
+      <p>Thank you for subscribing to our services</p>
+    </div>
+
+    <!-- Invoice Details -->
+    <div class="invoice-details">
+      <div class="date">
+        <strong>Date:</strong> <span>April 4, 2025</span>
+      </div>
+      <div class="invoice-number">
+        <strong>Invoice #:</strong> <span>#123456</span>
+      </div>
+    </div>
+
+    <!-- Client Info & Billing Info -->
+    <div class="client-info">
+      <h3>Client Information</h3>
+      <p><strong>Name:</strong> John Doe</p>
+      <p><strong>Company:</strong> ABC Corp.</p>
+      <p><strong>Email:</strong> johndoe@abccorp.com</p>
+      <p><strong>Phone:</strong> +1 234 567 890</p>
+    </div>
+
+    <div class="billing-info">
+      <h3>Billing Information</h3>
+      <p><strong>Address:</strong> 1234 Elm St, Suite 101</p>
+      <p><strong>City, State:</strong> Springfield, IL</p>
+      <p><strong>Postal Code:</strong> 62701</p>
+    </div>
+
+    <!-- Subscription Table -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Package Name</th>
+          <th>Price</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Premium Plan</td>
+          <td>₹ 5000</td>
+          <td>12 months</td>
+        </tr>
+        <tr>
+          <td>Support Plan</td>
+          <td>₹ 1500</td>
+          <td>12 months</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2" style="text-align: right;">Total</td>
+          <td>₹ 6500</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <p>If you have any questions regarding this invoice, feel free to contact us at <a href="mailto:support@company.com">support@company.com</a></p>
+      <p>Visit our website at <a href="https://www.company.com" target="_blank">www.company.com</a></p>
+    </div>
+  </div>
+
+</body>
+</html>
