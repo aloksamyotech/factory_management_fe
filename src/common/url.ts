@@ -5,6 +5,9 @@ export const urls = Object.freeze({
     endpoints: {
         customer: {
             customer: `${BASE_URL}${API_VERSION}/customer`,
+        },
+        rawMaterial: {
+            rawMaterial: `${BASE_URL}${API_VERSION}/rawmaterial`
         }
     }
 });

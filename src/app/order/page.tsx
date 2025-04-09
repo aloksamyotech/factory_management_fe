@@ -1,3 +1,10 @@
+// 'use client'
+// const Order = () => {
+//     return(
+
+//     )
+// }
+// export default Order
 "use client";
 import { Box, Button, Card, Grid } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -10,7 +17,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 
-const Product = () => {
+const Order = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -22,7 +29,7 @@ const Product = () => {
 
     const navigate = useRouter()
     const handleNavigate = (id: string) => {
-        navigate.push(`product/${id}`)
+        navigate.push(`order/${id}`)
     }
 
     const columns: GridColDef[] = [
@@ -33,32 +40,37 @@ const Product = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'title',
-            headerName: 'Title',
+            field: 'customerId',
+            headerName: 'Customer Name',
             flex: 1
         },
         {
-            field: 'category',
-            headerName: 'Category',
+            field: 'id',
+            headerName: 'Order Id',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'price',
-            headerName: 'Price',
+            field: 'item',
+            headerName: 'Items',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'description',
-            headerName: 'Description',
+            field: 'totalAmount',
+            headerName: 'Total Amount',
             flex: 1
         },
         {
-            field: 'rawmaterial',
-            headerName: 'Raw Material',
+            field: 'status',
+            headerName: 'Status',
             flex: 1,
             cellClassName: 'name-column--cell--capitalize'
+        },
+        {
+            field: 'createdAt',
+            headerName: 'Date',
+            flex: 1
         },
         {
             field: 'action',
@@ -75,7 +87,7 @@ const Product = () => {
         }
     ];
     const dummyData = [{
-        id: 1, index: '1', title: 'ProductOne', rawmaterial: 'Raw1,Raw2', price: 1000, category: 'cat1', description: 'this is the desc'
+        id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
     }]
 
     const getData = async () => {
@@ -116,7 +128,7 @@ const Product = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="Product" />
+            <Breadcrumb pageName="order" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={dummyData}
@@ -141,4 +153,4 @@ const Product = () => {
     );
 };
 
-export default Product;
+export default Order;
