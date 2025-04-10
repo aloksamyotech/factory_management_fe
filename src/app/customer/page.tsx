@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
+import { useRouter } from "next/navigation";
 
 const CustomerManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -16,6 +17,11 @@ const CustomerManagement = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowCount, setRowCount] = useState(0);
+
+    const navigate = useRouter()
+    const handleNavigate = (id: string) => {
+        navigate.push(`customer/${id}`)
+    }
 
     const PageSize: number = 10;
 
@@ -54,11 +60,9 @@ const CustomerManagement = () => {
             headerAlign: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid item xs={12} textAlign='center'>
-                        <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} />
-                        </Button>
+                <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Grid item>
+                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
                     </Grid>
                 </Grid>
         }
@@ -101,7 +105,7 @@ const CustomerManagement = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
             <Breadcrumb pageName="customer" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
