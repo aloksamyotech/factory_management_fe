@@ -28,26 +28,26 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Customer",
-        url: "/customer",
-        icon: Icons.User,
-        items: [],
-      },
-      {
         title: "Project",
         url: "/project",
         icon: icons.IconClipboard,
         items: [],
       },
       {
-        title: "Order",
-        url: "/order",
-        icon: icons.IconSitemap,
-        items: []
+        title: "Customer",
+        url: "/customer",
+        icon: Icons.User,
+        items: [],
       },
       {
         title: "Product",
         url: "/product",
+        icon: icons.IconSitemap,
+        items: []
+      },
+      {
+        title: "Order",
+        url: "/order",
         icon: icons.IconSitemap,
         items: []
       },
@@ -86,14 +86,32 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "Inventory",
+        icon: Icons.HomeIcon,
+        url: "/inventory",
+        items: [],
+      },
+      {
         title: "Machine",
         url: "/machine",
         icon: icons.IconBuildingFactory2,
         items: [],
       },
       {
+        title: "Vendor",
+        url: "/vendor",
+        icon: icons.IconUserUp,
+        items: [],
+      },
+      {
         title: "Raw Materials",
         url: "/rawmaterial",
+        icon: icons.IconGrain,
+        items: [],
+      },
+      {
+        title: "Purchase",
+        url: "/purchase",
         icon: icons.IconGrain,
         items: [],
       },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText, InputAdornment } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
@@ -11,39 +11,37 @@ const Form = (props: any) => {
     const { open, handleClose, getData } = props;
 
     const validationSchema = yup.object({
-        firstName: yup
+        title: yup
             .string()
-            .required('Please enter your First Name.')
-            .max(15, 'First Name cannot exceed 15 characters.'),
-        lastName: yup
+            .required('Please enter title.')
+            .max(15, 'Title cannot exceed 15 characters.'),
+        description: yup
             .string()
-            .max(15, 'Last Name cannot exceed 15 characters.'),
-        phoneNumber: yup
+            .max(50, 'Description cannot exceed 50 characters.'),
+        unit: yup
             .string()
-            .matches(/^[0-9]{10}$/, 'Phone Number must be exactly 10 digits.')
-            .required('Please enter your Phone Number.'),
-        email: yup
-            .string()
-            .nullable()
-            .email('Please enter a valid Email Address.')
-            .max(50, 'Email Address cannot exceed 50 characters.'),
+            .required('Please Select Unit.'),
+        price: yup
+            .number()
+            .required('Please Enter Price')
+            .max(100000, 'Prices are too high'),
     });
 
     const initialValues = {
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
+        title: '',
+        description: '',
+        unit: '',
+        price: '',
     };
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values: any) => {
-            const url = urls?.endpoints?.customer?.customer;
+            const url = urls?.endpoints?.rawMaterial;
             await postApi(url, values);
             handleClose()
             getData()
-            formik?.resetForm();
+            // formik?.resetForm();
         }
     });
 
@@ -58,7 +56,7 @@ const Form = (props: any) => {
                     justifyContent: 'space-between'
                 }}
             >
-                <Typography variant="h6">Add New Customer</Typography>
+                <Typography variant="h6">Add Raw Material</Typography>
                 <Typography>
                     <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
                 </Typography>
@@ -67,59 +65,68 @@ const Form = (props: any) => {
                 <form>
                     <DialogContentText tabIndex={-1}>
                         <Grid container spacing={2} rowSpacing={4}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
-                                    <FormLabel>First name*</FormLabel>
+                                    <FormLabel>Title*</FormLabel>
                                     <TextField
-                                        id="firstName"
-                                        name="firstName"
+                                        id="title"
+                                        name="title"
                                         size="small"
-                                        value={formik?.values?.firstName}
+                                        value={formik?.values?.title}
                                         onChange={formik?.handleChange}
-                                        error={formik?.touched?.firstName && Boolean(formik?.errors?.firstName)}
-                                        helperText={formik?.touched?.firstName && formik?.errors?.firstName ? String(formik?.errors?.firstName) : ''}
+                                        error={formik?.touched?.title && Boolean(formik?.errors?.title)}
+                                        helperText={formik?.touched?.title && formik?.errors?.title ? String(formik?.errors?.title) : ''}
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
-                                    <FormLabel>Last name</FormLabel>
+                                    <FormLabel>Description</FormLabel>
                                     <TextField
-                                        id="lastName"
-                                        name="lastName"
+                                        id="description"
+                                        name="description"
                                         size="small"
-                                        value={formik?.values?.lastName}
+                                        value={formik?.values?.description}
                                         onChange={formik?.handleChange}
-                                        error={formik?.touched?.lastName && Boolean(formik?.errors?.lastName)}
-                                        helperText={formik?.touched?.lastName && formik?.errors?.lastName ? String(formik?.errors?.lastName) : ''}
+                                        error={formik?.touched?.description && Boolean(formik?.errors?.description)}
+                                        helperText={formik?.touched?.description && formik?.errors?.description ? String(formik?.errors?.description) : ''}
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
+
                                 <FormControl fullWidth>
-                                    <FormLabel>Phone number*</FormLabel>
-                                    <TextField
-                                        id="phoneNumber"
-                                        name="phoneNumber"
+                                    <FormLabel>Unit*</FormLabel>
+                                    <Select
+                                        id="unit"
+                                        name="unit"
                                         size="small"
-                                        value={formik?.values?.phoneNumber}
+                                        value={formik?.values?.unit}
                                         onChange={formik?.handleChange}
-                                        error={formik?.touched?.phoneNumber && Boolean(formik?.errors?.phoneNumber)}
-                                        helperText={formik?.touched?.phoneNumber && formik?.errors?.phoneNumber ? String(formik?.errors?.phoneNumber) : ''}
-                                    />
+                                        error={formik?.touched?.unit && Boolean(formik?.errors?.unit)}
+                                    >
+                                        <MenuItem value="kg">KG</MenuItem>
+                                        <MenuItem value="pieces">Pieces</MenuItem>
+                                        <MenuItem value="ltr">Ltr</MenuItem>
+                                    </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Price*</FormLabel>
                                     <TextField
-                                        id="email"
-                                        name="email"
+                                        id="price"
+                                        name="price"
                                         size="small"
-                                        value={formik?.values?.email}
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                                            },
+                                        }}
+                                        value={formik?.values?.price}
                                         onChange={formik?.handleChange}
-                                        error={formik?.touched?.email && Boolean(formik?.errors?.email)}
-                                        helperText={formik?.touched?.email && formik?.errors?.email ? String(formik?.errors?.email) : ''}
+                                        error={formik?.touched?.price && Boolean(formik?.errors?.price)}
+                                        helperText={formik?.touched?.price && formik?.errors?.price ? String(formik?.errors?.price) : ''}
                                     />
                                 </FormControl>
                             </Grid>

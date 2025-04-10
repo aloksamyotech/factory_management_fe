@@ -9,9 +9,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
-import { Props } from "react-apexcharts";
 
-const Rawmaterial = () => {
+const Purchase = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -21,6 +20,11 @@ const Rawmaterial = () => {
 
     const PageSize: number = 10;
 
+    const navigate = useRouter()
+    const handleNavigate = (id: string) => {
+        navigate.push(`purchase/${id}`)
+    }
+
     const columns: GridColDef[] = [
         {
             field: 'index',
@@ -29,61 +33,60 @@ const Rawmaterial = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'image',
-            headerName: 'Image',
-            flex: 0.5,
-            headerAlign: 'center',
-            align: 'center',
-            cellClassName: 'name-column--cell name-column--cell--capitalize',
-            renderCell: () =>
-                <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
-                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
-                </Box>
+            field: 'customerId',
+            headerName: 'Vendor Name',
+            flex: 1
         },
         {
-            field: 'title',
-            headerName: 'Title',
+            field: 'id',
+            headerName: 'Purchase Id',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'description',
-            headerName: 'Description',
-            flex: 1.5,
+            field: 'item',
+            headerName: 'Items',
+            flex: 1,
+            cellClassName: 'name-column--cell name-column--cell--capitalize'
+        },
+        {
+            field: 'totalAmount',
+            headerName: 'Total Amount',
+            flex: 1
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            flex: 1,
             cellClassName: 'name-column--cell--capitalize'
         },
         {
-            field: 'unit',
-            headerName: 'Unit',
-            headerAlign: 'center',
-            align: 'center',
-            flex: 0.5
-        },
-        {
-            field: 'price',
-            headerName: 'Price',
-            headerAlign: 'center',
-            align: 'center',
-            flex: 0.5,
-            valueFormatter: (value) => {
-                return '₹' + value;
-            }
+            field: 'createdAt',
+            headerName: 'Date',
+            flex: 1
         },
         {
             field: 'action',
             headerName: 'Action',
             flex: 1,
-            headerAlign: 'center',
-            align: 'center',
             renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                <Grid container>
+                    <Grid item xs={12} textAlign='center'>
+                        <Button>
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                        </Button>
+                    </Grid>
+                </Grid>
         }
     ];
+    const dummyData = [{
+        id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
+    }]
 
     const getData = async () => {
-        const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}?page=${page + 1}&limit=${PageSize}`;
+        const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
-        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
+        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
             ...item,
             index: index + 1
         }));
@@ -92,7 +95,7 @@ const Rawmaterial = () => {
     };
 
     useEffect(() => {
-        getData();
+        // getData();
     }, [page]);
 
     const CustomToolbar = () => {
@@ -115,18 +118,13 @@ const Rawmaterial = () => {
         );
     };
 
-    const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push('/rawmaterial/123')
-    }
-
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="raw material" />
+            <Breadcrumb pageName="purchase" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
-                    rows={data}
+                    rows={dummyData}
                     columns={columns}
                     slots={{
                         toolbar: CustomToolbar
@@ -136,16 +134,16 @@ const Rawmaterial = () => {
                             fontWeight: 'bold',
                         },
                     }}
-                    paginationModel={{ page: page, pageSize: PageSize }}
-                    paginationMode="server"
-                    rowCount={rowCount}
-                    onPaginationModelChange={(newPaginationModel) => {
-                        setPage(newPaginationModel.page);
-                    }}
+                // paginationModel={{ page: page, pageSize: PageSize }}
+                // paginationMode="server"
+                // rowCount={rowCount}
+                // onPaginationModelChange={(newPaginationModel) => {
+                //     setPage(newPaginationModel.page);
+                // }}
                 />
             </Card>
         </>
     );
 };
 
-export default Rawmaterial;
+export default Purchase;
