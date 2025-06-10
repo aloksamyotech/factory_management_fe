@@ -1,4 +1,4 @@
-const Form = () => {
+const Form = (props: any) => {
 
 }
 export default Form

@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Card, Grid } from "@mui/material";
+import { Avatar, Box, Button, Card, Grid, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -9,6 +9,9 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
+import moment from "moment";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 const CustomerManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -33,47 +36,63 @@ const CustomerManagement = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'firstName',
-            headerName: 'First Name',
+            field: 'profile',
+            headerName: 'Profile',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
-        },
-        {
-            field: 'lastName',
-            headerName: 'Last Name',
-            flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) =>
+                <Stack direction={'row'} spacing={1} sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
+                    <Stack>
+                        <Avatar src={'https://img.freepik.com/premium-photo/fun-asian-teenager_183364-34074.jpg?w=996'} alt={params?.row?.fullName} sx={{ h: '15px', w: 'auto' }} />
+                    </Stack>
+                    <Stack>
+                        <Stack >
+                            <Stack>
+                                <Typography color='primary'>{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ ml: '5px', fontSize: '10px' }} /></Typography>
+                            </Stack>
+                            <Stack>
+                                <Typography sx={{ fontSize: '10px' }}>{params?.row?.email}</Typography>
+                            </Stack>
+                        </Stack>
+                    </Stack>
+                </Stack>
         },
         {
             field: 'phoneNumber',
             headerName: 'Phone Number',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
-            field: 'emailAddress',
-            headerName: 'Email Address',
+            field: 'date',
+            headerName: 'Created At',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'action',
             headerName: 'Action',
             headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Grid item>
-                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
-                    </Grid>
-                </Grid>
+                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
         }
     ];
 
     const getData = async () => {
         const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
+        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            ...item,
-            index: index + 1
+            id: item.id,
+            index: index + 1,
+            fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
+            phoneNumber: item?.phoneNumber,
+            email: item?.email,
+            date: formattedDate
         }));
         setData(modifiedData);
         setRowCount(response?.data?.data[1]);

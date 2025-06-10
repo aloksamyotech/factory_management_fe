@@ -37,7 +37,7 @@ const Form = (props: any) => {
         initialValues,
         validationSchema,
         onSubmit: async (values: any) => {
-            const url = urls?.endpoints?.rawMaterial;
+            const url = urls?.endpoints?.rawMaterial?.rawMaterial;
             await postApi(url, values);
             handleClose()
             getData()

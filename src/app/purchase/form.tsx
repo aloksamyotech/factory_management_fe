@@ -1,120 +1,224 @@
-import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid, FormControl, FormLabel, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+    Typography, Button, Dialog, DialogContentText, Grid, FormControl,
+    FormLabel, TextField, Autocomplete, Box, IconButton,
+    OutlinedInput,
+    InputAdornment
+} from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Formik, useFormik } from 'formik';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Formik, FieldArray } from 'formik';
 import * as yup from 'yup';
-import { postApi } from '@/common/api';
+import { getApi, postApi } from '@/common/api';
 import { urls } from '@/common/url';
 
 const Form = (props: any) => {
-    const { open, handleClose, getData } = props;
+    const { open, handleClose } = props;
 
-    const validationSchema = yup.object({
-        firstName: yup
-            .string()
-            .required('Please enter your First Name.')
-            .max(15, 'First Name cannot exceed 15 characters.'),
-        lastName: yup
-            .string()
-            .max(15, 'Last Name cannot exceed 15 characters.'),
-        phoneNumber: yup
-            .string()
-            .matches(/^[0-9]{10}$/, 'Phone Number must be exactly 10 digits.')
-            .required('Please enter your Phone Number.'),
-        email: yup
-            .string()
-            .nullable()
-            .email('Please enter a valid Email Address.')
-            .max(50, 'Email Address cannot exceed 50 characters.'),
-    });
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [vendors, setVendors] = useState<any[]>([]);
+    const [products, setProducts] = useState<any[]>([]);
 
     const initialValues = {
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
+        vendor: null,
+        items: [
+            {
+                productId: '',
+                quantity: 1
+            }
+        ],
+        expectedDeliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     };
-    const formik = useFormik({
-        initialValues,
-        validationSchema,
-        onSubmit: async (values: any) => {
-            console.log("order values", values);
-            handleClose()
-            formik?.resetForm();
-        }
+
+    const validationSchema = yup.object({
+        vendor: yup.string().required('Please Select Vendor.')
     });
 
+    const fetchVendors = async () => {
+        const res = await getApi(urls.endpoints.vendor.getAll);
+        const formatted = res?.data?.data?.map((v: any) => ({
+            id: v.id,
+            title: `${v.firstName} ${v.lastName || ''}`,
+            phoneNumber: v.phoneNumber
+        }));
+        setVendors(formatted);
+    };
+    const fetchProducts = async () => {
+        const res = await getApi(urls.endpoints.rawMaterial.getAll);
+        const formatted = res?.data?.data?.map((r: any) => ({
+            id: r.id,
+            title: r.title,
+            price: r.price,
+            unit: r.unit
+        }));
+        setProducts(formatted);
+    };
+
+    useEffect(() => {
+        fetchVendors();
+        fetchProducts();
+    }, []);
+
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-        >
-            <DialogTitle
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+            <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="h6">New Purchase</Typography>
+                <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
+            </DialogTitle>
+
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={async (values, { resetForm }) => {
+                    const data = {
+                        vendorId: values.vendor,
+                        productId: values?.items,
+                        totalAmount,
+                        expectedDeliveryDate: values?.expectedDeliveryDate
+                    }
+                    const url = urls?.endpoints?.purchase?.purchase
+                    const response = await postApi(url, data)
+                    handleClose();
+                    resetForm();
                 }}
             >
-                <Typography variant="h6">Create New Order</Typography>
-                <Typography>
-                    <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
-                </Typography>
-            </DialogTitle>
-            <DialogContent dividers>
-                <form>
-                    <DialogContentText tabIndex={-1}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={9}>
-                                <FormControl fullWidth>
-                                    <FormLabel>Select Customer*</FormLabel>
-                                    <TextField
-                                        id="firstName"
-                                        name="firstName"
-                                        size="small"
-                                        value={formik?.values?.firstName}
-                                        onChange={formik?.handleChange}
-                                        error={formik?.touched?.firstName && Boolean(formik?.errors?.firstName)}
-                                        helperText={formik?.touched?.firstName && formik?.errors?.firstName ? String(formik?.errors?.firstName) : ''}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <FormLabel>Select Product</FormLabel>
-                                    <TextField
-                                        id="lastName"
-                                        name="lastName"
-                                        size="small"
-                                        value={formik?.values?.lastName}
-                                        onChange={formik?.handleChange}
-                                        error={formik?.touched?.lastName && Boolean(formik?.errors?.lastName)}
-                                        helperText={formik?.touched?.lastName && formik?.errors?.lastName ? String(formik?.errors?.lastName) : ''}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <FormLabel>Qty</FormLabel>
-                                    <TextField
-                                        id="phoneNumber"
-                                        name="phoneNumber"
-                                        size="small"
-                                        value={formik?.values?.phoneNumber}
-                                        onChange={formik?.handleChange}
-                                        error={formik?.touched?.phoneNumber && Boolean(formik?.errors?.phoneNumber)}
-                                        helperText={formik?.touched?.phoneNumber && formik?.errors?.phoneNumber ? String(formik?.errors?.phoneNumber) : ''}
-                                    />
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </DialogContentText>
-                </form>
-            </DialogContent>
-            <DialogActions>
-                <Button variant="contained" color="primary" onClick={() => formik.handleSubmit()}>Save</Button>
-                <Button variant="outlined" color="error" onClick={() => (handleClose(), formik.resetForm())}>Cancel</Button>
-            </DialogActions>
+                {({ values, setFieldValue, handleChange, handleSubmit, errors, touched }) => {
+                    useEffect(() => {
+                        const total = values.items.reduce((sum, item) => {
+                            const product = products.find(p => p.id === item.productId);
+                            const qty = parseFloat(item?.quantity || 0);
+                            const price = parseFloat(product?.price || 0);
+                            return sum + qty * price;
+                        }, 0);
+                        setTotalAmount(total);
+                    }, [values.items, products]);
+
+                    return (
+                        <>
+                            <DialogContent dividers>
+                                <form onSubmit={handleSubmit}>
+                                    <Grid container spacing={2}>
+                                        <Grid size={6}>
+                                            <FormControl fullWidth>
+                                                <FormLabel>Select Vendor*</FormLabel>
+                                                <Autocomplete
+                                                    size='small'
+                                                    options={vendors}
+                                                    getOptionLabel={(option) => option.title}
+                                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                    value={vendors.find(v => v.id === values.vendor) || null}
+                                                    onChange={(e, val) => setFieldValue('vendor', val?.id || '')}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            error={Boolean(touched.vendor && errors.vendor)}
+                                                            helperText={touched.vendor && errors.vendor}
+                                                        />
+                                                    )}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                    <FieldArray name="items">
+                                        {({ push, remove }) => (
+                                            <Box
+                                                sx={{
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '5px',
+                                                    padding: 2,
+                                                    height: 250,
+                                                    overflowY: 'auto',
+                                                    mt: 2,
+                                                    mb: 2
+                                                }}
+                                            >
+                                                {values.items.map((item, index) => (
+                                                    <Grid container spacing={2} key={index} alignItems="center" sx={{ mt: 1 }}>
+                                                        <Grid size={5}>
+                                                            <FormControl fullWidth>
+                                                                <FormLabel>Product</FormLabel>
+                                                                <Autocomplete
+                                                                    size="small"
+                                                                    options={products.filter(
+                                                                        (p) =>
+                                                                            !values.items.some((i, iIdx) => i.productId === p.id && iIdx !== index)
+                                                                    )}
+                                                                    getOptionLabel={(opt) => opt.title}
+                                                                    value={products.find(p => p.id === item.productId) || null}
+                                                                    onChange={(e, val) =>
+                                                                        setFieldValue(`items[${index}].productId`, val?.id || '')
+                                                                    }
+                                                                    renderInput={(params) => (
+                                                                        <TextField {...params} placeholder="Select Product" />
+                                                                    )}
+                                                                />
+                                                            </FormControl>
+                                                        </Grid>
+                                                        <Grid size={5}>
+                                                            <FormControl fullWidth>
+                                                                <FormLabel>Quantity</FormLabel>
+                                                                <OutlinedInput
+                                                                    size="small"
+                                                                    type="number"
+                                                                    name={`items[${index}].quantity`}
+                                                                    value={item.quantity}
+                                                                    onChange={handleChange}
+                                                                    endAdornment={
+                                                                        <InputAdornment position="end">{products.find(p => p.id === item.productId)?.unit || ''}</InputAdornment>}
+                                                                />
+                                                            </FormControl>
+                                                        </Grid>
+                                                        <Grid size={2}>
+                                                            <IconButton
+                                                                onClick={() => remove(index)}
+                                                                disabled={values.items.length === 1}
+                                                                sx={{ mt: 3 }}
+                                                            >
+                                                                <DeleteIcon color="error" />
+                                                            </IconButton>
+                                                        </Grid>
+                                                    </Grid>
+                                                ))}
+
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={() => push({ productId: '', quantity: 1 })}
+                                                    sx={{ mt: 2 }}
+                                                >
+                                                    + Add Item
+                                                </Button>
+                                            </Box>
+                                        )}
+                                    </FieldArray>
+                                    <Grid container justifyContent="flex-end">
+                                        <Grid size={3}>
+                                            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                                Total Amount: ₹{totalAmount.toFixed(2)}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </form>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" onClick={() => handleSubmit()}>
+                                    Add Purchase
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={() => {
+                                        handleClose();
+                                        setFieldValue('items', initialValues.items);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </DialogActions>
+                        </>
+                    );
+                }}
+            </Formik>
         </Dialog>
     );
 };

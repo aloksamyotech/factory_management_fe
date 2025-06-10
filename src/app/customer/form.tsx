@@ -27,6 +27,9 @@ const Form = (props: any) => {
             .nullable()
             .email('Please enter a valid Email Address.')
             .max(50, 'Email Address cannot exceed 50 characters.'),
+        address: yup
+            .string()
+            .max(50, 'Address Cannot Exceed 50 Characters.'),
     });
 
     const initialValues = {
@@ -34,6 +37,7 @@ const Form = (props: any) => {
         lastName: '',
         phoneNumber: '',
         email: '',
+        address: ''
     };
     const formik = useFormik({
         initialValues,
@@ -67,7 +71,7 @@ const Form = (props: any) => {
                 <form>
                     <DialogContentText tabIndex={-1}>
                         <Grid container spacing={2} rowSpacing={4}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
                                     <FormLabel>First name*</FormLabel>
                                     <TextField
@@ -81,7 +85,7 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
                                     <FormLabel>Last name</FormLabel>
                                     <TextField
@@ -95,7 +99,7 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
                                     <FormLabel>Phone number*</FormLabel>
                                     <TextField
@@ -109,7 +113,7 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <FormControl fullWidth>
                                     <FormLabel>Email</FormLabel>
                                     <TextField
@@ -120,6 +124,20 @@ const Form = (props: any) => {
                                         onChange={formik?.handleChange}
                                         error={formik?.touched?.email && Boolean(formik?.errors?.email)}
                                         helperText={formik?.touched?.email && formik?.errors?.email ? String(formik?.errors?.email) : ''}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid size={12}>
+                                <FormControl fullWidth>
+                                    <FormLabel>Address</FormLabel>
+                                    <TextField
+                                        id="address"
+                                        name="address"
+                                        multiline
+                                        value={formik?.values?.address}
+                                        onChange={formik?.handleChange}
+                                        error={formik?.touched?.address && Boolean(formik?.errors?.address)}
+                                        helperText={formik?.touched?.address && formik?.errors?.address ? String(formik?.errors?.address) : ''}
                                     />
                                 </FormControl>
                             </Grid>

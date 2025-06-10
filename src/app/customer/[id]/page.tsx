@@ -62,7 +62,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid item xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
                     </Grid>
                 </Grid>
@@ -87,7 +87,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                             <Grid>
                                 <Card sx={{ minWidth: "350px" }}>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid >
                                             <CardContent>
                                                 <Typography variant="h6">Name: Neeraj</Typography>
                                                 <Typography variant="body1">Email: neer@gmail.com</Typography>
@@ -95,7 +95,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                                                 <Typography variant="body1">Address: 198/6 Indore</Typography>
                                             </CardContent>
                                         </Grid>
-                                        <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
                                             <CardMedia
                                                 component="img"
                                                 sx={{ height: '100px' }}

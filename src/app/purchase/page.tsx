@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Card, Grid } from "@mui/material";
+import { Avatar, Box, Button, Card, Grid, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -9,6 +9,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import moment from "moment";
 
 const Purchase = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -33,69 +35,98 @@ const Purchase = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'customerId',
-            headerName: 'Vendor Name',
-            flex: 1
+            field: 'vendor',
+            headerName: 'Vendor Details',
+            flex: 1,
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) =>
+                <Stack sx={{}}>
+                    <Stack>
+                        <Typography color='primary'>{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ fontSize: '10px' }} /></Typography>
+                    </Stack>
+                    <Stack>
+                        <Typography sx={{ fontSize: '10px' }}>{params?.row?.phoneNumber}</Typography>
+                    </Stack>
+                </Stack>
         },
         {
             field: 'id',
             headerName: 'Purchase Id',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
             field: 'item',
             headerName: 'Items',
+            headerAlign: 'center',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) => {
+                const itemIds = params.row.items?.map((item) => item.rawMaterial.title).join(', ') || 'N/A';
+                return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
+            }
         },
         {
             field: 'totalAmount',
             headerName: 'Total Amount',
-            flex: 1
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1,
+            valueFormatter: (value) => {
+                return '₹' + value;
+            }
         },
         {
             field: 'status',
             headerName: 'Status',
+            headerAlign: 'center',
+            align: 'center',
+            cellClassName: 'name-column--cell--capitalize',
             flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            renderCell: (params) =>
+                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '12px' }}>{params.value}</Typography>
         },
         {
-            field: 'createdAt',
+            field: 'date',
             headerName: 'Date',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'action',
             headerName: 'Action',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid item xs={12} textAlign='center'>
-                        <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
-                        </Button>
-                    </Grid>
-                </Grid>
+                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
+
         }
     ];
-    const dummyData = [{
-        id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
-    }]
 
     const getData = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
+        const url = `${urls?.endpoints?.purchase?.purchase}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
+        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            ...item,
-            index: index + 1
+            id: item.id,
+            index: index + 1,
+            fullName: `${item?.vendorId?.firstName} ${item?.vendorId?.lastName ? item?.vendorId?.lastName : ''}`,
+            phoneNumber: item?.vendorId?.phoneNumber,
+            items: item?.itemId,
+            totalAmount: item?.totalAmount,
+            status: item?.status,
+            date: formattedDate
         }));
         setData(modifiedData);
         setRowCount(response?.data?.data[1]);
     };
 
     useEffect(() => {
-        // getData();
+        getData();
     }, [page]);
 
     const CustomToolbar = () => {
@@ -124,7 +155,7 @@ const Purchase = () => {
             <Breadcrumb pageName="purchase" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
-                    rows={dummyData}
+                    rows={data}
                     columns={columns}
                     slots={{
                         toolbar: CustomToolbar
@@ -134,12 +165,12 @@ const Purchase = () => {
                             fontWeight: 'bold',
                         },
                     }}
-                // paginationModel={{ page: page, pageSize: PageSize }}
-                // paginationMode="server"
-                // rowCount={rowCount}
-                // onPaginationModelChange={(newPaginationModel) => {
-                //     setPage(newPaginationModel.page);
-                // }}
+                    paginationModel={{ page: page, pageSize: PageSize }}
+                    paginationMode="server"
+                    rowCount={rowCount}
+                    onPaginationModelChange={(newPaginationModel) => {
+                        setPage(newPaginationModel.page);
+                    }}
                 />
             </Card>
         </>
