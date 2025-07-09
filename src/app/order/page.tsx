@@ -136,8 +136,7 @@ const Order = () => {
             }
         });
         setData(modifiedData);
-        console.log(modifiedData);
-
+        
         setRowCount(response?.data?.data[1]);
     };
 

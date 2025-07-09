@@ -134,7 +134,6 @@ const Order = () => {
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-    console.log(data);
 
     return (
         <>

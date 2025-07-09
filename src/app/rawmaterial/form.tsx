@@ -38,8 +38,6 @@ const Form = (props: any) => {
         validationSchema,
         onSubmit: async (values: any) => {
             const url = urls?.endpoints?.rawMaterial?.rawMaterial;
-            console.log(values);
-
             await postApi(url, values);
             handleClose()
             getData()

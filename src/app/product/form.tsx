@@ -33,7 +33,6 @@ const Formm = (props: any) => {
     setLoading(true);
     const url = urls?.endpoints?.rawMaterial?.getAll
     const res = await getApi(url);
-    console.log(res);
     
     setMaterials(res?.data?.data);
     setLoading(false);

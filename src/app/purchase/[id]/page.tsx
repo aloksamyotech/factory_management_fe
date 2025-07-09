@@ -75,8 +75,6 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
 
     const navigate = useRouter()
     const handleNavigate = (id: any) => {
-        console.log(id);
-        
         navigate.push(`/rawmaterial/${id}`)
     }
 
@@ -84,7 +82,6 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
         const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
         const response = await getApi(url);
         setDetails(response?.data?.data);
-        console.log(response?.data?.data?.itemId);
         
         const modifiedData = response?.data?.data?.itemId
             ?.map((item: any, index: number) => ({
