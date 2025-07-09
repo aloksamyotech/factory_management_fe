@@ -47,6 +47,8 @@ const Product = () => {
         {
             field: 'name',
             headerName: 'Title',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
@@ -83,7 +85,7 @@ const Product = () => {
             flex: 1.5,
             cellClassName: 'name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.rawMaterial?.map((item) => item.title).join(', ') || 'N/A';
+                const itemIds = params.row.rawMaterial?.map((item:any) => item.title).join(', ') || 'N/A';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -91,6 +93,7 @@ const Product = () => {
             field: 'action',
             headerName: 'Action',
             headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
