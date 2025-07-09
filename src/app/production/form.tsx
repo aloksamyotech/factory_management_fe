@@ -88,8 +88,8 @@ const Formm = (props: any) => {
                     /></Grid>
                   <Grid size={6}>
                     <TextField
-                      label="Category"
-                      name="category"
+                      label="Quantity"
+                      name="quantity"
                       fullWidth
                       margin="normal"
                       value={values.category}
@@ -100,9 +100,8 @@ const Formm = (props: any) => {
                   </Grid>
                   <Grid size={6}>
                     <TextField
-                      label="Price"
-                      name="price"
-                      type="number"
+                      label="Machine"
+                      name="machine"
                       fullWidth
                       margin="normal"
                       value={values.price}

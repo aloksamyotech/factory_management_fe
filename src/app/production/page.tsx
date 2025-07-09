@@ -30,19 +30,12 @@ const Production = () => {
             flex: 0.3 ,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
-        { 
-            field: 'image', 
-            headerName: 'Image', 
-            flex: 0.5,
+        {
+            field: 'machine',
+            headerName: "Machine",
             headerAlign: 'center',
             align: 'center',
-            cellClassName: 'name-column--cell name-column--cell--capitalize',
-            renderCell: () => 
-                <Box>
-                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} 
-                    alt="img" style={{height: '45px', width: '45px' , 
-                    objectFit: 'cover' }} />
-                </Box> 
+            flex:1
         },
         { 
             field: 'productName',
@@ -59,11 +52,18 @@ const Production = () => {
             flex:1
         },
         {
-            field: 'machine',
-            headerName: "Machine",
+            field: 'estimateTime',
+            headerName: 'Estimate Time',
             headerAlign: 'center',
             align: 'center',
             flex:1
+        },
+        {
+            field: 'date',
+            headerName: 'Date',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1
         },
         {
             field: 'status',
@@ -71,13 +71,6 @@ const Production = () => {
             headerAlign: 'center',
             align:'center',
             flex: 1
-        },
-        {
-            field: 'date',
-            headerName: 'Estimate Date',
-            headerAlign: 'center',
-            align: 'center',
-            flex:1
         },
         {
             field: 'action',
