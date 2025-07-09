@@ -50,7 +50,10 @@ const Rawmaterial = () => {
             field: 'description',
             headerName: 'Description',
             flex: 1.5,
-            cellClassName: 'name-column--cell--capitalize'
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params) => {
+                return params.value ? params.value : '-';
+            }
         },
         {
             field: 'unit',
@@ -76,7 +79,7 @@ const Rawmaterial = () => {
             headerAlign: 'center',
             align: 'center',
             renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
         }
     ];
 
@@ -116,8 +119,8 @@ const Rawmaterial = () => {
     };
 
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push('/rawmaterial/123')
+    const handleNavigate = (id:any) => {
+        navigate.push(`/rawmaterial/${id}`)
     }
 
     return (

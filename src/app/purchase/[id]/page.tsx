@@ -4,11 +4,15 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useRouter } from "next/navigation";
+import { urls } from "@/common/url";
+import { getApi } from "@/common/api";
+import moment from "moment";
 
-const PurchaseViewPage = ({ id }: { id: string }) => {
+const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
-
+    const [details, setDetails] = useState<any | null>([]);
+    const [data, setData] = useState([])
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -25,56 +29,85 @@ const PurchaseViewPage = ({ id }: { id: string }) => {
         },
         {
             field: 'item',
-            headerName: 'Items',
+            headerName: 'Item Name',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
             field: 'price',
             headerName: 'Price',
+            align: 'center',
+            headerAlign: 'center',
+            valueFormatter: (value) => {
+                return '₹' + value;
+            },
             flex: 1
         },
         {
             field: 'quantity',
             headerName: 'Quantity',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
-            field: 'status',
-            headerName: 'Status',
-            flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            field: 'unit',
+            headerName: 'Unit',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1
         },
         {
             field: 'action',
             headerName: 'Action',
+            headerAlign: 'center',
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid item xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
         }
     ];
 
-    const data: any = [
-        { id: 1, index: 1, item: 'raw1', price: 1000, quantity: 10, status: 'pending' },
-        { id: 2, index: 2, item: 'raw2', price: 1000, quantity: 10, status: 'pending' }
-    ]
-
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push('/rawmaterial/123')
+    const handleNavigate = (id: any) => {
+        console.log(id);
+        
+        navigate.push(`/rawmaterial/${id}`)
     }
+
+    const GetDetails = async () => {
+        const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
+        const response = await getApi(url);
+        setDetails(response?.data?.data);
+        console.log(response?.data?.data?.itemId);
+        
+        const modifiedData = response?.data?.data?.itemId
+            ?.map((item: any, index: number) => ({
+                id: item?.rawMaterial?.id,
+                index: index + 1,
+                item: item?.rawMaterial?.title,
+                price: item?.rawMaterial?.price,
+                unit: item?.rawMaterial?.unit,
+                quantity: item?.quantity,
+                status: item?.status,
+            }));
+        setData(modifiedData)
+    }
+
+    useEffect(() => {
+        GetDetails()
+    }, [])
 
     return (
         <Card sx={{ minHeight: '100vh' }}>
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange}>
-                    <Tab label="RawMaterial Details" />
+                    <Tab label="Purchase Details" />
                 </Tabs>
 
                 {value === 0 && (
@@ -83,13 +116,13 @@ const PurchaseViewPage = ({ id }: { id: string }) => {
                             <Grid>
                                 <Card sx={{ minWidth: "350px" }}>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid>
                                             <CardContent>
-                                                <Typography variant="h6">Purchase Id: <span style={{ textDecoration: 'underline' }}>OD123</span></Typography>
-                                                <Typography variant="body1">Vendor Name: John</Typography>
-                                                <Typography variant="body1">Phone: 7745977459</Typography>
-                                                <Typography variant="body1">Purchase Date: 20/oct/2025</Typography>
-                                                <Typography variant="body1">Total Amount: ₹ 1000</Typography>
+                                                <Typography variant="h6">Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
+                                                <Typography variant="body1">Vendor Name: {details?.vendorId?.firstName}</Typography>
+                                                <Typography variant="body1">Phone: {details?.vendorId?.phoneNumber}</Typography>
+                                                <Typography variant="body1">Purchase Date: {moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                <Typography variant="body1">Total Amount: ₹ {details?.totalAmount}</Typography>
                                             </CardContent>
                                         </Grid>
                                     </Grid>

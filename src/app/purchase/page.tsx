@@ -64,7 +64,7 @@ const Purchase = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.items?.map((item) => item.rawMaterial.title).join(', ') || 'N/A';
+                const itemIds = params.row.items?.map((item:any) => item.rawMaterial.title).join(', ') || 'N/A';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },

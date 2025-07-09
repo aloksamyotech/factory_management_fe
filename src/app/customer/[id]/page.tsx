@@ -4,8 +4,37 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useRouter } from "next/navigation";
+import { urls } from "@/common/url";
+import { getApi } from "@/common/api";
+import moment from "moment";
 
-const CustomerViewPage = ({ id }: { id: string }) => {
+const CustomerViewPage = ({ params }: { params: { id: string } }) => {
+    const id = params?.id
+    const [Details, setDetails] = useState<any | null>(null)
+    const [data, setData] = useState([])
+    const GetDetails = async () => {
+        const url = `${urls?.endpoints?.customer?.customer}/${id}`
+        const response = await getApi(url);
+        setDetails(response?.data?.data);
+    }
+    const GetPurchase = async () => {
+        const url = `${urls?.endpoints?.order?.order}?orderId=${id}`
+        const response = await getApi(url);
+        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+            index: index + 1,
+            createdAt: formattedDate,
+            id: item.id,
+            item: item?.itemId,
+            totalAmount: item?.totalAmount,
+            status: item?.status
+        }));
+        setData(modifiedData)
+    }
+    useEffect(() => {
+        GetDetails();
+        GetPurchase();
+    }, [])
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
 
@@ -69,10 +98,10 @@ const CustomerViewPage = ({ id }: { id: string }) => {
         }
     ];
 
-    const data: any = [
-        { index: 1, id: 12345, createdAt: "10/oct/2024", item: 'product1', totalAmount: 1000, status: 'pending' },
-        { index: 2, id: 52348, createdAt: "15/oct/2025", item: 'product2', totalAmount: 1000, status: 'pending' }
-    ]
+    // const data: any = [
+    //     { index: 1, id: 12345, createdAt: "10/oct/2024", item: 'product1', totalAmount: 1000, status: 'pending' },
+    //     { index: 2, id: 52348, createdAt: "15/oct/2025", item: 'product2', totalAmount: 1000, status: 'pending' }
+    // ]
 
     return (
         <Card sx={{ minHeight: '100vh' }}>
@@ -89,10 +118,10 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                                     <Grid container>
                                         <Grid >
                                             <CardContent>
-                                                <Typography variant="h6">Name: Neeraj</Typography>
-                                                <Typography variant="body1">Email: neer@gmail.com</Typography>
-                                                <Typography variant="body1">Phone: 7745977459</Typography>
-                                                <Typography variant="body1">Address: 198/6 Indore</Typography>
+                                                <Typography variant="h6">Name: {Details?.firstName || '-'}</Typography>
+                                                <Typography variant="body1">Email: {Details?.email || '-'}</Typography>
+                                                <Typography variant="body1">Phone: {Details?.phoneNumber || '-'}</Typography>
+                                                <Typography variant="body1">Address: {Details?.address || '-'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid sx={{ display: 'flex', alignItems: 'center' }}>

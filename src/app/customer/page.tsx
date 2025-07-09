@@ -11,6 +11,7 @@ import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useTheme } from "next-themes";
 
 
 const CustomerManagement = () => {
@@ -20,7 +21,7 @@ const CustomerManagement = () => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowCount, setRowCount] = useState(0);
-
+    const { theme } = useTheme();
     const navigate = useRouter()
     const handleNavigate = (id: string) => {
         navigate.push(`customer/${id}`)
@@ -126,7 +127,7 @@ const CustomerManagement = () => {
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
             <Breadcrumb pageName="customer" />
-            <Card sx={{ height: 600, width: '100%' }}>
+            <Card sx={{ height: 600, width: '100%', bgcolor: theme == 'dark' ? '#122031' : '#fff' }}>
                 <DataGrid
                     rows={data}
                     columns={columns}

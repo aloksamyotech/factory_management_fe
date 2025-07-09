@@ -38,10 +38,12 @@ const Form = (props: any) => {
         validationSchema,
         onSubmit: async (values: any) => {
             const url = urls?.endpoints?.rawMaterial?.rawMaterial;
+            console.log(values);
+
             await postApi(url, values);
             handleClose()
             getData()
-            // formik?.resetForm();
+            formik?.resetForm();
         }
     });
 
@@ -118,6 +120,7 @@ const Form = (props: any) => {
                                         id="price"
                                         name="price"
                                         size="small"
+                                        type='number'
                                         slotProps={{
                                             input: {
                                                 startAdornment: <InputAdornment position="start">₹</InputAdornment>,

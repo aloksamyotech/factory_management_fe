@@ -20,5 +20,11 @@ export const urls = Object.freeze({
         product: {
             product: `${BASE_URL}${API_VERSION}/product`
         },
+        order: {
+            order: `${BASE_URL}${API_VERSION}/order`
+        },
+        inventory: {
+            inventory: `${BASE_URL}${API_VERSION}/inventory`
+        },
     }
 });
