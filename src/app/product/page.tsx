@@ -33,40 +33,68 @@ const Product = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'title',
+            field: 'image',
+            headerName: 'Image',
+            flex: 0.8,
+            headerAlign: 'center',
+            align: 'center',
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: () =>
+                <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
+                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                </Box>
+        },
+        {
+            field: 'name',
             headerName: 'Title',
             flex: 1
         },
         {
             field: 'category',
             headerName: 'Category',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
             field: 'price',
             headerName: 'Price',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            valueFormatter: (value) => {
+                return '₹' + value;
+            }
         },
         {
             field: 'description',
             headerName: 'Description',
-            flex: 1
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1.5
         },
         {
-            field: 'rawmaterial',
+            field: 'rawMaterial',
             headerName: 'Raw Material',
-            flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1.5,
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params) => {
+                const itemIds = params.row.rawMaterial?.map((item) => item.title).join(', ') || 'N/A';
+                return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
+            }
         },
         {
             field: 'action',
             headerName: 'Action',
+            headerAlign: 'center',
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid item xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <Button>
                             <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
@@ -74,12 +102,12 @@ const Product = () => {
                 </Grid>
         }
     ];
-    const dummyData = [{
-        id: 1, index: '1', title: 'ProductOne', rawmaterial: 'Raw1,Raw2', price: 1000, category: 'cat1', description: 'this is the desc'
-    }]
+    // const dummyData = [{
+    //     id: 1, index: '1', title: 'ProductOne', rawmaterial: 'Raw1,Raw2', price: 1000, category: 'cat1', description: 'this is the desc'
+    // }]
 
     const getData = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
+        const url = `${urls?.endpoints?.product?.product}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
             ...item,
@@ -90,7 +118,7 @@ const Product = () => {
     };
 
     useEffect(() => {
-        // getData();
+        getData();
     }, [page]);
 
     const CustomToolbar = () => {
@@ -119,7 +147,7 @@ const Product = () => {
             <Breadcrumb pageName="Product" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
-                    rows={dummyData}
+                    rows={data}
                     columns={columns}
                     slots={{
                         toolbar: CustomToolbar
@@ -129,12 +157,12 @@ const Product = () => {
                             fontWeight: 'bold',
                         },
                     }}
-                // paginationModel={{ page: page, pageSize: PageSize }}
-                // paginationMode="server"
-                // rowCount={rowCount}
-                // onPaginationModelChange={(newPaginationModel) => {
-                //     setPage(newPaginationModel.page);
-                // }}
+                    paginationModel={{ page: page, pageSize: PageSize }}
+                    paginationMode="server"
+                    rowCount={rowCount}
+                    onPaginationModelChange={(newPaginationModel) => {
+                        setPage(newPaginationModel.page);
+                    }}
                 />
             </Card>
         </>

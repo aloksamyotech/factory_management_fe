@@ -8,26 +8,38 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 
-const CustomerViewPage = ({ params }: { params: { id: string } }) => {
+interface Props {
+    params: { id: string };
+}
+interface VendorInterface {
+    id:any,
+    firstName: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber: string;
+    address?: string
+}
+const VendorViewPage = ({ params }: Props) => {
+
     const id = params?.id
-    const [Details, setDetails] = useState<any | null>(null)
+    const [Details, setDetails] = useState<VendorInterface | null>(null)
     const [data, setData] = useState([])
     const GetDetails = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}/${id}`
+        const url = `${urls?.endpoints?.vendor?.vendor}/${id}`
         const response = await getApi(url);
         setDetails(response?.data?.data);
     }
     const GetPurchase = async () => {
-        const url = `${urls?.endpoints?.order?.order}?orderId=${id}`
+        const url = `${urls?.endpoints?.purchase?.purchase}?vendorId=${id}`
         const response = await getApi(url);
         const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
             index: index + 1,
             createdAt: formattedDate,
             id: item.id,
-            item: item?.itemId,
-            totalAmount: item?.totalAmount,
-            status: item?.status
+            item:item?.itemId,
+            totalAmount:item?.totalAmount,
+            status:item?.status
         }));
         setData(modifiedData)
     }
@@ -35,6 +47,7 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
         GetDetails();
         GetPurchase();
     }, [])
+
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
 
@@ -46,8 +59,8 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
     };
 
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push(`/order/123`)
+    const handleNavigate = (id:any) => {
+        navigate.push(`/purchase/${id}`)
     }
 
     const columns: GridColDef[] = [
@@ -60,54 +73,68 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
         {
             field: 'createdAt',
             headerName: 'Date',
+            align:'center',
+            headerAlign:'center',
             flex: 1
         },
         {
             field: 'id',
-            headerName: 'Order Id',
+            headerName: 'Purchase Id',
             flex: 1,
+            align:'center',
+            headerAlign:'center',
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
             field: 'item',
             headerName: 'Items',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            align:'center',
+            headerAlign:'center',
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) => {
+                const itemIds = params.row.item?.map((item:any) => item.rawMaterial.title).join(', ') || 'N/A';
+                return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
+            }
         },
         {
             field: 'totalAmount',
             headerName: 'Total Amount',
-            flex: 1
+            flex: 1,
+            align:'center',
+            headerAlign:'center',
+            valueFormatter: (value) => {
+                return '₹' + value;
+            }
         },
         {
             field: 'status',
             headerName: 'Status',
             flex: 1,
+            align:'center',
+            headerAlign:'center',
             cellClassName: 'name-column--cell--capitalize'
         },
         {
             field: 'action',
             headerName: 'Action',
+            align:'center',
+            headerAlign:'center',
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
                     <Grid size={12} textAlign='center'>
-                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params?.row?.id)} />
                     </Grid>
                 </Grid>
         }
     ];
 
-    // const data: any = [
-    //     { index: 1, id: 12345, createdAt: "10/oct/2024", item: 'product1', totalAmount: 1000, status: 'pending' },
-    //     { index: 2, id: 52348, createdAt: "15/oct/2025", item: 'product2', totalAmount: 1000, status: 'pending' }
-    // ]
-
     return (
         <Card sx={{ minHeight: '100vh' }}>
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange}>
-                    <Tab label="Customer Details" />
+                    <Tab label="Vendor Details" />
                 </Tabs>
 
                 {value === 0 && (
@@ -116,18 +143,18 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
                             <Grid>
                                 <Card sx={{ minWidth: "350px" }}>
                                     <Grid container>
-                                        <Grid >
+                                        <Grid size={8}>
                                             <CardContent>
-                                                <Typography variant="h6">Name: {Details?.firstName || '-'}</Typography>
-                                                <Typography variant="body1">Email: {Details?.email || '-'}</Typography>
-                                                <Typography variant="body1">Phone: {Details?.phoneNumber || '-'}</Typography>
-                                                <Typography variant="body1">Address: {Details?.address || '-'}</Typography>
+                                                <Typography variant="h6"><span>Name:</span> {Details?.firstName||'-'}</Typography>
+                                                <Typography variant="body2" sx={{ mt: '5px',overflow:'clip' }}>Email: {Details?.email||'-'}</Typography>
+                                                <Typography variant="body2">Phone: {Details?.phoneNumber||'-'}</Typography>
+                                                <Typography variant="body2">Address: {Details?.address !== null ? Details?.address : '-'}</Typography>
                                             </CardContent>
                                         </Grid>
-                                        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Grid size={4} sx={{ display: 'flex', alignItems: 'center' }}>
                                             <CardMedia
                                                 component="img"
-                                                sx={{ height: '100px' }}
+                                                sx={{ height: '100px',objectFit:'contain' }}
                                                 image="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?t=st=1744176159~exp=1744179759~hmac=c31940ea003abce313891832a1201aea66a8f654b06b6b8ed67b4a80deb77c1f&w=900"
                                                 alt="Profile Image"
                                             />
@@ -139,7 +166,7 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
                     </Box>
                 )}
                 <Tabs value={valueOrder} onChange={handleTabOrderChange}>
-                    <Tab label="Order Details" />
+                    <Tab label="Purchase Details" />
                 </Tabs>
                 {value === 0 && (
                     <Card sx={{ height: 600, width: '100%', p: 1 }}>
@@ -154,4 +181,4 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
     );
 };
 
-export default CustomerViewPage;
+export default VendorViewPage;

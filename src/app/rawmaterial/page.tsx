@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
+import { useRouter } from "next/navigation";
+import { Props } from "react-apexcharts";
 
 const Rawmaterial = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -27,6 +29,18 @@ const Rawmaterial = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
+            field: 'image',
+            headerName: 'Image',
+            flex: 0.5,
+            headerAlign: 'center',
+            align: 'center',
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: () =>
+                <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
+                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                </Box>
+        },
+        {
             field: 'title',
             headerName: 'Title',
             flex: 1,
@@ -35,32 +49,37 @@ const Rawmaterial = () => {
         {
             field: 'description',
             headerName: 'Description',
-            flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            flex: 1.5,
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params) => {
+                return params.value ? params.value : '-';
+            }
         },
         {
             field: 'unit',
             headerName: 'Unit',
-            flex: 1
+            headerAlign: 'center',
+            align: 'center',
+            flex: 0.5
         },
         {
             field: 'price',
             headerName: 'Price',
-            flex: 1
+            headerAlign: 'center',
+            align: 'center',
+            flex: 0.5,
+            valueFormatter: (value) => {
+                return '₹' + value;
+            }
         },
         {
             field: 'action',
             headerName: 'Action',
-            headerAlign: 'center',
             flex: 1,
+            headerAlign: 'center',
+            align: 'center',
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid item xs={12} textAlign='center'>
-                        <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} />
-                        </Button>
-                    </Grid>
-                </Grid>
+                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
         }
     ];
 
@@ -98,6 +117,11 @@ const Rawmaterial = () => {
             </GridToolbarContainer>
         );
     };
+
+    const navigate = useRouter()
+    const handleNavigate = (id:any) => {
+        navigate.push(`/rawmaterial/${id}`)
+    }
 
     return (
         <>

@@ -6,8 +6,25 @@ export const urls = Object.freeze({
         customer: {
             customer: `${BASE_URL}${API_VERSION}/customer`,
         },
+        vendor: {
+            vendor: `${BASE_URL}${API_VERSION}/vendor`,
+            getAll: `${BASE_URL}${API_VERSION}/vendor/list`,
+        },
         rawMaterial: {
-            rawMaterial: `${BASE_URL}${API_VERSION}/rawmaterial`
-        }
+            rawMaterial: `${BASE_URL}${API_VERSION}/rawmaterial`,
+            getAll: `${BASE_URL}${API_VERSION}/rawmaterial/list`
+        },
+        purchase: {
+            purchase: `${BASE_URL}${API_VERSION}/purchase`
+        },
+        product: {
+            product: `${BASE_URL}${API_VERSION}/product`
+        },
+        order: {
+            order: `${BASE_URL}${API_VERSION}/order`
+        },
+        inventory: {
+            inventory: `${BASE_URL}${API_VERSION}/inventory`
+        },
     }
 });

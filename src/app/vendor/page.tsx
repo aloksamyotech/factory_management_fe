@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Box, Button, Card, Grid, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Card, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -9,22 +9,21 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
-import moment from "moment";
+import Grid from '@mui/material/Grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useTheme } from "next-themes";
+import moment from 'moment';
 
-
-const CustomerManagement = () => {
+const VendorManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowCount, setRowCount] = useState(0);
-    const { theme } = useTheme();
+
     const navigate = useRouter()
     const handleNavigate = (id: string) => {
-        navigate.push(`customer/${id}`)
+        navigate.push(`vendor/${id}`)
     }
 
     const PageSize: number = 10;
@@ -44,7 +43,7 @@ const CustomerManagement = () => {
             renderCell: (params) =>
                 <Stack direction={'row'} spacing={1} sx={{ display: 'flex', alignItems: 'center', pt: 1 }}>
                     <Stack>
-                        <Avatar src={'https://img.freepik.com/premium-photo/fun-asian-teenager_183364-34074.jpg?w=996'} alt={params?.row?.fullName} sx={{ h: '15px', w: 'auto' }} />
+                        <Avatar src={'https://i.pinimg.com/736x/33/ba/df/33badf7bd7e2bd56b21e3d972fe3ed5a.jpg'} alt={params?.row?.fullName} sx={{ h: '15px', w: 'auto' }} />
                     </Stack>
                     <Stack>
                         <Stack >
@@ -76,15 +75,18 @@ const CustomerManagement = () => {
             field: 'action',
             headerName: 'Action',
             headerAlign: 'center',
-            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
+                <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Grid>
+                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
+                    </Grid>
+                </Grid>
         }
     ];
 
     const getData = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
+        const url = `${urls?.endpoints?.vendor?.vendor}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
         const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
@@ -126,8 +128,8 @@ const CustomerManagement = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="customer" />
-            <Card sx={{ height: 600, width: '100%', bgcolor: theme == 'dark' ? '#122031' : '#fff' }}>
+            <Breadcrumb pageName="vendor" />
+            <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={data}
                     columns={columns}
@@ -151,4 +153,4 @@ const CustomerManagement = () => {
     );
 };
 
-export default CustomerManagement;
+export default VendorManagement;

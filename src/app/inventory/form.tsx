@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, Grid, FormControl, FormLabel, TextField } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
@@ -27,9 +27,6 @@ const Form = (props: any) => {
             .nullable()
             .email('Please enter a valid Email Address.')
             .max(50, 'Email Address cannot exceed 50 characters.'),
-        address: yup
-            .string()
-            .max(50, 'Address Cannot Exceed 50 Characters.'),
     });
 
     const initialValues = {
@@ -37,16 +34,13 @@ const Form = (props: any) => {
         lastName: '',
         phoneNumber: '',
         email: '',
-        address: ''
     };
     const formik = useFormik({
         initialValues,
         validationSchema,
         onSubmit: async (values: any) => {
-            const url = urls?.endpoints?.customer?.customer;
-            await postApi(url, values);
+            console.log("order values", values);
             handleClose()
-            getData()
             formik?.resetForm();
         }
     });
@@ -62,7 +56,7 @@ const Form = (props: any) => {
                     justifyContent: 'space-between'
                 }}
             >
-                <Typography variant="h6">Add New Customer</Typography>
+                <Typography variant="h6">Create New Order</Typography>
                 <Typography>
                     <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
                 </Typography>
@@ -70,10 +64,10 @@ const Form = (props: any) => {
             <DialogContent dividers>
                 <form>
                     <DialogContentText tabIndex={-1}>
-                        <Grid container spacing={2} rowSpacing={4}>
-                            <Grid size={6}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={9}>
                                 <FormControl fullWidth>
-                                    <FormLabel>First name*</FormLabel>
+                                    <FormLabel>Select Customer*</FormLabel>
                                     <TextField
                                         id="firstName"
                                         name="firstName"
@@ -85,9 +79,9 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid size={6}>
+                            <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <FormLabel>Last name</FormLabel>
+                                    <FormLabel>Select Product</FormLabel>
                                     <TextField
                                         id="lastName"
                                         name="lastName"
@@ -99,9 +93,9 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid size={6}>
+                            <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <FormLabel>Phone number*</FormLabel>
+                                    <FormLabel>Qty</FormLabel>
                                     <TextField
                                         id="phoneNumber"
                                         name="phoneNumber"
@@ -110,34 +104,6 @@ const Form = (props: any) => {
                                         onChange={formik?.handleChange}
                                         error={formik?.touched?.phoneNumber && Boolean(formik?.errors?.phoneNumber)}
                                         helperText={formik?.touched?.phoneNumber && formik?.errors?.phoneNumber ? String(formik?.errors?.phoneNumber) : ''}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid size={6}>
-                                <FormControl fullWidth>
-                                    <FormLabel>Email</FormLabel>
-                                    <TextField
-                                        id="email"
-                                        name="email"
-                                        size="small"
-                                        value={formik?.values?.email}
-                                        onChange={formik?.handleChange}
-                                        error={formik?.touched?.email && Boolean(formik?.errors?.email)}
-                                        helperText={formik?.touched?.email && formik?.errors?.email ? String(formik?.errors?.email) : ''}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid size={12}>
-                                <FormControl fullWidth>
-                                    <FormLabel>Address</FormLabel>
-                                    <TextField
-                                        id="address"
-                                        name="address"
-                                        multiline
-                                        value={formik?.values?.address}
-                                        onChange={formik?.handleChange}
-                                        error={formik?.touched?.address && Boolean(formik?.errors?.address)}
-                                        helperText={formik?.touched?.address && formik?.errors?.address ? String(formik?.errors?.address) : ''}
                                     />
                                 </FormControl>
                             </Grid>

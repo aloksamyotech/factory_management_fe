@@ -36,8 +36,8 @@ const Form = (props: any) => {
     });
 
     const fetchVendors = async () => {
-        const res = await getApi(urls.endpoints.customer.customer);
-        const formatted = res?.data?.data[0]?.map((v: any) => ({
+        const res = await getApi(urls.endpoints.vendor.getAll);
+        const formatted = res?.data?.data?.map((v: any) => ({
             id: v.id,
             title: `${v.firstName} ${v.lastName || ''}`,
             phoneNumber: v.phoneNumber
@@ -45,10 +45,10 @@ const Form = (props: any) => {
         setVendors(formatted);
     };
     const fetchProducts = async () => {
-        const res = await getApi(urls.endpoints.product?.product);
-        const formatted = res?.data?.data[0]?.map((r: any) => ({
+        const res = await getApi(urls.endpoints.rawMaterial.getAll);
+        const formatted = res?.data?.data?.map((r: any) => ({
             id: r.id,
-            title: r.name,
+            title: r.title,
             price: r.price,
             unit: r.unit
         }));
@@ -63,7 +63,7 @@ const Form = (props: any) => {
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="h6">New Order</Typography>
+                <Typography variant="h6">New Purchase</Typography>
                 <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
             </DialogTitle>
 
@@ -72,13 +72,12 @@ const Form = (props: any) => {
                 validationSchema={validationSchema}
                 onSubmit={async (values, { resetForm }) => {
                     const data = {
-                        customerId: values.vendor,
+                        vendorId: values.vendor,
                         productId: values?.items,
                         totalAmount,
                         expectedDeliveryDate: values?.expectedDeliveryDate
                     }
-
-                    const url = urls?.endpoints?.order?.order
+                    const url = urls?.endpoints?.purchase?.purchase
                     const response = await postApi(url, data)
                     handleClose();
                     resetForm();
@@ -102,7 +101,7 @@ const Form = (props: any) => {
                                     <Grid container spacing={2}>
                                         <Grid size={6}>
                                             <FormControl fullWidth>
-                                                <FormLabel>Select Customer*</FormLabel>
+                                                <FormLabel>Select Vendor*</FormLabel>
                                                 <Autocomplete
                                                     size='small'
                                                     options={vendors}
@@ -203,7 +202,7 @@ const Form = (props: any) => {
                             </DialogContent>
                             <DialogActions>
                                 <Button variant="contained" onClick={() => handleSubmit()}>
-                                    Add Order
+                                    Add Purchase
                                 </Button>
                                 <Button
                                     variant="outlined"
