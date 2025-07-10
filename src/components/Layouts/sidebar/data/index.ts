@@ -40,6 +40,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "Employee",
+        url: "/employee",
+        icon: Icons.User,
+        items: [],
+      },
+      {
         title: "Product",
         url: "/product",
         icon: icons.IconSitemap,
