@@ -75,11 +75,20 @@ const Rawmaterial = () => {
         {
             field: 'action',
             headerName: 'Action',
-            flex: 1,
             headerAlign: 'center',
             align: 'center',
-            renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
+            flex: 1,
+            // renderCell: (params: any) =>
+            //     <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
+            renderCell: (params: any) => (
+                <Grid container>
+                    <Grid size xs={12} textAlign='center'>
+                        <Button onClick={() => handleNavigate(params.row.id)}>
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} />
+                        </Button>
+                    </Grid>
+                </Grid>
+            )
         }
     ];
 

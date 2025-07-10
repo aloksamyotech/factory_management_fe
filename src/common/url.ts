@@ -18,7 +18,12 @@ export const urls = Object.freeze({
             purchase: `${BASE_URL}${API_VERSION}/purchase`
         },
         product: {
-            product: `${BASE_URL}${API_VERSION}/product`
+            product: `${BASE_URL}${API_VERSION}/product`,
+            getAll: `${BASE_URL}${API_VERSION}/product/list`
+        },
+        machine: {
+            machine: `${BASE_URL}${API_VERSION}/machine`,
+            getAll: `${BASE_URL}${API_VERSION}/machine/list`,
         },
         order: {
             order: `${BASE_URL}${API_VERSION}/order`
@@ -26,5 +31,8 @@ export const urls = Object.freeze({
         inventory: {
             inventory: `${BASE_URL}${API_VERSION}/inventory`
         },
+        production: {
+            create: `${BASE_URL}${API_VERSION}/production`,
+        }
     }
 });

@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { getApi, postApi } from '@/common/api';
 import { urls } from '@/common/url';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -52,7 +51,7 @@ const Formm = (props: any) => {
   const handleSubmit = async (values: any) => {
     const payload = {
       ...values,
-      rawMaterial: values?.rawMaterial?.map(item => item.id),
+      rawMaterial: values?.rawMaterial?.map( (item:any) => item.id),
     };
     const url = urls?.endpoints?.product?.product
     await postApi(url, payload)
@@ -62,7 +61,7 @@ const Formm = (props: any) => {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6">Add Product</Typography>
+        <Typography variant="h6" >Add Product</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <Formik
@@ -116,7 +115,7 @@ const Formm = (props: any) => {
                       multiple
                       options={materials}
                       loading={loading}
-                      getOptionLabel={(option) => option.title}
+                      getOptionLabel={(option:any) => option.title}
                       onChange={(event, value) => setFieldValue('rawMaterial', value)}
                       renderInput={(params) => (
                         <TextField

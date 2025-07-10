@@ -62,7 +62,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid item xs={12} textAlign='center'>
+                    <Grid size xs={12} textAlign='center'>
                         <Button>
                             <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate()} />
                         </Button>
