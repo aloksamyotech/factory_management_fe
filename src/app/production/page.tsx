@@ -3,7 +3,7 @@ import { Box, Button, Card, Grid } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Form from "./form";
+import Formm from "./form";
 import { useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
@@ -125,7 +125,7 @@ const Production = () => {
 
     return (
     <>
-        <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+        <Formm open={openAdd} handleClose={handleCloseAdd} getData={getData} />
         <Breadcrumb pageName="Production"/>
         <Card sx={{ height: 600, width: '100%'}}>
             <DataGrid

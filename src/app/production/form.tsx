@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import {
-  TextField, Box, Button, Autocomplete, CircularProgress, Typography,
+  TextField, Button, Autocomplete, Typography,
   DialogTitle,
   Dialog,
   DialogContent,
@@ -15,53 +15,64 @@ import { urls } from '@/common/url';
 import ClearIcon from '@mui/icons-material/Clear';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  category: Yup.string().required('Category is required'),
-  price: Yup.number().typeError('Price must be a number').required('Price is required'),
-  description: Yup.string().required('Description is required'),
-  rawMaterial: Yup.array().min(1, 'Select at least one raw material'),
+  product: Yup.object().required("Product is required"),
+  quantity: Yup.number().typeError("Quantity must be a number").required("Quantity is required"),
+  machine: Yup.object().nullable(),
+  estimateTime: Yup.string().required("Estimate time is required").matches(/^(\d{1,2}):([0-5][0-9])$/, 'Enter time in HH:MM format'),
 });
 
-const Formm = (props: any) => {
-  const { open, handleClose } = props;
-
-  const [materials, setMaterials] = useState([]);
+const Formm = ({open, handleClose, getData} : any) => {
+  const [products, setProducts] = useState([]);
+  const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(false);
+  // const [materials, setMaterials] = useState([]);
 
-  const fetchMaterials = async () => {
+  const fetchDropdowns = async () => {
     setLoading(true);
-    const url = urls?.endpoints?.rawMaterial?.getAll
-    const res = await getApi(url);
+    const productRes = await getApi(urls?.endpoints?.product?.getAll);
+    const machineRes = await getApi(urls?.endpoints?.machine?.getAll);
     
-    setMaterials(res?.data?.data);
+    setProducts(productRes?.data?.data || []);
+    setMachines(machineRes?.data?.data || []);
     setLoading(false);
   };
   useEffect(() => {
-    fetchMaterials();
+    fetchDropdowns();
   }, []);
 
   const initialValues = {
-    name: '',
-    category: '',
-    price: '',
-    description: '',
-    rawMaterial: [],
+    product: null,
+    quantity: '',
+    machine: null,
+    estimateTime: '',
   };
 
   const handleSubmit = async (values: any) => {
-    const payload = {
-      ...values,
-      rawMaterial: values?.rawMaterial?.map((item: any) => item.id),
-    };
-    const url = urls?.endpoints?.product?.product
-    await postApi(url, payload)
-    handleClose()
+    const [hours, minutes] = values.estimateTime.split(':').map(Number);
+    const startTime = new Date();
+    const endTime = new Date(startTime);
+    endTime.setHours(startTime.getHours() + hours);
+    endTime.setMinutes(startTime.getMinutes() + minutes);
+
+    const payload ={
+      productId: values.product.id,
+      machineId: values.machine?.id || null,
+      quantity: Number(values.quantity),
+      startTime,
+      endTime,
+      status: 'pending',
+    }
+
+    const url = urls?.endpoints?.production?.create;
+    await postApi(url, payload);
+    getData?.();
+    handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6" >Add Product</Typography>
+        <Typography variant="h6" >Add Production</Typography>
         <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
       </DialogTitle>
       <Formik
@@ -70,103 +81,87 @@ const Formm = (props: any) => {
         onSubmit={handleSubmit}
       >
 
-        {({ values, errors, touched, handleChange, setFieldValue, handleSubmit }) => (
+        {({ values, errors, touched, handleChange, setFieldValue }) => (
           <>
+            <Form noValidate>
             <DialogContent dividers>
-              <Form noValidate>
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                   <Grid size={6}>
-                    <TextField
-                      label="Product Name"
-                      name="productName"
-                      fullWidth
-                      margin="normal"
-                      value={values.name}
-                      onChange={handleChange}
-                      error={touched.name && Boolean(errors.name)}
-                      helperText={touched.name && errors.name}
-                    /></Grid>
+                    <Autocomplete 
+                      options={products}
+                      loading={loading}
+                      getOptionLabel={(option: any) => option.name}
+                      onChange={(e, value) => setFieldValue('product',value)}
+                      renderInput={(params)=>(
+                        <TextField
+                        {...params}
+                        label="Product"
+                        name="productName"
+                        fullWidth
+                        margin="normal"
+                        error={touched.product && Boolean(errors.product)}
+                        helperText={touched.product && errors.product}
+                        />
+                      )}
+                      />
+                    </Grid>
                   <Grid size={6}>
                     <TextField
                       label="Quantity"
                       name="quantity"
                       fullWidth
                       margin="normal"
-                      value={values.category}
+                      value={values.quantity}
                       onChange={handleChange}
-                      error={touched.category && Boolean(errors.category)}
-                      helperText={touched.category && errors.category}
+                      error={touched.quantity && Boolean(errors.quantity)}
+                      helperText={touched.quantity && errors.quantity}
                     />
                   </Grid>
                   <Grid size={6}>
-                    <TextField
-                      label="Machine"
-                      name="machine"
-                      fullWidth
-                      margin="normal"
-                      value={values.price}
-                      onChange={handleChange}
-                      error={touched.price && Boolean(errors.price)}
-                      helperText={touched.price && errors.price}
-                    /></Grid>
-                  <Grid size={6}>
-                    <Autocomplete
-                      multiple
-                      options={materials}
+                    <Autocomplete 
+                      options={machines}
                       loading={loading}
-                      getOptionLabel={(option) => option.title}
-                      onChange={(event, value) => setFieldValue('rawMaterial', value)}
-                      renderInput={(params) => (
+                      getOptionLabel={(option: any) => option.name}
+                      onChange={(e, value)=> setFieldValue('machine', value)}
+                      renderInput={(params)=>(
+
                         <TextField
-                          {...params}
-                          label="Raw Materials"
-                          margin="normal"
-                          fullWidth
-                          error={touched.rawMaterial && Boolean(errors.rawMaterial)}
-                          helperText={touched.rawMaterial && errors.rawMaterial}
-                          InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                              <>
-                                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                                {params.InputProps.endAdornment}
-                              </>
-                            ),
-                          }}
+                        {...params}
+                        label="Machine"
+                        name="machine"
+                        fullWidth
+                        margin="normal"
+                        error={touched.machine && Boolean(errors.machine)}
+                        helperText={touched.machine && errors.machine}
                         />
                       )}
-                    />
-                  </Grid>
-                  <Grid size={12}>
+                      />
+                    </Grid>
+                  <Grid size={6}>
                     <TextField
-                      label="Description"
-                      name="description"
-                      multiline
-                      rows={3}
-                      fullWidth
-                      margin="normal"
-                      value={values.description}
-                      onChange={handleChange}
-                      error={touched.description && Boolean(errors.description)}
-                      helperText={touched.description && errors.description}
-                    /></Grid>
+                        label="Estimate Time (HH:MM)"
+                        name='estimateTime'
+                        fullWidth
+                        margin='normal'
+                        placeholder='e.g. 02:30'
+                        value={values.estimateTime}
+                        onChange={handleChange}
+                        error={touched.estimateTime && Boolean(errors. estimateTime)}
+                        helperText={touched.estimateTime && errors.estimateTime}
+                        />
+                  </Grid>
                 </Grid>
-              </Form>
-            </DialogContent>
+            </DialogContent>    
             <DialogActions>
-              <Button variant="contained" onClick={() => handleSubmit()}>
-                Save
-              </Button>
+              <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
               <Button
                 variant="outlined"
                 color="error"
-                onClick={() => {
-                  handleClose();
-                }}
-              >
+                onClick={() => {console.log("Cancel"); handleClose();}}>
                 Cancel
               </Button>
             </DialogActions>
+            </Form>
           </>
         )}
       </Formik>

@@ -48,6 +48,6 @@ export const getApi = async (url: any) => {
   } catch (error) {
     // toast.error(error?.response?.data?.message);
     // console.error('API Error:', error.response || error.message);
-    console.error('API Error:');
+    console.log(error);
   }
 };
