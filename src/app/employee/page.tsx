@@ -94,13 +94,9 @@ const EmployeeManagement = () => {
 
   const getData = async () =>{
     const url = `${urls?.endpoints?.employee.getAll}?page=${page+1}&limit=${pageSize}`;
-    console.log('Fetching employees from:', url);
     const response = await getApi(url);
-    console.log('API Response:', response);
-    console.log('Response data:', response?.data);
     
     if (!response) {
-      console.error('No response from API');
       setEmployees([]);
       setRowCount(0);
       return;
@@ -110,7 +106,6 @@ const EmployeeManagement = () => {
       ...item,
       index: index +1
     })) || [];
-    console.log('Processed rows:', rows);
     setEmployees(rows);
     setRowCount(response?.data?.data[1] || 0);
   };

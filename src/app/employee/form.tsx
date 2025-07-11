@@ -49,7 +49,6 @@ const Formm = ({open, handleClose, getData}:any) => {
   };
 
   const handleSubmit = async(values: any)=>{
-    try{
     const [day, month, year] = values.dateOfJoining.split('/');
     const isoDate = new Date(`${year}-${month}-${day}`).toISOString();
       const payload = {
@@ -58,15 +57,8 @@ const Formm = ({open, handleClose, getData}:any) => {
         dateOfJoining: isoDate,
       }
    const res = await postApi(urls?.endpoints?.employee.employee, payload);
-   console.log("Employee added successfully", res?.data);
     handleClose();
-    if (getData()){
-      getData();
-      console.log(getData().dateOfJoining)
-    }else{return "Data not Found"}
-    }catch(err){
-      console.log("Error while adding employee", err);
-    }
+    getData();    
   };
 
   return (
@@ -105,10 +97,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                       <TextField 
                           label='Last Name'
                           id='lastName'
-                          defaultValue='NA'
                           name='lastName'
                           fullWidth
                           margin='normal'
+                          value={values.lastName}
                           onChange={handleChange}
                           error={touched?.lastName && Boolean(errors.lastName)}
                           helperText={touched?.lastName && errors.lastName}
@@ -186,11 +178,11 @@ const Formm = ({open, handleClose, getData}:any) => {
                   </Grid>
                 </Grid>
               </DialogContent>
-              </Form>
               <DialogActions>
                 <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
-                <Button variant='contained' color='error' onClick={()=>{handleClose();}}>Cancel</Button>
+                <Button variant='outlined' color='error' onClick={()=>{handleClose();}}>Cancel</Button>
               </DialogActions>
+              </Form>
               </>
             )}
       </Formik>
