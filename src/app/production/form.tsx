@@ -6,7 +6,9 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
-  Grid
+  Grid,
+  FormLabel,
+  DialogContentText
 } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -16,7 +18,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 const validationSchema = Yup.object().shape({
   product: Yup.object().required("Product is required"),
-  quantity: Yup.number().typeError("Quantity must be a number").required("Quantity is required"),
+  quantity: Yup
+      .number()
+      .min(0, "Quantity cannot be less than 0")
+      .typeError("Quantity must be a number")
+      .required("Quantity is required"),
   machine: Yup.object().nullable(),
   estimateTime: Yup.string().required("Estimate time is required").matches(/^(\d{1,2}):([0-5][0-9])$/, 'Enter time in HH:MM format'),
 });
@@ -25,7 +31,6 @@ const Formm = ({open, handleClose, getData} : any) => {
   const [products, setProducts] = useState([]);
   const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [materials, setMaterials] = useState([]);
 
   const fetchDropdowns = async () => {
     setLoading(true);
@@ -41,7 +46,7 @@ const Formm = ({open, handleClose, getData} : any) => {
   }, []);
 
   const initialValues = {
-    product: null,
+    product: '',
     quantity: '',
     machine: null,
     estimateTime: '',
@@ -63,10 +68,10 @@ const Formm = ({open, handleClose, getData} : any) => {
       status: 'pending',
     }
 
-    const url = urls?.endpoints?.production?.create;
+    const url = urls?.endpoints?.production.create;
     await postApi(url, payload);
-    getData?.();
     handleClose();
+    await getData();
   };
 
   return (
@@ -87,6 +92,7 @@ const Formm = ({open, handleClose, getData} : any) => {
             <DialogContent dividers>
                 <Grid container spacing={2}>
                   <Grid size={6}>
+                    <FormLabel>Product Name*</FormLabel>
                     <Autocomplete 
                       options={products}
                       loading={loading}
@@ -95,10 +101,9 @@ const Formm = ({open, handleClose, getData} : any) => {
                       renderInput={(params)=>(
                         <TextField
                         {...params}
-                        label="Product"
                         name="productName"
+                        size='small'
                         fullWidth
-                        margin="normal"
                         error={touched.product && Boolean(errors.product)}
                         helperText={touched.product && errors.product}
                         />
@@ -106,11 +111,11 @@ const Formm = ({open, handleClose, getData} : any) => {
                       />
                     </Grid>
                   <Grid size={6}>
+                    <FormLabel>Quantity*</FormLabel>
                     <TextField
-                      label="Quantity"
                       name="quantity"
+                      size='small'
                       fullWidth
-                      margin="normal"
                       value={values.quantity}
                       onChange={handleChange}
                       error={touched.quantity && Boolean(errors.quantity)}
@@ -118,6 +123,7 @@ const Formm = ({open, handleClose, getData} : any) => {
                     />
                   </Grid>
                   <Grid size={6}>
+                    <FormLabel>Machine Name</FormLabel>
                     <Autocomplete 
                       options={machines}
                       loading={loading}
@@ -127,10 +133,9 @@ const Formm = ({open, handleClose, getData} : any) => {
 
                         <TextField
                         {...params}
-                        label="Machine"
                         name="machine"
+                        size='small'
                         fullWidth
-                        margin="normal"
                         error={touched.machine && Boolean(errors.machine)}
                         helperText={touched.machine && errors.machine}
                         />
@@ -138,11 +143,11 @@ const Formm = ({open, handleClose, getData} : any) => {
                       />
                     </Grid>
                   <Grid size={6}>
+                    <FormLabel>Estimate Time*</FormLabel>
                     <TextField
-                        label="Estimate Time (HH:MM)"
                         name='estimateTime'
+                        size='small'
                         fullWidth
-                        margin='normal'
                         placeholder='e.g. 02:30'
                         value={values.estimateTime}
                         onChange={handleChange}
@@ -151,13 +156,13 @@ const Formm = ({open, handleClose, getData} : any) => {
                         />
                   </Grid>
                 </Grid>
-            </DialogContent>    
+              </DialogContent>    
             <DialogActions>
-              <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
+              <Button type='submit' variant='contained'>Save</Button>
               <Button
                 variant="outlined"
                 color="error"
-                onClick={() => {console.log("Cancel"); handleClose();}}>
+                onClick={() => { handleClose();}}>
                 Cancel
               </Button>
             </DialogActions>

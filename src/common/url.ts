@@ -37,6 +37,7 @@ export const urls = Object.freeze({
         },
         production: {
             create: `${BASE_URL}${API_VERSION}/production`,
+            getAll: `${BASE_URL}${API_VERSION}/production`
         }
     }
 });

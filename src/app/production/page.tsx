@@ -82,7 +82,7 @@ const Production = () => {
                 <Grid container>  
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{fontSize: '20px'}} onClick={() => handleNavigate(params.row.id)}/>
+                            <RemoveRedEyeIcon color="inherit" sx={{fontSize: '20px'}}/>
                         </Button>
                     </Grid>
                 </Grid>
@@ -90,13 +90,13 @@ const Production = () => {
     ];
  
     const getData = async () => {
-        const url = `${urls?.endpoints?.product?.product}?page=${page+1}&limit=${PageSize}`;
+        const url = `${urls?.endpoints?.production.getAll}?page=${page+1}&limit=${PageSize}`;
         const response = await getApi(url);
         const modifiedData = response?.data?.data[0].map((item: any,index: number) => ({
             ...item, index: index+1
         }));
         setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
+        setRowCount(response?.data?.data[1] || 0);
     };
 
     useEffect(()=>{

@@ -16,15 +16,16 @@ const validation = Yup.object({
     .max(15, "Last Name cannot exceed 15 characters"),
   email: Yup
     .string()
+    .max(50, "Email cannot exceed 50 characters")
     .email('Please enter a valid Email Address.')
     .required("Please enter your Email Address"),
   phoneNumber: Yup
     .string()
+    .max(10, "Phone Number cannot exceed 10 digits")
     .matches(/^[0-9]{10}/, "Phone Number must be exactly 10 digits.")
     .required("Please enter your Phone Number"),
   salary: Yup
     .number()
-    .required("Please enter your Salary")
     .positive("Salary must be a positive number")
     .max(100000, "Salary cannot exceed 100,000")
     .min(0, "Salary cannot be less than 0"),
@@ -58,7 +59,7 @@ const Formm = ({open, handleClose, getData}:any) => {
       }
    const res = await postApi(urls?.endpoints?.employee.employee, payload);
     handleClose();
-    getData();    
+    await getData();    
   };
 
   return (
@@ -81,11 +82,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                   <FormLabel>First Name*</FormLabel>
                       <TextField 
-                          label='First Name'
                           id='firstName'
                           name='firstName'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.firstName}
                           onChange={handleChange}
                           error={touched?.firstName && Boolean(errors.firstName)}
@@ -93,13 +93,12 @@ const Formm = ({open, handleClose, getData}:any) => {
                         />
                   </Grid>
                   <Grid size={6}>
-                      <FormLabel>Last Name*</FormLabel>
+                      <FormLabel>Last Name</FormLabel>
                       <TextField 
-                          label='Last Name'
                           id='lastName'
                           name='lastName'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.lastName}
                           onChange={handleChange}
                           error={touched?.lastName && Boolean(errors.lastName)}
@@ -109,11 +108,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Email*</FormLabel>
                       <TextField 
-                          label='Email'
                           id='Email'
                           name='email'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.email}
                           onChange={handleChange}
                           error={touched?.email && Boolean(errors.email)}
@@ -123,11 +121,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Phone Number*</FormLabel>
                       <TextField 
-                          label='Phone Number'
                           id='phoneNumber'
                           name='phoneNumber'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.phoneNumber}
                           onChange={handleChange}
                           error={touched?.phoneNumber && Boolean(errors.phoneNumber)}
@@ -135,13 +132,12 @@ const Formm = ({open, handleClose, getData}:any) => {
                         />
                   </Grid>
                   <Grid size={6}>
-                      <FormLabel>Salary*</FormLabel>
+                      <FormLabel>Salary</FormLabel>
                       <TextField 
-                          label='Salary'
                           id='salary'
                           name='salary'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.salary}
                           onChange={handleChange}
                           error={touched?.salary && Boolean(errors.salary)}
@@ -151,11 +147,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Department*</FormLabel>
                       <TextField 
-                          label='Department'
                           id='department'
                           name='department'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.department}
                           onChange={handleChange}
                           error={touched?.department && Boolean(errors.department)}
@@ -168,8 +163,8 @@ const Formm = ({open, handleClose, getData}:any) => {
                           type='date'
                           id='dateOfJoining'
                           name='dateOfJoining'
+                          size='small'
                           fullWidth
-                          margin='normal'
                           value={values.dateOfJoining}
                           onChange={handleChange}
                           error={touched?.dateOfJoining && Boolean(errors.dateOfJoining)}
@@ -178,8 +173,8 @@ const Formm = ({open, handleClose, getData}:any) => {
                   </Grid>
                 </Grid>
               </DialogContent>
-              <DialogActions>
-                <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
+              <DialogActions style={{ position: 'sticky', bottom: 0, background: '#fff',zIndex: 2}}>
+                <Button type='submit' variant='contained' >Save</Button>
                 <Button variant='outlined' color='error' onClick={()=>{handleClose();}}>Cancel</Button>
               </DialogActions>
               </Form>

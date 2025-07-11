@@ -5,10 +5,14 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { urls } from "@/common/url";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { getApi } from "@/common/api";
-import { Box, Card } from "@mui/material";
+import { Box, Card, Stack, Typography } from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Formm from "./form";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import moment from "moment";
+
+
 const EmployeeManagement = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const handleOpenAdd = () => setOpenAdd(true);
@@ -20,7 +24,7 @@ const EmployeeManagement = () => {
   const pageSize: number = 10;
   const navigate = useRouter();
   const handleNavigate = (id: string) => {
-    navigate.push(`/employee/${id}`);
+    navigate.push(`employee/${id}`);
   }
 
 
@@ -32,46 +36,36 @@ const EmployeeManagement = () => {
       cellClassName: 'name-column--cell name-column--cell--capitalize'
     },
     {
-      field: 'firstName',
-      headerName: 'First Name',
-      headerAlign: 'center',
+      field: 'profile',
+      headerName: 'Profile',
       align: 'center',
-      flex: 0.6,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last Name',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 0.6,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      headerAlign: 'center',
-      align: 'center',
-      flex:0.6
+      flex: 1,
+      renderCell: (params) => 
+        <Stack direction={'row'} spacing={1} sx={{display: 'flex', alignItems: 'flex-start',justifyContent: 'flex-start' ,pt:1}}>
+          <Stack>
+              <Stack sx={{textAlign: 'left'}}>
+                <Typography color="primary">{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ ml: '5px', fontSize: '10px' }} />
+                </Typography>
+              </Stack>
+              <Stack sx={{textAlign: 'left'}}>
+                <Typography sx={{fontSize: '10px'}}>{params?.row?.email}</Typography>
+              </Stack>
+          </Stack>
+        </Stack>
     },
     {
       field: 'phoneNumber',
       headerName: 'Phone Number',
       headerAlign: 'center',
       align: 'center',
-      flex: 0.6
-    },
-    {
-      field: 'salary',
-      headerName: 'Salary',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 0.6
+      flex: 1
     },
     {
       field: 'department',
       headerName: 'Department',
       headerAlign: 'center',
       align: 'center',
-      flex: 0.6
+      flex: 1
     },
     {
       field: 'dateOfJoining',
@@ -79,16 +73,15 @@ const EmployeeManagement = () => {
       headerAlign: 'center',
       align: 'center',
       flex: 1,
-      valueFormatter: (params: any) => new Date(params.value).toLocaleDateString(),
     },
     {
       field: 'action',
       headerName: 'Action',
       headerAlign: 'center',
       align: 'center',
-      flex: 0.6,
+      flex: 1,
       renderCell: (params:any)=>
-        <RemoveRedEyeIcon color="primary" sx={{fontSize: "20px", cursor: 'pointer'}} onClick={() => handleNavigate(params.row.id)}/>
+        <RemoveRedEyeIcon  color="primary" sx={{fontSize: "20px", cursor: 'pointer'}} />
     }
   ];
 
@@ -103,8 +96,13 @@ const EmployeeManagement = () => {
     }
     
     const rows = response?.data?.data[0]?.map((item:any, index: number)=>({
-      ...item,
-      index: index +1
+      id: item.id,
+      index: index + 1,
+      fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
+      email: item.email,
+      phoneNumber: item?.phoneNumber,
+      department: item.department,
+      dateOfJoining: moment(item.dateOfJoining).format("ll")
     })) || [];
     setEmployees(rows);
     setRowCount(response?.data?.data[1] || 0);
@@ -123,7 +121,7 @@ const EmployeeManagement = () => {
                 p: 2,
                 m:1,
                 borderRadius: 1,
-                bgcolor: 'rgb(88, 80, 241, 0.07'
+                bgcolor: 'rgb(88, 80, 241, 0.07)'
             }}>
               <GridToolbarExport />
               <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>  
