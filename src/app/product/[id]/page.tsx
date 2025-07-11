@@ -62,7 +62,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid size xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <Button>
                             <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate()} />
                         </Button>
@@ -93,7 +93,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                             <Grid>
                                 <Card>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid>
                                             <CardContent>
                                                 <Typography variant="h6">Product Name: <span style={{ textDecoration: 'underline' }}>Apple</span></Typography>
                                                 <Typography variant="body1">Category: Fruit</Typography>
@@ -101,7 +101,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                                                 <Typography variant="body1">Description: this is the desc</Typography>
                                             </CardContent>
                                         </Grid>
-                                        <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Grid sx={{ display: 'flex', alignItems: 'center' }}>
                                             <CardMedia
                                                 component="img"
                                                 sx={{ height: '100px' }}

@@ -6,6 +6,10 @@ export const urls = Object.freeze({
         customer: {
             customer: `${BASE_URL}${API_VERSION}/customer`,
         },
+        employee: {
+            employee: `${BASE_URL}${API_VERSION}/employee`,
+            getAll: `${BASE_URL}${API_VERSION}/employee`
+        },
         vendor: {
             vendor: `${BASE_URL}${API_VERSION}/vendor`,
             getAll: `${BASE_URL}${API_VERSION}/vendor/list`,
