@@ -7,12 +7,34 @@ import ClearIcon from '@mui/icons-material/Clear'
 import { Form, Formik } from 'formik'
 
 const validation = Yup.object({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
-  email: Yup.string().email('Invalid').required("Required"),
-  phoneNumber: Yup.string().required("Required"),
-  department: Yup.string().required("Required"),
-  dateOfJoining: Yup.string().required("Required"),
+  firstName: Yup
+      .string()
+      .required("Please enter your First Name")
+      .max(15, "First Name cannot exceed 15 characters"),
+  lastName: Yup
+    .string()
+    .max(15, "Last Name cannot exceed 15 characters"),
+  email: Yup
+    .string()
+    .email('Please enter a valid Email Address.')
+    .required("Please enter your Email Address"),
+  phoneNumber: Yup
+    .string()
+    .matches(/^[0-9]{10}/, "Phone Number must be exactly 10 digits.")
+    .required("Please enter your Phone Number"),
+  salary: Yup
+    .number()
+    .required("Please enter your Salary")
+    .positive("Salary must be a positive number")
+    .max(100000, "Salary cannot exceed 100,000")
+    .min(0, "Salary cannot be less than 0"),
+  department: Yup
+    .string()
+    .max(30, "Department cannot exceed 30 characters")
+    .required("Please enter your Department"),
+  dateOfJoining: Yup
+    .date()
+    .required("Please select your Date of Joining"),
 });
 const Formm = ({open, handleClose, getData}:any) => {
   
@@ -38,7 +60,10 @@ const Formm = ({open, handleClose, getData}:any) => {
    const res = await postApi(urls?.endpoints?.employee.employee, payload);
    console.log("Employee added successfully", res?.data);
     handleClose();
-    getData();
+    if (getData()){
+      getData();
+      console.log(getData().dateOfJoining)
+    }else{return "Data not Found"}
     }catch(err){
       console.log("Error while adding employee", err);
     }
@@ -80,10 +105,10 @@ const Formm = ({open, handleClose, getData}:any) => {
                       <TextField 
                           label='Last Name'
                           id='lastName'
+                          defaultValue='NA'
                           name='lastName'
                           fullWidth
                           margin='normal'
-                          value={values.lastName}
                           onChange={handleChange}
                           error={touched?.lastName && Boolean(errors.lastName)}
                           helperText={touched?.lastName && errors.lastName}
@@ -161,11 +186,11 @@ const Formm = ({open, handleClose, getData}:any) => {
                   </Grid>
                 </Grid>
               </DialogContent>
+              </Form>
               <DialogActions>
                 <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
                 <Button variant='contained' color='error' onClick={()=>{handleClose();}}>Cancel</Button>
               </DialogActions>
-              </Form>
               </>
             )}
       </Formik>
