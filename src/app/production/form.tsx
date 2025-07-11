@@ -83,8 +83,8 @@ const Formm = ({open, handleClose, getData} : any) => {
 
         {({ values, errors, touched, handleChange, setFieldValue }) => (
           <>
-            <Form noValidate>
             <DialogContent dividers>
+            <Form noValidate>
                 <Grid container spacing={2}>
                   <Grid size={6}>
                     <Autocomplete 
@@ -151,6 +151,7 @@ const Formm = ({open, handleClose, getData} : any) => {
                         />
                   </Grid>
                 </Grid>
+            </Form>
             </DialogContent>    
             <DialogActions>
               <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
@@ -161,7 +162,6 @@ const Formm = ({open, handleClose, getData} : any) => {
                 Cancel
               </Button>
             </DialogActions>
-            </Form>
           </>
         )}
       </Formik>

@@ -24,7 +24,6 @@ const validation = Yup.object({
     .required("Please enter your Phone Number"),
   salary: Yup
     .number()
-    .required("Please enter your Salary")
     .positive("Salary must be a positive number")
     .max(100000, "Salary cannot exceed 100,000")
     .min(0, "Salary cannot be less than 0"),
@@ -75,13 +74,13 @@ const Formm = ({open, handleClose, getData}:any) => {
           onSubmit={handleSubmit}>
             {({values, handleChange, errors, touched}) => (
               <>
-              <Form noValidate>
               <DialogContent dividers>
+              <Form noValidate>
                 <Grid container spacing={2}>
                   <Grid size={6}>
                   <FormLabel>First Name*</FormLabel>
                       <TextField 
-                          label='First Name'
+                          placeholder='First Name'
                           id='firstName'
                           name='firstName'
                           fullWidth
@@ -95,7 +94,7 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Last Name*</FormLabel>
                       <TextField 
-                          label='Last Name'
+                          placeholder='Last Name'
                           id='lastName'
                           name='lastName'
                           fullWidth
@@ -109,7 +108,7 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Email*</FormLabel>
                       <TextField 
-                          label='Email'
+                          placeholder='Email'
                           id='Email'
                           name='email'
                           fullWidth
@@ -123,7 +122,7 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Phone Number*</FormLabel>
                       <TextField 
-                          label='Phone Number'
+                          placeholder='Phone Number'
                           id='phoneNumber'
                           name='phoneNumber'
                           fullWidth
@@ -137,7 +136,7 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Salary*</FormLabel>
                       <TextField 
-                          label='Salary'
+                          placeholder='Salary'
                           id='salary'
                           name='salary'
                           fullWidth
@@ -151,7 +150,7 @@ const Formm = ({open, handleClose, getData}:any) => {
                   <Grid size={6}>
                       <FormLabel>Department*</FormLabel>
                       <TextField 
-                          label='Department'
+                          placeholder='Department'
                           id='department'
                           name='department'
                           fullWidth
@@ -177,12 +176,12 @@ const Formm = ({open, handleClose, getData}:any) => {
                           />
                   </Grid>
                 </Grid>
+              </Form>
               </DialogContent>
               <DialogActions>
                 <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
                 <Button variant='outlined' color='error' onClick={()=>{handleClose();}}>Cancel</Button>
               </DialogActions>
-              </Form>
               </>
             )}
       </Formik>

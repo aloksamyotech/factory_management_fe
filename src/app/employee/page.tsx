@@ -60,13 +60,6 @@ const EmployeeManagement = () => {
       flex: 0.6
     },
     {
-      field: 'salary',
-      headerName: 'Salary',
-      headerAlign: 'center',
-      align: 'center',
-      flex: 0.6
-    },
-    {
       field: 'department',
       headerName: 'Department',
       headerAlign: 'center',
