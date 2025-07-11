@@ -91,9 +91,7 @@ const Production = () => {
  
     const getData = async () => {
         const url = `${urls?.endpoints?.production.getAll}?page=${page+1}&limit=${PageSize}`;
-        console.log(url);
         const response = await getApi(url);
-        console.log(response);
         const modifiedData = response?.data?.data[0].map((item: any,index: number) => ({
             ...item, index: index+1
         }));
