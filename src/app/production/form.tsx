@@ -71,7 +71,7 @@ const Formm = ({open, handleClose, getData} : any) => {
     const url = urls?.endpoints?.production.create;
     await postApi(url, payload);
     handleClose();
-    await getData();
+    getData();
   };
 
   return (

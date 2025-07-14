@@ -59,7 +59,7 @@ const Formm = ({open, handleClose, getData}:any) => {
       }
    const res = await postApi(urls?.endpoints?.employee.employee, payload);
     handleClose();
-    await getData();    
+    getData();    
   };
 
   return (

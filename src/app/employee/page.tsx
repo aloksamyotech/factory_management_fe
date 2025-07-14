@@ -95,7 +95,7 @@ const EmployeeManagement = () => {
       return;
     }
     
-    const rows = response?.data?.data[0]?.map((item:any, index: number)=>({
+    const rows = response?.data?.data[0].map((item:any, index: number)=>({
       id: item.id,
       index: index + 1,
       fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
