@@ -24,9 +24,8 @@ const EmployeeManagement = () => {
   const pageSize: number = 10;
   const navigate = useRouter();
   const handleNavigate = (id: string) => {
-    navigate.push(`employee/${id}`);
+    // navigate.push(`employee/${id}`);
   }
-
 
   const columns: GridColDef[] = [
     {

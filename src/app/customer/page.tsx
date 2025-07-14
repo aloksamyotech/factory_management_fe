@@ -112,7 +112,7 @@ const CustomerManagement = () => {
                     p: 2,
                     m: 1,
                     borderRadius: 1,
-                    bgcolor: 'rgb(88, 80, 241,0.07)'
+                    bgcolor: theme == 'dark' ? '#122031' : 'rgb(88, 80, 241, 0.07)'
                 }}>
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -127,7 +127,7 @@ const CustomerManagement = () => {
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
             <Breadcrumb pageName="Customer" />
-            <Card sx={{ height: 600, width: '100%', bgcolor: theme == 'dark' ? '#122031' : '#fff' }}>
+            <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={data}
                     columns={columns}
@@ -135,9 +135,15 @@ const CustomerManagement = () => {
                         toolbar: CustomToolbar
                     }}
                     sx={{
+                        backgroundColor: theme == 'dark' ? '#2a3746' : '#fff',
+                        border: 'none',
                         '& .MuiDataGrid-columnHeaderTitle': {
                             fontWeight: 'bold',
                         },
+                        '& .MuiDataGrid-columnHeader': {
+                            backgroundColor: theme == 'dark' ? '#122031' : 'rgb(88, 80, 241, 0.07)',
+                            color: theme == 'dark' ? '#fff' : '#000'
+                        }
                     }}
                     paginationModel={{ page: page, pageSize: PageSize }}
                     paginationMode="server"
