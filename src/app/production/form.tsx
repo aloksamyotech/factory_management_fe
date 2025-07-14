@@ -56,8 +56,6 @@ const Formm = ({ open, handleClose, getData }: any) => {
   };
 
   const handleSubmit = async (values: any) => {
-    console.log("values", values);
-
     const url = urls?.endpoints?.production?.create;
     await postApi(url, values);
     getData();
