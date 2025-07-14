@@ -23,11 +23,11 @@ export const urls = Object.freeze({
         },
         product: {
             product: `${BASE_URL}${API_VERSION}/product`,
-            getAll: `${BASE_URL}${API_VERSION}/product/list`
+            getAll: `${BASE_URL}${API_VERSION}/product`
         },
         machine: {
             machine: `${BASE_URL}${API_VERSION}/machine`,
-            getAll: `${BASE_URL}${API_VERSION}/machine/list`,
+            getAll: `${BASE_URL}${API_VERSION}/machine`,
         },
         order: {
             order: `${BASE_URL}${API_VERSION}/order`
