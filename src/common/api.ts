@@ -51,3 +51,14 @@ export const getApi = async (url: any) => {
     console.log(error);
   }
 };
+
+export const patchApi = async (url: any, data: any) => {
+  try{
+    const response = await axios.patch(url, data);
+    toast.success(response?.data?.message);
+    return response.data;
+  }
+  catch(err){
+    console.log(err);
+  }
+}

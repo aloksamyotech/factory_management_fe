@@ -2,8 +2,10 @@
 import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Formm from "./form";
+import Status from "./status";
 import { useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
@@ -12,12 +14,20 @@ import { useRouter } from "next/navigation";
 import moment from "moment";
 const Production = () => {
     const [openAdd, setOpenAdd] = useState(false);
+    const [openStatus, setOpenStatus] = useState(false);
     const [data, setData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowCount, setRowCount] = useState(0);
+    const [selectedId, setSelectedId] = useState(null);
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
-
+    
+    const handleStatusUpdate = () => setOpenStatus(true);
+    const handleStatusClose = () => {
+        setOpenStatus(false);
+        setSelectedId(null);
+    };
+    
     const PageSize: number = 10;
     const navigate = useRouter();
     const handleNavigate = (id: string) => {
@@ -78,17 +88,32 @@ const Production = () => {
             headerAlign: 'center',
             align: 'center',
             flex: 1,
-            renderCell: (params) =>
+            renderCell: (params) => {
+                const format = (status: string)=>{
+                    return status === 'pending' ? "Pending" : 
+                           status === 'completed' ? "Completed" : 
+                           status === 'in_progress'? "In Progress" :
+                           status === 'cancelled' ? "Cancelled" : "";
+                };
+                return (
                 <Typography sx={{
                     padding: '5px 15px',
                     borderRadius: '10px',
-                    bgcolor: '#fff8e1',
-                    color: '#ffc107',
+                    bgcolor: params.value === 'pending' ? '#ffff8f' : 
+                             params.value === 'completed' ? '#cdffdf' : 
+                             params.value === 'in_progress'? '#cdf0ff' : 
+                             params.value === 'cancelled' ? '#ffc1b9' : "",
+                    color: params.value === 'pending' ? '#ffd300' : 
+                             params.value === 'completed' ? '#00dc4f' : 
+                             params.value === 'in_progress'? '#19bdff' : 
+                             params.value === 'cancelled' ? '#f01d00' : "",
                     fontSize: '12px',
                     display: 'inline'
                 }}>
-                    {params.value}
+                    {format(params.value)}
                 </Typography>
+                );
+            }
         },
         {
             field: 'action',
@@ -100,7 +125,9 @@ const Production = () => {
                 <Grid container>
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                            <PendingActionsIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => {
+                                setSelectedId(params.row.id)
+                                handleStatusUpdate();  }}/>
                         </Button>
                     </Grid>
                 </Grid>
@@ -120,7 +147,7 @@ const Production = () => {
                 machine: item?.machine?.name,
                 estimateTime: item?.estimationTime,
                 date: formattedDate,
-                status: item?.status
+                status: item?.status 
             }
         });
         setData(modifiedData);
@@ -154,6 +181,7 @@ const Production = () => {
     return (
         <>
             <Formm open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={getData}/>
             <Breadcrumb pageName="Production" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

@@ -103,7 +103,6 @@ const Formm = ({ open, handleClose, getData }: any) => {
                       name="quantity"
                       size='small'
                       fullWidth
-                      size='small'
                       type='number'
                       value={values.quantity}
                       onChange={handleChange}
@@ -148,7 +147,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={() => { console.log("Cancel"); handleClose(); }}>
+                  onClick={() => { handleClose() }}>
                   Cancel
                 </Button>
               </DialogActions>
