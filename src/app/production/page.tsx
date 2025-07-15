@@ -97,7 +97,10 @@ const Production = () => {
                 };
                 return (
                 <Typography sx={{
-                    padding: '5px 15px',
+                    padding: params.value === 'pending' ? '5px 20px' : 
+                             params.value === 'completed' ? '5px 13px' : 
+                             params.value === 'in_progress'? '5px 11px' : 
+                             params.value === 'cancelled' ? '5px 15px' : "",
                     borderRadius: '10px',
                     bgcolor: params.value === 'pending' ? '#ffff8f' : 
                              params.value === 'completed' ? '#cdffdf' : 

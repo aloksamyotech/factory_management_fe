@@ -41,7 +41,7 @@ const status = (props: any) => {
       <>
       <Form noValidate>
       <DialogContent dividers>
-        <Grid container style={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+        <Grid container style={{display: 'flex', justifyContent: 'start', alignItems:'start'}}>
             <Grid size={8}>
                 <FormLabel>Status</FormLabel>
                 <Select 
