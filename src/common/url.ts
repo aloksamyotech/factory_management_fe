@@ -28,7 +28,7 @@ export const urls = Object.freeze({
         machine: {
             machine: `${BASE_URL}${API_VERSION}/machine`,
             getAll: `${BASE_URL}${API_VERSION}/machine`,
-            maintenance: `${BASE_URL}${API_VERSION}/machine/maintenance`
+            maintenance: `${BASE_URL}${API_VERSION}/machine/maintenance`,
         },
         order: {
             order: `${BASE_URL}${API_VERSION}/order`
