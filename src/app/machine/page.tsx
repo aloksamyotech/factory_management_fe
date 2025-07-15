@@ -24,7 +24,7 @@ const MachineManagement = () => {
     const { theme } = useTheme();
     const navigate = useRouter()
     const handleNavigate = (id: string) => {
-        // navigate.push(`customer/${id}`)
+        navigate.push(`machine/${id}`)
     }
 
     const PageSize: number = 10;
