@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { urls } from '@/common/url';
-import { postApi } from '@/common/api';
+import { getApi, postApi } from '@/common/api';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -14,6 +14,25 @@ const validationSchema = Yup.object().shape({
 });
 const form = (props: any) => {
   const {open, handleClose, getData, machineId} = props;
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getEmployees = async () => {
+    setLoading(true);
+
+    const emps = await getApi(urls?.endpoints?.employee?.getAll);
+    console.log(emps);
+    const formatted = emps?.data?.data[0].map((res: any) => ({
+      id: res.id,
+      fullName: res.firstName +" "+res.lastName,
+    }));
+    setEmployees(formatted || []);
+  }
+
+  useEffect(()=>{
+    getEmployees();
+    setLoading(false);
+  }, []);
 
   const initialValues = {
     employeeId: '',
@@ -40,23 +59,28 @@ const form = (props: any) => {
           <Typography><ClearIcon onClick={handleClose} style={{cursor: 'pointer'}}/></Typography>
       </DialogTitle>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-          {({values, handleChange, errors, touched}) => (
+          {({values, handleChange, errors, touched, setFieldValue}) => (
             <>
             <Form noValidate>
             <DialogContent dividers>
                     <Grid container spacing={2}>
                         <Grid size={6}>
-                          <FormLabel>EmployeeID*</FormLabel>
-                          <TextField 
-                                id='employeeId'
-                                name='employeeId'
-                                fullWidth
-                                size='small'
-                                value={values?.employeeId}
-                                onChange={handleChange}
-                                error={touched?.employeeId && Boolean(errors?.employeeId)}
-                                helperText={touched?.employeeId && errors?.employeeId}
-                                 />
+                          <FormLabel>Select Employee*</FormLabel>
+                          <Autocomplete
+                              size='small'
+                              options={employees}
+                              loading={loading}
+                              getOptionLabel={(option: any)=> option.fullName}
+                              value={employees.find(e => e.id === Number(values.employeeId)) || null}
+                              onChange={(e, val) => setFieldValue('employeeId', val?.id || '')}
+                              renderInput={(params)=>(
+                                <TextField 
+                                  {...params}
+                                  error={touched?.employeeId && Boolean(errors?.employeeId)}
+                                  helperText={touched?.employeeId && errors?.employeeId}
+                                  />
+                              )}
+                            />
                         </Grid>
                         <Grid size={6}>
                           <FormLabel>Next Maintenance*</FormLabel>
