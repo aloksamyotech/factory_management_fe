@@ -7,7 +7,6 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Formm from "./form";
 import Status from "./status";
 import { useEffect, useState } from "react";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
@@ -100,7 +99,7 @@ const Production = () => {
                     padding: params.value === 'pending' ? '5px 20px' : 
                              params.value === 'completed' ? '5px 13px' : 
                              params.value === 'in_progress'? '5px 11px' : 
-                             params.value === 'cancelled' ? '5px 15px' : "",
+                             params.value === 'cancelled' ? '5px 14px' : "",
                     borderRadius: '10px',
                     bgcolor: params.value === 'pending' ? '#ffff8f' : 
                              params.value === 'completed' ? '#cdffdf' : 
