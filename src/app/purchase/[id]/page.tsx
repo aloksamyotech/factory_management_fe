@@ -114,7 +114,7 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                     <Tabs value={value} onChange={handleTabChange}>
                         <Tab label="Purchase Details" />
                     </Tabs>
-
+                  
                     {value === 0 && (
                         <Box sx={{ padding: 3 }}>
                             <Grid container spacing={2}>
@@ -152,20 +152,23 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                             Update Purchase Status
                         </Button>
                     </Box>
-                    <Tabs value={valueOrder} onChange={handleTabOrderChange}>
-                        <Tab label="Items Details" />
-                    </Tabs>
-                    {value === 0 && (
-                        <Card sx={{ height: 600, width: '100%', p: 1 }}>
-                            <DataGrid
-                                rows={data}
-                                columns={columns}
-                            />
-                        </Card>
-                    )}
-                </Box>
-            </Card>
-        </>
+                )}
+                <Tabs value={valueOrder} onChange={handleTabOrderChange}>
+                    <Tab label="Items Details" />
+                </Tabs>
+                {value === 0 && (
+                    <Card sx={{ height: 600, width: '100%', p: 1 }}>
+                        <DataGrid
+                            rows={data}
+                            columns={columns}
+                            sx={{
+                                '& .MuiDataGrid-columnHeaderTitle': {fontWeight:'bold',},
+                            }}
+                        />
+                    </Card>
+                )}
+            </Box>
+        </Card>
     );
 };
 

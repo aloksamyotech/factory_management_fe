@@ -86,7 +86,7 @@ const Purchase = () => {
             cellClassName: 'name-column--cell--capitalize',
             flex: 1,
             renderCell: (params) =>
-                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '12px' }}>{params.value}</Typography>
+                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px' }}>{params.value}</Typography>
         },
         {
             field: 'date',
@@ -152,7 +152,7 @@ const Purchase = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="purchase" />
+            <Breadcrumb pageName="Purchase" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={data}

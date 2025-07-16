@@ -128,7 +128,7 @@ const VendorManagement = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="vendor" />
+            <Breadcrumb pageName="Vendor" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={data}

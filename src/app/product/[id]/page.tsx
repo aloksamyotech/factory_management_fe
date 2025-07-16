@@ -4,17 +4,21 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useRouter } from "next/navigation";
+import { urls } from "@/common/url";
+import { getApi } from "@/common/api";
 
-const CustomerViewPage = ({ id }: { id: string }) => {
+const ProductViewPage = ({ params }: {params:{ id: string }}) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
+    const [details, setDetails] = useState<any | null>([]);
+    const [data, setData] = useState([]);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     const handleTabOrderChange = (event: React.SyntheticEvent, newValue: number) => {
         setValueOrder(newValue);
-    };
+    };      
 
     const columns: GridColDef[] = [
         {
@@ -70,15 +74,38 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                 </Grid>
         }
     ];
-    const data = [{
-        id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
-    }]
+    // const data = [{
+    //     id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
+    // }]
 
     const navigate = useRouter()
     const handleNavigate = () => {
         navigate.push('/order/123')
 
     }
+
+    const getDetails = async ()=>{
+        const url = `${urls?.endpoints?.product?.product}/${params.id}`;
+        const response = await getApi(url);
+        setDetails(response?.data?.data);
+
+        // const modifiedData = response?.data?.data?.itemId
+        // .map((item: any, index: number) =>({
+        //     index: index + 1,
+        //     orderId: response?.data?.data.id,
+        //     customerName: `${response?.data?.data?.customerId.firstName || ''} ${response?.data?.data?.customerId.lastName || ''}`,
+        //     item: item?.productId.name,
+        //     totalAmount: 
+        // }));
+
+        // setData(modifiedData); 
+    }   
+
+
+    useEffect(()=>{
+        getDetails();
+    }, [])
+
 
     return (
         <Card sx={{ minHeight: '100vh' }}>
@@ -91,14 +118,15 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                     <Box sx={{ padding: 3 }}>
                         <Grid container spacing={2}>
                             <Grid>
-                                <Card>
+                                <Card sx={{maxWidth: '600px'}}>
                                     <Grid container>
                                         <Grid>
                                             <CardContent>
-                                                <Typography variant="h6">Product Name: <span style={{ textDecoration: 'underline' }}>Apple</span></Typography>
-                                                <Typography variant="body1">Category: Fruit</Typography>
-                                                <Typography variant="body1">Price: ₹1000</Typography>
-                                                <Typography variant="body1">Description: this is the desc</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Product Name: 
+                                                    <span style={{ textDecoration:'underline'}}>{details.name || '   -'}</span></Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Category: </span>{details.category || '   -'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Price: </span>₹{details.price || '   -'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Description: </span>{details.description || '  -'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid sx={{ display: 'flex', alignItems: 'center' }}>
@@ -123,6 +151,7 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
+                            sx={{'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold'}}}
                         />
                     </Card>
                 )}
@@ -131,4 +160,4 @@ const CustomerViewPage = ({ id }: { id: string }) => {
     );
 };
 
-export default CustomerViewPage;
+export default ProductViewPage;
