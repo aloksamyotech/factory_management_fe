@@ -4,11 +4,16 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useRouter } from "next/navigation";
+import { urls } from "@/common/url";
+import { getApi } from "@/common/api";
+import moment from "moment";
 
-const CustomerViewPage = ({ id }: { id: string }) => {
+const CustomerViewPage = ({ params }: {params: {id:string}}) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
-
+    const [details, setDetails] = useState<any | null>([]);
+    const [data, setData] = useState([])
+    
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -32,42 +37,70 @@ const CustomerViewPage = ({ id }: { id: string }) => {
         {
             field: 'price',
             headerName: 'Price',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'quantity',
             headerName: 'Quantity',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'status',
             headerName: 'Status',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params)=> 
+                <Typography
+                    sx={{m:2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px'}}>    
+                    {params.value}</Typography>
         },
         {
             field: 'action',
             headerName: 'Action',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
                 <Grid container>
-                    <Grid item xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
         }
     ];
 
-    const data: any = [
-        { id: 1, index: 1, item: 'product1', price: 1000, quantity: 10, status: 'pending' },
-        { id: 2, index: 2, item: 'product2', price: 1000, quantity: 10, status: 'pending' }
-    ]
+    const getDetails = async ()=>{
+        const url = `${urls?.endpoints?.order?.order}/${params.id}`;
+        const response = await getApi(url);
+        setDetails(response?.data?.data);
+
+        const modifiedData = response?.data?.data.itemId
+            ?.map((item: any, index: number)=>({
+                id: item?.productId?.id,
+                index: index + 1,
+                item: item?.productId?.name,
+                price: item?.productId?.price,
+                quantity: item?.quantity,
+                status: response?.data?.data.status,
+            }));        
+        setData(modifiedData);    
+    }
+
+    useEffect(()=>{
+        getDetails();
+    }, [])
 
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push('/product/123')
+    const handleNavigate = (id: any) => {
+        navigate.push(`/product/${id}`)
     }
 
     return (
@@ -83,13 +116,22 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                             <Grid>
                                 <Card sx={{ minWidth: "350px" }}>
                                     <Grid container>
-                                        <Grid item>
+                                        <Grid>
                                             <CardContent>
-                                                <Typography variant="h6">Order Id: <span style={{ textDecoration: 'underline' }}>OD123</span></Typography>
-                                                <Typography variant="body1">Customer Name: John</Typography>
-                                                <Typography variant="body1">Phone: 7745977459</Typography>
-                                                <Typography variant="body1">Order Date: 20/oct/2025</Typography>
-                                                <Typography variant="body1">Total Amount: ₹ 1000</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Order ID: <span style={{textDecoration: 'underline'}}>{details?.id || "-"}</span>
+                                                    </Typography>
+                                                <Typography>
+                                                    <span style={{fontWeight: 'bold'}}>Customer Name: </span>
+                                                    {details?.customerId?.firstName || ""} {details?.customerId?.lastName || ""}</Typography>
+                                                <Typography><span style={{fontWeight: 'bold'}}>Phone: </span>
+                                                        {details?.customerId?.phoneNumber || '-'}
+                                                </Typography>
+                                                <Typography><span style={{fontWeight: 'bold'}}>Order Date: </span>
+                                                        {moment(details?.createdAt).format('ll') || "-"}
+                                                </Typography>
+                                                <Typography> <span style={{fontWeight: 'bold'}}>Total Amount: </span>
+                                                        ₹{details?.totalAmount || "-"}
+                                                </Typography>
                                             </CardContent>
                                         </Grid>
                                     </Grid>
@@ -106,6 +148,9 @@ const CustomerViewPage = ({ id }: { id: string }) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
+                            sx={{
+                                '& .MuiDataGrid-columnHeaderTitle' : {fontWeight: 'bold',},
+                            }}
                         />
                     </Card>
                 )}

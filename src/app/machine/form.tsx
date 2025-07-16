@@ -96,6 +96,8 @@ const Form = (props: any) => {
                                     <TextField
                                         id="description"
                                         name="description"
+                                        multiline
+                                        rows={2}
                                         size="small"
                                         value={formik?.values?.description}
                                         onChange={formik?.handleChange}

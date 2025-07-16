@@ -85,6 +85,7 @@ const RawViewPage = ({ params }: { params: { id: any } }) => {
             field: 'item',
             headerName: 'Items',
             headerAlign: 'center',
+            align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: (params) => {
@@ -110,7 +111,7 @@ const RawViewPage = ({ params }: { params: { id: any } }) => {
             cellClassName: 'name-column--cell--capitalize',
             flex: 1,
             renderCell: (params) =>
-                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '12px' }}>{params.value}</Typography>
+                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px' }}>{params.value}</Typography>
         },
         {
             field: 'date',
@@ -130,10 +131,7 @@ const RawViewPage = ({ params }: { params: { id: any } }) => {
 
         }
     ];
-    // const data = [{
-    //     id: 'OD123', index: '1', customerId: 'John', item: 'Raw1,Raw2', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
-    // }]
-
+    
     const navigate = useRouter()
     const handleNavigate = (id: any) => {
         navigate.push(`/order/${id}`)
@@ -154,10 +152,10 @@ const RawViewPage = ({ params }: { params: { id: any } }) => {
                                     <Grid container>
                                         <Grid>
                                             <CardContent>
-                                                <Typography variant="h6">Product Name: <span style={{ textDecoration: 'underline' }}>{details?.title || '-'}</span></Typography>
-                                                <Typography variant="body1">Category: {details?.category || '-'}</Typography>
-                                                <Typography variant="body1">Price: ₹{details?.price || '-'}</Typography>
-                                                <Typography variant="body1">Description: {details?.description || '-'}</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Product Name: <span style={{ textDecoration: 'underline' }}>{details?.title || '-'}</span></Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Category: </span>{details?.category || '-'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Price: </span>₹{details?.price || '-'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Description: </span>{details?.description || '-'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid sx={{ display: 'flex', alignItems: 'center' }}>
@@ -182,6 +180,7 @@ const RawViewPage = ({ params }: { params: { id: any } }) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
+                            sx={{'& .MuiDataGrid-columnHeaderTitle':{fontWeight:'bold'}}}
                         />
                     </Card>
                 )}

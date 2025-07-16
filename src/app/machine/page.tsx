@@ -118,7 +118,7 @@ const MachineManagement = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="machine" />
+            <Breadcrumb pageName="Machine" />
             <Card sx={{ height: 600, width: '100%', bgcolor: theme == 'dark' ? '#122031' : '#fff' }}>
                 <DataGrid
                     rows={data}

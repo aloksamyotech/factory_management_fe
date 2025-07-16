@@ -82,7 +82,7 @@ const Rawmaterial = () => {
             //     <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
             renderCell: (params: any) => (
                 <Grid container>
-                    <Grid size xs={12} textAlign='center'>
+                    <Grid size={12} textAlign='center'>
                         <Button onClick={() => handleNavigate(params.row.id)}>
                             <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} />
                         </Button>
@@ -135,7 +135,7 @@ const Rawmaterial = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="raw material" />
+            <Breadcrumb pageName="Raw Material" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={data}

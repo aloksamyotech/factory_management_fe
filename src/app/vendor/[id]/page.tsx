@@ -113,7 +113,10 @@ const VendorViewPage = ({ params }: Props) => {
             flex: 1,
             align:'center',
             headerAlign:'center',
-            cellClassName: 'name-column--cell--capitalize'
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params)=>
+                <Typography sx={{m:2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px'}}>{params.value}</Typography>
+            
         },
         {
             field: 'action',
@@ -145,10 +148,10 @@ const VendorViewPage = ({ params }: Props) => {
                                     <Grid container>
                                         <Grid size={8}>
                                             <CardContent>
-                                                <Typography variant="h6"><span>Name:</span> {Details?.firstName||'-'}</Typography>
-                                                <Typography variant="body2" sx={{ mt: '5px',overflow:'clip' }}>Email: {Details?.email||'-'}</Typography>
-                                                <Typography variant="body2">Phone: {Details?.phoneNumber||'-'}</Typography>
-                                                <Typography variant="body2">Address: {Details?.address !== null ? Details?.address : '-'}</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}><span>Name:</span> {Details?.firstName||'-'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Email: </span>{Details?.email||'-'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Phone: </span> {Details?.phoneNumber||'-'}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Address: </span>{Details?.address !== null ? Details?.address : ' - '}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid size={4} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -173,6 +176,9 @@ const VendorViewPage = ({ params }: Props) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
+                            sx={{
+                                '& .MuiDataGrid-columnHeaderTitle': {fontWeight:'bold'}
+                            }}
                         />
                     </Card>
                 )}

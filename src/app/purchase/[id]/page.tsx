@@ -115,11 +115,11 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                                     <Grid container>
                                         <Grid>
                                             <CardContent>
-                                                <Typography variant="h6">Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
-                                                <Typography variant="body1">Vendor Name: {details?.vendorId?.firstName}</Typography>
-                                                <Typography variant="body1">Phone: {details?.vendorId?.phoneNumber}</Typography>
-                                                <Typography variant="body1">Purchase Date: {moment(details?.vendorId?.createdAt).format('ll')}</Typography>
-                                                <Typography variant="body1">Total Amount: ₹ {details?.totalAmount}</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                <Typography><span style={{fontWeight:'bold'}}>Total Amount: </span>₹{details?.totalAmount}</Typography>
                                             </CardContent>
                                         </Grid>
                                     </Grid>
@@ -136,6 +136,9 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
+                            sx={{
+                                '& .MuiDataGrid-columnHeaderTitle': {fontWeight:'bold',},
+                            }}
                         />
                     </Card>
                 )}
