@@ -20,13 +20,13 @@ const Production = () => {
     const [selectedId, setSelectedId] = useState(null);
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
-    
+
     const handleStatusUpdate = () => setOpenStatus(true);
     const handleStatusClose = () => {
         setOpenStatus(false);
         setSelectedId(null);
     };
-    
+
     const PageSize: number = 10;
     const navigate = useRouter();
     const handleNavigate = (id: string) => {
@@ -88,11 +88,11 @@ const Production = () => {
             align: 'center',
             flex: 1,
             renderCell: (params) => {
-                const format = (status: string)=>{
-                    return status === 'pending' ? "Pending" : 
-                           status === 'completed' ? "Completed" : 
-                           status === 'in_progress'? "In Progress" :
-                           status === 'cancelled' ? "Cancelled" : "";
+                const format = (status: string) => {
+                    return status === 'pending' ? "Pending" :
+                        status === 'completed' ? "Completed" :
+                            status === 'in_progress' ? "In Progress" :
+                                status === 'cancelled' ? "Cancelled" : "";
                 };
                 return (
                 <Typography sx={{
@@ -126,10 +126,11 @@ const Production = () => {
             renderCell: (params: any) =>
                 <Grid container>
                     <Grid size={12} textAlign='center'>
-                        <Button>
+                        <Button disabled={params.row.status === 'completed' || params.row.status === 'cancelled'}>
                             <PendingActionsIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => {
                                 setSelectedId(params.row.id)
-                                handleStatusUpdate();  }}/>
+                                handleStatusUpdate();
+                            }} />
                         </Button>
                     </Grid>
                 </Grid>
@@ -149,7 +150,7 @@ const Production = () => {
                 machine: item?.machine?.name,
                 estimateTime: item?.estimationTime,
                 date: formattedDate,
-                status: item?.status 
+                status: item?.status
             }
         });
         setData(modifiedData);
@@ -183,7 +184,7 @@ const Production = () => {
     return (
         <>
             <Formm open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={getData}/>
+            <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={getData} />
             <Breadcrumb pageName="Production" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
