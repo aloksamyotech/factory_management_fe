@@ -7,12 +7,18 @@ import { useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
+import Update from "./update";
 
 const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
     const [details, setDetails] = useState<any | null>([]);
     const [data, setData] = useState([])
+    const [openAdd, setOpenAdd] = useState(false);
+
+    const handleOpenAdd = () => setOpenAdd(true);
+    const handleCloseAdd = () => setOpenAdd(false);
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -66,7 +72,7 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                 <Grid container>
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
@@ -82,7 +88,7 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
         const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
         const response = await getApi(url);
         setDetails(response?.data?.data);
-        
+
         const modifiedData = response?.data?.data?.itemId
             ?.map((item: any, index: number) => ({
                 id: item?.rawMaterial?.id,
@@ -101,31 +107,50 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
     }, [])
 
     return (
-        <Card sx={{ minHeight: '100vh' }}>
-            <Box sx={{ width: "100%" }}>
-                <Tabs value={value} onChange={handleTabChange}>
-                    <Tab label="Purchase Details" />
-                </Tabs>
-
-                {value === 0 && (
-                    <Box sx={{ padding: 3 }}>
-                        <Grid container spacing={2}>
-                            <Grid>
-                                <Card sx={{ minWidth: "350px" }}>
-                                    <Grid container>
-                                        <Grid>
-                                            <CardContent>
-                                                <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Total Amount: </span>₹{details?.totalAmount}</Typography>
-                                            </CardContent>
+        <>
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} />
+            <Card sx={{ minHeight: '100vh' }}>
+                <Box sx={{ width: "100%" }}>
+                    <Tabs value={value} onChange={handleTabChange}>
+                        <Tab label="Purchase Details" />
+                    </Tabs>
+                  
+                    {value === 0 && (
+                        <Box sx={{ padding: 3 }}>
+                            <Grid container spacing={2}>
+                                <Grid>
+                                    <Card sx={{ minWidth: "350px" }}>
+                                        <Grid container>
+                                            <Grid>
+                                                <CardContent>
+                                                    <Typography variant="h6">Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
+                                                    <Typography variant="body1">Vendor Name: {details?.vendorId?.firstName}</Typography>
+                                                    <Typography variant="body1">Phone: {details?.vendorId?.phoneNumber}</Typography>
+                                                    <Typography variant="body1">Purchase Date: {moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                    <Typography variant="body1">Total Amount: ₹ {details?.totalAmount}</Typography>
+                                                    <Typography variant="body1" sx={{ mt: '5px' }}>Status: <span style={{
+                                                        borderRadius: '5px',
+                                                        padding: '5px 10px',
+                                                        textTransform: 'capitalize',
+                                                        backgroundColor: details?.status === 'pending' ? '#ffff8f' :
+                                                            details?.status === 'completed' ? '#cdffdf' :
+                                                                details?.status === 'cancelled' ? '#ffc1b9' : "",
+                                                        color: details?.status === 'pending' ? '#ffd300' :
+                                                            details?.status === 'completed' ? '#00dc4f' :
+                                                                details?.status === 'cancelled' ? '#f01d00' : "",
+                                                    }}>{details?.status}</span></Typography>
+                                                </CardContent>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </Card>
+                                    </Card>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        </Box>
+                    )}
+                    <Box sx={{ display: 'flex', justifyContent: 'end', marginRight: '40px' }}>
+                        <Button variant='contained' color='primary' onClick={handleOpenAdd} disabled={details?.status ? details?.status === 'completed' : true}>
+                            Update Purchase Status
+                        </Button>
                     </Box>
                 )}
                 <Tabs value={valueOrder} onChange={handleTabOrderChange}>
