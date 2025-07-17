@@ -81,8 +81,7 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
         const url = `${urls?.endpoints?.order?.order}/${params.id}`;
         const response = await getApi(url);
         setDetails(response?.data?.data);
-        console.log(response);
-
+        
         const modifiedData = response?.data?.data.itemId
             ?.map((item: any, index: number) => ({
                 id: item?.productId?.id,

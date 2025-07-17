@@ -24,7 +24,6 @@ const ProductViewPage = ({ params }: { params: { id: any } }) => {
     const GetPurchase = async () => {
         const url = `${urls?.endpoints?.order?.order}`
         const response = await getApi(url);
-        console.log(response);
         const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0]
             ?.filter((item: any) => item.itemId.some((i: any) => i?.productId?.id == id))

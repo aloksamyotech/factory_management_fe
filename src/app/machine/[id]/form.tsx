@@ -21,7 +21,6 @@ const form = (props: any) => {
     setLoading(true);
 
     const emps = await getApi(urls?.endpoints?.employee?.getAll);
-    console.log(emps);
     const formatted = emps?.data?.data[0].map((res: any) => ({
       id: res.id,
       fullName: res.firstName + " " + res.lastName,
