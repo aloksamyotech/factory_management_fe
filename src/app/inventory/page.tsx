@@ -23,10 +23,11 @@ const Order = () => {
 
     const navigate = useRouter()
     const handleNavigate = (id: string) => {
-        navigate.push(`product/${id}`)
-    }
-    const handleNavigate2 = (id: string) => {
-        navigate.push(`rawmaterial/${id}`)
+        if (value == 0) {
+            navigate.push(`product/${id}`)
+        } else {
+            navigate.push(`rawmaterial/${id}`)
+        }
     }
 
     const columns: GridColDef[] = [
@@ -122,8 +123,11 @@ const Order = () => {
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <GridToolbarQuickFilter />
-                    {/* <AddCircleOutlineIcon fontSize='large' sx={{ color: '#5750f1', cursor: 'pointer' }} onClick={handleOpenAdd} /> */}
-                    <AddCircleOutlineIcon fontSize='large' sx={{ color: '#5750f1', cursor: 'pointer' }} />
+                    <AddCircleOutlineIcon fontSize='large' sx={{
+                        // color: '#5750f1',
+                        // cursor: 'pointer'
+                        color: '#9d9e9f',
+                    }} />
                 </Box>
             </GridToolbarContainer>
         );
@@ -147,7 +151,6 @@ const Order = () => {
                 {value === 0 && (
                     <Card sx={{ height: 600, width: '100%' }}>
                         <DataGrid
-                            // rows={data}
                             rows={data}
                             columns={columns}
                             slots={{
@@ -170,7 +173,6 @@ const Order = () => {
                 {value === 1 && (
                     <Card sx={{ height: 600, width: '100%' }}>
                         <DataGrid
-                            // rows={data}
                             rows={dataRaw}
                             columns={columns}
                             slots={{

@@ -64,7 +64,7 @@ const Order = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.item?.map((item) => item.productId.name).join(', ') || 'N/A';
+                const itemIds = params.row.item?.map((item: any) => item.productId.name).join(', ') || 'N/A';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -122,12 +122,12 @@ const Order = () => {
     const getData = async () => {
         const url = `${urls?.endpoints?.order?.order}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
-        const modifiedData = response?.data?.data?.map((item: any, index: number) => {
+        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => {
             const formattedDate = moment(item?.createdAt).format('ll');
             return {
                 index: index + 1,
                 id: item?.id,
-                customerId: `${item?.customerId?.firstName} ${item?.customerId?.lastName ? item?.vendorId?.lastName : ''}`,
+                customerId: `${item?.customerId?.firstName} ${item?.customerId?.lastName ? item?.customerId?.lastName : ''}`,
                 phoneNumber: item?.customerId?.phoneNumber || '',
                 item: item?.itemId,
                 totalAmount: item?.totalAmount,
@@ -136,7 +136,7 @@ const Order = () => {
             }
         });
         setData(modifiedData);
-        
+
         setRowCount(response?.data?.data[1]);
     };
 

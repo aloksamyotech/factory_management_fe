@@ -18,10 +18,10 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
         setDetails(response?.data?.data);
     }
     const GetPurchase = async () => {
-        const url = `${urls?.endpoints?.order?.order}?orderId=${id}`
+        const url = `${urls?.endpoints?.order?.order}?customerId=${id}`
         const response = await getApi(url);
         const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
             index: index + 1,
             createdAt: formattedDate,
             id: item.id,
@@ -46,8 +46,8 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
     };
 
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push(`/order/123`)
+    const handleNavigate = (id: any) => {
+        navigate.push(`/order/${id}`)
     }
 
     const columns: GridColDef[] = [
@@ -65,6 +65,8 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
         {
             field: 'id',
             headerName: 'Order Id',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
@@ -72,36 +74,42 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
             field: 'item',
             headerName: 'Items',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            headerAlign: 'center',
+            align: 'center',
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) => {
+                const itemIds = params.row.item?.map((item: any) => item?.productId?.name).join(', ') || 'N/A';
+                return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
+            }
         },
         {
             field: 'totalAmount',
             headerName: 'Total Amount',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'status',
             headerName: 'Status',
             flex: 1,
+            headerAlign: 'center',
+            align: 'center',
             cellClassName: 'name-column--cell--capitalize'
         },
         {
             field: 'action',
             headerName: 'Action',
             flex: 1,
+            headerAlign: 'center',
             renderCell: (params: any) =>
                 <Grid container>
                     <Grid size={12} textAlign='center'>
-                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={handleNavigate} />
+                        <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                     </Grid>
                 </Grid>
         }
     ];
-
-    // const data: any = [
-    //     { index: 1, id: 12345, createdAt: "10/oct/2024", item: 'product1', totalAmount: 1000, status: 'pending' },
-    //     { index: 2, id: 52348, createdAt: "15/oct/2025", item: 'product2', totalAmount: 1000, status: 'pending' }
-    // ]
 
     return (
         <Card sx={{ minHeight: '100vh' }}>

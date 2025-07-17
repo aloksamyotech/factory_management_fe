@@ -13,12 +13,13 @@ export const postApi = async (url: any, data: any, customHeaders = {}) => {
       ...customHeaders
     }
     const response = await axios.post(url, data, { headers });
-    toast.success('aaaa');
-    return response.data;
-  } catch (error) {
-    console.log(error);
+    console.log(response);
 
-    // toast.error(error?.response?.data?.message);
+    toast.success(response?.data?.message || 'Success');
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.message);
     // console.error('API Error:', error.response || error.message);
   }
 };
@@ -53,12 +54,12 @@ export const getApi = async (url: any) => {
 };
 
 export const patchApi = async (url: any, data: any) => {
-  try{
+  try {
     const response = await axios.patch(url, data);
     toast.success(response?.data?.message);
     return response.data;
   }
-  catch(err){
+  catch (err) {
     console.log(err);
   }
 }

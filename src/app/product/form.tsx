@@ -23,7 +23,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Formm = (props: any) => {
-  const { open, handleClose } = props;
+  const { open, handleClose, getData } = props;
 
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ const Formm = (props: any) => {
     setLoading(true);
     const url = urls?.endpoints?.rawMaterial?.getAll
     const res = await getApi(url);
-    
+
     setMaterials(res?.data?.data);
     setLoading(false);
   };
@@ -51,10 +51,11 @@ const Formm = (props: any) => {
   const handleSubmit = async (values: any) => {
     const payload = {
       ...values,
-      rawMaterial: values?.rawMaterial?.map( (item:any) => item.id),
+      rawMaterial: values?.rawMaterial?.map((item: any) => item.id),
     };
     const url = urls?.endpoints?.product?.product
-    await postApi(url, payload)
+    await postApi(url, payload);
+    getData()
     handleClose()
   };
 
@@ -115,7 +116,7 @@ const Formm = (props: any) => {
                       multiple
                       options={materials}
                       loading={loading}
-                      getOptionLabel={(option:any) => option.title}
+                      getOptionLabel={(option: any) => option.title}
                       onChange={(event, value) => setFieldValue('rawMaterial', value)}
                       renderInput={(params) => (
                         <TextField

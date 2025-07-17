@@ -105,9 +105,6 @@ const Product = () => {
                 </Grid>
         }
     ];
-    // const dummyData = [{
-    //     id: 1, index: '1', title: 'ProductOne', rawmaterial: 'Raw1,Raw2', price: 1000, category: 'cat1', description: 'this is the desc'
-    // }]
 
     const getData = async () => {
         const url = `${urls?.endpoints?.product?.product}?page=${page + 1}&limit=${PageSize}`;

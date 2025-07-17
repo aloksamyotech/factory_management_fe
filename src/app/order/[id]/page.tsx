@@ -8,12 +8,12 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 
-const CustomerViewPage = ({ params }: {params: {id:string}}) => {
+const CustomerViewPage = ({ params }: { params: { id: string } }) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
     const [details, setDetails] = useState<any | null>([]);
     const [data, setData] = useState([])
-    
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -55,9 +55,9 @@ const CustomerViewPage = ({ params }: {params: {id:string}}) => {
             align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell--capitalize',
-            renderCell: (params)=> 
+            renderCell: (params) =>
                 <Typography
-                    sx={{m:2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px'}}>    
+                    sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px' }}>
                     {params.value}</Typography>
         },
         {
@@ -70,31 +70,31 @@ const CustomerViewPage = ({ params }: {params: {id:string}}) => {
                 <Grid container>
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={()=>handleNavigate(params.row.id)} />
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
         }
     ];
 
-    const getDetails = async ()=>{
+    const getDetails = async () => {
         const url = `${urls?.endpoints?.order?.order}/${params.id}`;
         const response = await getApi(url);
         setDetails(response?.data?.data);
-
+        
         const modifiedData = response?.data?.data.itemId
-            ?.map((item: any, index: number)=>({
+            ?.map((item: any, index: number) => ({
                 id: item?.productId?.id,
                 index: index + 1,
                 item: item?.productId?.name,
                 price: item?.productId?.price,
                 quantity: item?.quantity,
                 status: response?.data?.data.status,
-            }));        
-        setData(modifiedData);    
+            }));
+        setData(modifiedData);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getDetails();
     }, [])
 
@@ -118,19 +118,19 @@ const CustomerViewPage = ({ params }: {params: {id:string}}) => {
                                     <Grid container>
                                         <Grid>
                                             <CardContent>
-                                                <Typography variant="h6" fontWeight={'bold'}>Order ID: <span style={{textDecoration: 'underline'}}>{details?.id || "-"}</span>
-                                                    </Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Order ID: <span style={{ textDecoration: 'underline' }}>{details?.id || "-"}</span>
+                                                </Typography>
                                                 <Typography>
-                                                    <span style={{fontWeight: 'bold'}}>Customer Name: </span>
+                                                    <span style={{ fontWeight: 'bold' }}>Customer Name: </span>
                                                     {details?.customerId?.firstName || ""} {details?.customerId?.lastName || ""}</Typography>
-                                                <Typography><span style={{fontWeight: 'bold'}}>Phone: </span>
-                                                        {details?.customerId?.phoneNumber || '-'}
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Phone: </span>
+                                                    {details?.customerId?.phoneNumber || '-'}
                                                 </Typography>
-                                                <Typography><span style={{fontWeight: 'bold'}}>Order Date: </span>
-                                                        {moment(details?.createdAt).format('ll') || "-"}
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Order Date: </span>
+                                                    {moment(details?.createdAt).format('ll') || "-"}
                                                 </Typography>
-                                                <Typography> <span style={{fontWeight: 'bold'}}>Total Amount: </span>
-                                                        ₹{details?.totalAmount || "-"}
+                                                <Typography> <span style={{ fontWeight: 'bold' }}>Total Amount: </span>
+                                                    ₹{details?.totalAmount || "-"}
                                                 </Typography>
                                             </CardContent>
                                         </Grid>
@@ -149,7 +149,7 @@ const CustomerViewPage = ({ params }: {params: {id:string}}) => {
                             rows={data}
                             columns={columns}
                             sx={{
-                                '& .MuiDataGrid-columnHeaderTitle' : {fontWeight: 'bold',},
+                                '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold', },
                             }}
                         />
                     </Card>

@@ -38,7 +38,7 @@ const MachineMaintanence = () => {
   const getData = async()=>{
     const url = `${urls?.endpoints?.machine?.maintenance}?machineId=${machineId}`;
     const response = await getApi(url);
-    const modifiedData = response?.data?.data.map((item: any, index: number) => ({
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
       id: item.id,
       index: index +1,
       employee: `${item?.employeeId?.firstName || ''} ${item?.employeeId?.lastName || ''}`,
