@@ -13,7 +13,7 @@ const Update = (props: any) => {
     };
 
     const handleSubmit = async (values: any) => {
-        const url = `${urls?.endpoints?.purchase?.purchase}/${purchaseId}`;
+        const url = `${urls?.endpoints?.order?.order}/${purchaseId}`;
         const body = { status: values.status };
         const res = await patchApi(url, body);
         GetDetails()

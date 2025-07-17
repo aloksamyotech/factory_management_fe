@@ -7,7 +7,11 @@ import { IconGrain } from '@tabler/icons-react';
 import { IconReportAnalytics } from '@tabler/icons-react';
 import { IconBuildingWarehouse } from '@tabler/icons-react';
 import { IconUserUp } from '@tabler/icons-react';
+import { IconForklift } from '@tabler/icons-react';
+import { IconTruckDelivery } from '@tabler/icons-react';
+import { IconShoppingCart } from '@tabler/icons-react';
 const icons = {
+  IconForklift,
   IconClipboard,
   IconSitemap,
   IconTimeline,
@@ -15,7 +19,9 @@ const icons = {
   IconGrain,
   IconReportAnalytics,
   IconBuildingWarehouse,
-  IconUserUp
+  IconUserUp,
+  IconTruckDelivery,
+  IconShoppingCart
 }
 export const NAV_DATA = [
   {
@@ -28,20 +34,26 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Project",
-        url: "/project",
-        icon: icons.IconClipboard,
+        title: "Machine",
+        url: "/machine",
+        icon: icons.IconBuildingFactory2,
+        items: [],
+      },
+      {
+        title: "Inventory",
+        icon: icons.IconBuildingWarehouse,
+        url: "/inventory",
+        items: [],
+      },
+      {
+        title: "Production",
+        icon: icons.IconForklift,
+        url: "/production",
         items: [],
       },
       {
         title: "Customer",
         url: "/customer",
-        icon: Icons.User,
-        items: [],
-      },
-      {
-        title: "Employee",
-        url: "/employee",
         icon: Icons.User,
         items: [],
       },
@@ -54,54 +66,8 @@ export const NAV_DATA = [
       {
         title: "Order",
         url: "/order",
-        icon: icons.IconSitemap,
+        icon: icons.IconTruckDelivery,
         items: []
-      },
-    ],
-  },
-  {
-    label: "SCHEDULE",
-    items: [
-      {
-        title: "Planning",
-        icon: icons.IconTimeline,
-        url: "/planning",
-        items: [],
-      },
-      {
-        title: "Shiftment",
-        url: "/shiftment",
-        icon: Icons.Calendar,
-        items: [],
-      },
-      {
-        title: "Leader",
-        url: "/leader",
-        icon: icons.IconUserUp,
-        items: [],
-      },
-    ],
-  },
-  {
-    label: "PROCESSING",
-    items: [
-      {
-        title: "Production",
-        icon: Icons.HomeIcon,
-        url: "/production",
-        items: [],
-      },
-      {
-        title: "Inventory",
-        icon: Icons.HomeIcon,
-        url: "/inventory",
-        items: [],
-      },
-      {
-        title: "Machine",
-        url: "/machine",
-        icon: icons.IconBuildingFactory2,
-        items: [],
       },
       {
         title: "Vendor",
@@ -118,26 +84,21 @@ export const NAV_DATA = [
       {
         title: "Purchase",
         url: "/purchase",
-        icon: icons.IconGrain,
+        icon: icons.IconShoppingCart,
         items: [],
       },
-    ],
-  },
-  {
-    label: "REPORTS",
-    items: [
+      {
+        title: "Employee",
+        url: "/employee",
+        icon: Icons.User,
+        items: [],
+      },
       {
         title: "Report",
         icon: icons.IconReportAnalytics,
         url: "/report",
         items: [],
-      },
-      {
-        title: "Ware Housing",
-        url: "/warehousing",
-        icon: IconBuildingWarehouse,
-        items: [],
       }
     ],
-  },
+  }
 ];

@@ -3,7 +3,6 @@ import { Box, Button, Card, Grid, Tab, Tabs } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Form from "./form";
 import { useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
@@ -88,16 +87,23 @@ const Order = () => {
     const getData = async () => {
         const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
+        console.log(response);
         const modifiedData = response?.data?.data[0]?.filter(item => item?.type === 'product')?.map((item: any, index: number) => ({
-            ...item,
+            // ...item,
             index: index + 1,
+            id: item?.productId?.id || item?.rawMaterialId?.id,
+            quantity: item?.quantity,
+            unit: item?.unit,
             title: item?.productId?.name || item?.rawMaterialId?.title,
             price: item?.productId?.price || item?.rawMaterialId?.price,
         }));
         setData(modifiedData);
         const modifiedDataRaw = response?.data?.data[0]?.filter(item => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
-            ...item,
+            // ...item,
             index: index + 1,
+            id: item?.productId?.id || item?.rawMaterialId?.id,
+            quantity: item?.quantity,
+            unit: item?.unit,
             title: item?.productId?.name || item?.rawMaterialId?.title,
             price: item?.productId?.price || item?.rawMaterialId?.price,
         }));
@@ -141,7 +147,6 @@ const Order = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
             <Breadcrumb pageName="inventory" />
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange} sx={{ mb: '5px' }}>
