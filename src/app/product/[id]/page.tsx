@@ -3,7 +3,8 @@ import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button,
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useRouter } from "next/navigation";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useParams, useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
@@ -66,7 +67,7 @@ const ProductViewPage = ({ params }: { params: { id: any } }) => {
             renderCell: (params) =>
                 <Stack sx={{}}>
                     <Stack>
-                        <Typography color='primary'>{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ fontSize: '10px' }} /></Typography>
+                        <Typography color='primary' marginTop='5px'>{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ fontSize: '10px' }} /></Typography>
                     </Stack>
                     <Stack>
                         <Typography sx={{ fontSize: '10px' }}>{params?.row?.phoneNumber}</Typography>
@@ -110,8 +111,34 @@ const ProductViewPage = ({ params }: { params: { id: any } }) => {
             align: 'center',
             cellClassName: 'name-column--cell--capitalize',
             flex: 1,
-            renderCell: (params) =>
-                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px' }}>{params.value}</Typography>
+            renderCell: (params) =>{
+                const format = (status:  string)=>{
+                    return status === 'pending'? 'Pending' : 
+                           status === 'completed'? 'Completed' :
+                           status === 'in_progress'? 'In Progress':
+                           status === 'cancelled'? 'Cancelled': '';
+                }
+                return (
+                <Typography sx={{
+                    padding: params.value === 'pending' ? '5px 20px' :
+                             params.value === 'completed'? '5px 13px' :
+                             params.value === 'in_progress'? '5px 11px' :
+                             params.value === 'cancelled'? '5px 14px' : "",
+                    borderRadius: '10px', 
+                    bgcolor: params.value === 'pending'? '#ffff8f' : 
+                             params.value === 'completed'? '#cdffdf' :
+                             params.value === 'in_progress'? '#cdf0ff':
+                             params.value === 'cancelled'? '#ffc1b9': '', 
+                    color: params.value === 'pending'? '#ffd300': 
+                           params.value === 'completed'? '#00dc4f':
+                           params.value === 'in_progress'? '#19bdff':
+                           params.value === 'cancelled'? '#f01d00': "", 
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    display: 'inline' 
+                }}>{params.value}</Typography>
+                )
+            }
         },
         {
             field: 'date',
@@ -127,7 +154,7 @@ const ProductViewPage = ({ params }: { params: { id: any } }) => {
             align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params?.row?.id)} />
+                <ExitToAppIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params?.row?.id)} />
 
         }
     ];

@@ -110,6 +110,7 @@ const Production = () => {
                              params.value === 'in_progress'? '#19bdff' : 
                              params.value === 'cancelled' ? '#f01d00' : "",
                     fontSize: '12px',
+                    fontWeight: 'bold',
                     display: 'inline'
                 }}>
                     {format(params.value)}
