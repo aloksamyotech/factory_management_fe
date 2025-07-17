@@ -35,6 +35,7 @@ const validation = Yup.object({
     .required("Please enter your Department"),
   dateOfJoining: Yup
     .date()
+    .max(new Date(), "Date of Joining cannot be in the future")
     .required("Please select your Date of Joining"),
 });
 const Formm = ({ open, handleClose, getData }: any) => {

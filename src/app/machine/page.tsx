@@ -63,7 +63,15 @@ const MachineManagement = () => {
             align: 'center',
             flex: 1,
             renderCell: (params) =>
-                <Typography sx={{borderRadius: '10px', bgcolor: '#b9f6ca', color: '#19ce63', fontSize: '12px',display:'inline',padding:'5px 15px' }}>{params.value}</Typography>
+                <Typography sx={{
+                    padding:'5px 15px', 
+                    borderRadius: '10px', 
+                    bgcolor: params.value === true ? '#ffc1b9' : '#cdffdf', 
+                    color: params.value === true ? '#f01d00' : '#00dc4f', 
+                    fontSize: '12px', 
+                    fontWeight: 'bold',
+                    display:'inline',
+                }}>{params.value}</Typography>
         },
         {
             field: 'action',

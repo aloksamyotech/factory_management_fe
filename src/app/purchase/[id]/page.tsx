@@ -3,13 +3,15 @@ import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button,
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useRouter } from "next/navigation";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useParams, useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
 
-const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
+const PurchaseViewPage = () => {
+    const params = useParams();
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
     const [details, setDetails] = useState<any | null>([]);
@@ -72,7 +74,7 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                 <Grid container>
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                            <ExitToAppIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
@@ -123,12 +125,12 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                                         <Grid container>
                                             <Grid>
                                                 <CardContent>
-                                                    <Typography variant="h6">Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
-                                                    <Typography variant="body1">Vendor Name: {details?.vendorId?.firstName}</Typography>
-                                                    <Typography variant="body1">Phone: {details?.vendorId?.phoneNumber}</Typography>
-                                                    <Typography variant="body1">Purchase Date: {moment(details?.vendorId?.createdAt).format('ll')}</Typography>
-                                                    <Typography variant="body1">Total Amount: ₹ {details?.totalAmount}</Typography>
-                                                    <Typography variant="body1" sx={{ mt: '5px' }}>Status: <span style={{
+                                                    <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
+                                                    <Typography><span style={{fontWeight:'bold'}}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
+                                                    <Typography><span style={{fontWeight:'bold'}}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
+                                                    <Typography><span style={{fontWeight:'bold'}}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                    <Typography><span style={{fontWeight:'bold'}}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
+                                                    <Typography sx={{mt:'5px'}}><span style={{fontWeight:'bold'}}>Status: </span><span style={{
                                                         borderRadius: '5px',
                                                         padding: '5px 10px',
                                                         textTransform: 'capitalize',

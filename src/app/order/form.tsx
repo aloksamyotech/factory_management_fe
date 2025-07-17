@@ -103,7 +103,7 @@ const Form = (props: any) => {
                                     <Grid container spacing={2}>
                                         <Grid size={6}>
                                             <FormControl fullWidth>
-                                                <FormLabel>Select Customer*</FormLabel>
+                                                <FormLabel>Customer*</FormLabel>
                                                 <Autocomplete
                                                     size='small'
                                                     options={vendors}
@@ -114,6 +114,7 @@ const Form = (props: any) => {
                                                     renderInput={(params) => (
                                                         <TextField
                                                             {...params}
+                                                            placeholder='Select Customer'
                                                             error={Boolean(touched.vendor && errors.vendor)}
                                                             helperText={touched.vendor && errors.vendor}
                                                         />
@@ -139,7 +140,7 @@ const Form = (props: any) => {
                                                     <Grid container spacing={2} key={index} alignItems="center" sx={{ mt: 1 }}>
                                                         <Grid size={5}>
                                                             <FormControl fullWidth>
-                                                                <FormLabel>Product</FormLabel>
+                                                                <FormLabel>Product*</FormLabel>
                                                                 <Autocomplete
                                                                     size="small"
                                                                     options={products.filter(

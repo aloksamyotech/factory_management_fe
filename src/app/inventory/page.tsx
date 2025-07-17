@@ -45,9 +45,9 @@ const Order = () => {
         {
             field: 'quantity',
             headerName: 'Quantity',
-            flex: 1,
-            align: 'center',
             headerAlign: 'center',
+            align: 'center',
+            flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
@@ -88,14 +88,14 @@ const Order = () => {
     const getData = async () => {
         const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
-        const modifiedData = response?.data?.data[0]?.filter(item => item?.type === 'product')?.map((item: any, index: number) => ({
+        const modifiedData = response?.data?.data[0]?.filter((item:any) => item?.type === 'product')?.map((item: any, index: number) => ({
             ...item,
             index: index + 1,
             title: item?.productId?.name || item?.rawMaterialId?.title,
             price: item?.productId?.price || item?.rawMaterialId?.price,
         }));
         setData(modifiedData);
-        const modifiedDataRaw = response?.data?.data[0]?.filter(item => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
+        const modifiedDataRaw = response?.data?.data[0]?.filter((item:any) => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
             ...item,
             index: index + 1,
             title: item?.productId?.name || item?.rawMaterialId?.title,
@@ -142,11 +142,11 @@ const Order = () => {
     return (
         <>
             <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
-            <Breadcrumb pageName="inventory" />
+            <Breadcrumb pageName="Inventory" />
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange} sx={{ mb: '5px' }}>
                     <Tab label="Product" />
-                    <Tab label="RawMaterial" />
+                    <Tab label="Raw Material" />
                 </Tabs>
                 {value === 0 && (
                     <Card sx={{ height: 600, width: '100%' }}>
