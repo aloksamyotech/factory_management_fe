@@ -3,13 +3,14 @@ import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button,
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
 
-const CustomerViewPage = ({ params }: { params: { id: string } }) => {
+const OrderViewPage = ({ params }: { params: { id: string } }) => {
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
     const [details, setDetails] = useState<any | null>([]);
@@ -91,7 +92,7 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
                 <Grid container>
                     <Grid size={12} textAlign='center'>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                            <ExitToAppIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
                     </Grid>
                 </Grid>
@@ -230,4 +231,4 @@ const CustomerViewPage = ({ params }: { params: { id: string } }) => {
     );
 };
 
-export default CustomerViewPage;
+export default OrderViewPage;

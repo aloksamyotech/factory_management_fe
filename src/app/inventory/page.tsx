@@ -44,9 +44,9 @@ const Order = () => {
         {
             field: 'quantity',
             headerName: 'Quantity',
-            flex: 1,
-            align: 'center',
             headerAlign: 'center',
+            align: 'center',
+            flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
@@ -87,9 +87,7 @@ const Order = () => {
     const getData = async () => {
         const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
-        console.log(response);
-        const modifiedData = response?.data?.data[0]?.filter(item => item?.type === 'product')?.map((item: any, index: number) => ({
-            // ...item,
+        const modifiedData = response?.data?.data[0]?.filter((item:any) => item?.type === 'product')?.map((item: any, index: number) => ({
             index: index + 1,
             id: item?.productId?.id || item?.rawMaterialId?.id,
             quantity: item?.quantity,
@@ -98,8 +96,8 @@ const Order = () => {
             price: item?.productId?.price || item?.rawMaterialId?.price,
         }));
         setData(modifiedData);
-        const modifiedDataRaw = response?.data?.data[0]?.filter(item => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
-            // ...item,
+        
+        const modifiedDataRaw = response?.data?.data[0]?.filter((item:any) => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
             index: index + 1,
             id: item?.productId?.id || item?.rawMaterialId?.id,
             quantity: item?.quantity,
@@ -151,7 +149,7 @@ const Order = () => {
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange} sx={{ mb: '5px' }}>
                     <Tab label="Product" />
-                    <Tab label="RawMaterial" />
+                    <Tab label="Raw Material" />
                 </Tabs>
                 {value === 0 && (
                     <Card sx={{ height: 600, width: '100%' }}>
