@@ -1,24 +1,56 @@
 'use client'
-import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button, CardMedia } from "@mui/material";
+import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button, CardMedia, Stack } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
+import moment from "moment";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const ProductViewPage = ({ params }: {params:{ id: string }}) => {
+const ProductViewPage = ({ params }: { params: { id: any } }) => {
+    const id = params?.id
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
-    const [details, setDetails] = useState<any | null>([]);
     const [data, setData] = useState([]);
+    const [details, setDetails] = useState<any | null>([]);
+
+    const GetDetails = async () => {
+        const url = `${urls?.endpoints?.product?.product}/${id}`
+        const response = await getApi(url);
+        setDetails(response?.data?.data);
+    }
+    const GetPurchase = async () => {
+        const url = `${urls?.endpoints?.order?.order}`
+        const response = await getApi(url);
+        console.log(response);
+        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+        const modifiedData = response?.data?.data[0]
+            ?.filter((item: any) => item.itemId.some((i: any) => i?.productId?.id == id))
+            ?.map((item: any, index: number) => ({
+                id: item.id,
+                index: index + 1,
+                fullName: `${item?.customerId?.firstName} ${item?.customerId?.lastName ? item?.customerId?.lastName : ''}`,
+                phoneNumber: item?.customerId?.phoneNumber,
+                items: item?.itemId,
+                totalAmount: item?.totalAmount,
+                status: item?.status,
+                date: formattedDate
+            }));
+        setData(modifiedData)
+    }
+    useEffect(() => {
+        GetDetails();
+        GetPurchase();
+    }, [])
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
     const handleTabOrderChange = (event: React.SyntheticEvent, newValue: number) => {
         setValueOrder(newValue);
-    };      
+    };
 
     const columns: GridColDef[] = [
         {
@@ -28,84 +60,83 @@ const ProductViewPage = ({ params }: {params:{ id: string }}) => {
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
-            field: 'customerId',
-            headerName: 'Customer Name',
-            flex: 1
+            field: 'vendor',
+            headerName: 'Customer Details',
+            flex: 1,
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) =>
+                <Stack sx={{}}>
+                    <Stack>
+                        <Typography color='primary'>{params?.row?.fullName}<CheckCircleIcon color="success" sx={{ fontSize: '10px' }} /></Typography>
+                    </Stack>
+                    <Stack>
+                        <Typography sx={{ fontSize: '10px' }}>{params?.row?.phoneNumber}</Typography>
+                    </Stack>
+                </Stack>
         },
         {
             field: 'id',
             headerName: 'Order Id',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize'
         },
         {
             field: 'item',
             headerName: 'Items',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
+            renderCell: (params) => {
+                const itemIds = params.row.items?.map((item: any) => item?.productId?.name).join(', ') || 'N/A';
+                return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
+            }
         },
         {
             field: 'totalAmount',
             headerName: 'Total Amount',
-            flex: 1
+            headerAlign: 'center',
+            align: 'center',
+            flex: 1,
+            valueFormatter: (value) => {
+                return '₹' + value;
+            }
         },
         {
             field: 'status',
             headerName: 'Status',
+            headerAlign: 'center',
+            align: 'center',
+            cellClassName: 'name-column--cell--capitalize',
             flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            renderCell: (params) =>
+                <Typography sx={{ m: 2, borderRadius: '10px', bgcolor: '#fff8e1', color: '#ffc107', fontSize: '13px' }}>{params.value}</Typography>
         },
         {
-            field: 'createdAt',
+            field: 'date',
             headerName: 'Date',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1
         },
         {
             field: 'action',
             headerName: 'Action',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid size={12} textAlign='center'>
-                        <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate()} />
-                        </Button>
-                    </Grid>
-                </Grid>
+                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params?.row?.id)} />
+
         }
     ];
-    // const data = [{
-    //     id: 'OD123', index: '1', customerId: 'John', item: 'Product1', totalAmount: 1000, status: 'pending', createdAt: '10-oct-2025'
-    // }]
 
     const navigate = useRouter()
-    const handleNavigate = () => {
-        navigate.push('/order/123')
-
+    const handleNavigate = (id: any) => {
+        navigate.push(`/order/${id}`)
     }
-
-    const getDetails = async ()=>{
-        const url = `${urls?.endpoints?.product?.product}/${params.id}`;
-        const response = await getApi(url);
-        setDetails(response?.data?.data);
-
-        // const modifiedData = response?.data?.data?.itemId
-        // .map((item: any, index: number) =>({
-        //     index: index + 1,
-        //     orderId: response?.data?.data.id,
-        //     customerName: `${response?.data?.data?.customerId.firstName || ''} ${response?.data?.data?.customerId.lastName || ''}`,
-        //     item: item?.productId.name,
-        //     totalAmount: 
-        // }));
-
-        // setData(modifiedData); 
-    }   
-
-
-    useEffect(()=>{
-        getDetails();
-    }, [])
-
 
     return (
         <Card sx={{ minHeight: '100vh' }}>
@@ -118,15 +149,14 @@ const ProductViewPage = ({ params }: {params:{ id: string }}) => {
                     <Box sx={{ padding: 3 }}>
                         <Grid container spacing={2}>
                             <Grid>
-                                <Card sx={{maxWidth: '600px'}}>
+                                <Card>
                                     <Grid container>
                                         <Grid>
                                             <CardContent>
-                                                <Typography variant="h6" fontWeight={'bold'}>Product Name: 
-                                                    <span style={{ textDecoration:'underline'}}>{details.name || '   -'}</span></Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Category: </span>{details.category || '   -'}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Price: </span>₹{details.price || '   -'}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Description: </span>{details.description || '  -'}</Typography>
+                                                <Typography variant="h6" fontWeight={'bold'}>Product Name: <span style={{ textDecoration: 'underline' }}>{details?.name || '-'}</span></Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Category: </span>{details?.category || '-'}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Price: </span>₹{details?.price || '-'}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Description: </span>{details?.description || '-'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid sx={{ display: 'flex', alignItems: 'center' }}>
@@ -151,7 +181,7 @@ const ProductViewPage = ({ params }: {params:{ id: string }}) => {
                         <DataGrid
                             rows={data}
                             columns={columns}
-                            sx={{'& .MuiDataGrid-columnHeaderTitle': {fontWeight: 'bold'}}}
+                            sx={{ '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold' } }}
                         />
                     </Card>
                 )}

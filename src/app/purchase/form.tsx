@@ -14,7 +14,7 @@ import { getApi, postApi } from '@/common/api';
 import { urls } from '@/common/url';
 
 const Form = (props: any) => {
-    const { open, handleClose } = props;
+    const { open, handleClose, getData } = props;
 
     const [totalAmount, setTotalAmount] = useState(0);
     const [vendors, setVendors] = useState<any[]>([]);
@@ -81,6 +81,7 @@ const Form = (props: any) => {
                     const response = await postApi(url, data)
                     handleClose();
                     resetForm();
+                    getData()
                 }}
             >
                 {({ values, setFieldValue, handleChange, handleSubmit, errors, touched }) => {

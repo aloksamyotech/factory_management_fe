@@ -108,13 +108,13 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
 
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} />
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={GetDetails}/>
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>
                         <Tab label="Purchase Details" />
                     </Tabs>
-                  
+
                     {value === 0 && (
                         <Box sx={{ padding: 3 }}>
                             <Grid container spacing={2}>
@@ -148,27 +148,32 @@ const PurchaseViewPage = ({ params }: { params: { id: string } }) => {
                         </Box>
                     )}
                     <Box sx={{ display: 'flex', justifyContent: 'end', marginRight: '40px' }}>
-                        <Button variant='contained' color='primary' onClick={handleOpenAdd} disabled={details?.status ? details?.status === 'completed' : true}>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={handleOpenAdd}
+                            disabled={details?.status ? details?.status === 'completed' : true}
+                        >
                             Update Purchase Status
                         </Button>
                     </Box>
-                )}
-                <Tabs value={valueOrder} onChange={handleTabOrderChange}>
-                    <Tab label="Items Details" />
-                </Tabs>
-                {value === 0 && (
-                    <Card sx={{ height: 600, width: '100%', p: 1 }}>
-                        <DataGrid
-                            rows={data}
-                            columns={columns}
-                            sx={{
-                                '& .MuiDataGrid-columnHeaderTitle': {fontWeight:'bold',},
-                            }}
-                        />
-                    </Card>
-                )}
-            </Box>
-        </Card>
+                    <Tabs value={valueOrder} onChange={handleTabOrderChange}>
+                        <Tab label="Items Details" />
+                    </Tabs>
+                    {value === 0 && (
+                        <Card sx={{ height: 600, width: '100%', p: 1 }}>
+                            <DataGrid
+                                rows={data}
+                                columns={columns}
+                                sx={{
+                                    '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold', },
+                                }}
+                            />
+                        </Card>
+                    )}
+                </Box>
+            </Card>
+        </>
     );
 };
 

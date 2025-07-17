@@ -33,7 +33,7 @@ const Form = (props: any) => {
         firstName: '',
         lastName: '',
         phoneNumber: '',
-        email: '',
+        email: undefined,
     };
     const formik = useFormik({
         initialValues,

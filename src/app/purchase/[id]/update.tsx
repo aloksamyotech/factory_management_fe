@@ -6,7 +6,7 @@ import { Form, Formik } from 'formik';
 import { urls } from '@/common/url';
 import { patchApi } from '@/common/api';
 const Update = (props: any) => {
-    const { open, handleClose, purchaseId } = props;
+    const { open, handleClose, purchaseId, GetDetails } = props;
 
     const initialValues = {
         status: 'pending'
@@ -15,7 +15,8 @@ const Update = (props: any) => {
     const handleSubmit = async (values: any) => {
         const url = `${urls?.endpoints?.purchase?.purchase}/${purchaseId}`;
         const body = { status: values.status };
-        await patchApi(url, body);
+        const res = await patchApi(url, body);
+        GetDetails()
         handleClose();
     }
     return (
