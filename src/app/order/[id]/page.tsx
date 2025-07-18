@@ -20,7 +20,6 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
 
-
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
@@ -144,6 +143,9 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
         navigate.push(`/product/${id}`)
     }
 
+    const goToInvoice = () => {
+        navigate.push(`/order/${params.id}/invoice`);
+    }
     return (
         <>
             <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={getDetails} />
@@ -194,7 +196,13 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
                             </Grid>
                         </Box>
                     )}
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginRight: '40px' }}>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginLeft: '40px', marginRight: '40px' }}>
+                        <Button
+                            variant="contained"
+                            color= 'primary'
+                            onClick={goToInvoice}
+                        >Download Invoice</Button>
                         <Button
                             variant='contained'
                             color='primary'
@@ -211,7 +219,7 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
                         data.some((item: any) => item.status === 'Out of Stock') &&
                         <p style={{ textAlign: 'end', color: '#f01d00', marginRight: '40px', marginTop: '5px', fontSize: '15px' }}>*Some of the item are out of stock</p>
                     }
-                    <Tabs value={valueOrder} onChange={handleTabOrderChange}>
+                    <Tabs value={valueOrder} onChange={handleTabOrderChange} sx={{mt: '15px'}}>
                         <Tab label="Items Details" />
                     </Tabs>
                     {value === 0 && (
