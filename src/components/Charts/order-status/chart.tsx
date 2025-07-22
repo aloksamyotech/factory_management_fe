@@ -18,7 +18,7 @@ export function DonutChart({ data }: PropsType) {
       type: "donut",
       fontFamily: "inherit",
     },
-    colors: ["#5750F1", "#5475E5", "#8099EC", "#ADBCF2"],
+    colors: ['#ffff57','#90ff7e','#ff735f'],
     labels: data.map((item) => item.name),
     legend: {
       show: true,
@@ -35,14 +35,14 @@ export function DonutChart({ data }: PropsType) {
     plotOptions: {
       pie: {
         donut: {
-          size: "80%",
+          size: "60%",
           background: "transparent",
           labels: {
             show: true,
             total: {
               show: true,
               showAlways: true,
-              label: "Visitors",
+              label: "Order Status",
               fontSize: "16px",
               fontWeight: "400",
             },
