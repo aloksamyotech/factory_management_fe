@@ -1,6 +1,5 @@
 import { ProductionOverview } from "@/components/Charts/production-overview";
 import { OrderStatus } from "@/components/Charts/order-status";
-import { WeeksProfit } from "@/components/Charts/weeks-profit";
 import { createTimeFrameExtractor } from "@/utils/timeframe-extractor";
 import { Suspense } from "react";
 import { OverviewCardsGroup } from "./_components/overview-cards";
@@ -29,12 +28,6 @@ export default async function Home({ searchParams }: PropsType) {
         <ProductionOverview
           className="col-span-12 xl:col-span-12"
         />
-
-        {/* <WeeksProfit
-          key={extractTimeFrame("weeks_profit")}
-          timeFrame={extractTimeFrame("weeks_profit")?.split(":")[1]}
-          className="col-span-12 xl:col-span-5"
-        /> */}
 
         <OrderStatus
           className="col-span-12 xl:col-span-5"

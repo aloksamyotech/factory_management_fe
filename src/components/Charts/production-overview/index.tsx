@@ -12,19 +12,22 @@ export async function getProductionStatusOverview() {
   const response = await getApi(urls?.endpoints?.production.getAll);
   const production = response?.data?.data[0] || [];
 
-  const statusCounts = production.reduce((acc: Record<string, number>, prod: any) => {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0,10);
+  
+  const todaysProduction = production.filter((prod:any)=>{
+    if(!prod.createdAt) return false;
+    const prodDate = new Date(prod.createdAt).toISOString().slice(0,10);
+    return prodDate === todayStr;
+  })
+
+  const statusCounts = todaysProduction.reduce((acc: Record<string, number>, prod: any) => {
     const status = (prod.status || "").toLowerCase();
     acc[status] = (acc[status] || 0) + 1;
     return acc; 
   }, {});
 
-  const inProgress = production.filter(
-    (prod:any)=> 
-      prod.status?.toLowerCase() === "pending" || 
-      prod.status?.toLowerCase() === "in_progress"
-  );
-
-  const inProduction = production.filter(
+  const inProduction = todaysProduction.filter(
     (prod:any) => 
       prod.status?.toLowerCase() === 'pending' || prod.status?.toLowerCase() === 'in_progress'
   );
@@ -34,6 +37,7 @@ export async function getProductionStatusOverview() {
     machineName: prod.machine.name || "",
     quantity: prod.quantity || 0,
     status: prod.status,
+    estimateTime: prod.estimationTime,
     id: prod.id, 
   }));
 
@@ -50,8 +54,11 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
   ].filter(item => item.amount > 0);
   return (
     <div className={cn("grid grid-cols-1 grid-rows-[auto_1fr] gap-9 rounded-[10px] bg-white p-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card",className)}>
-      <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Production Overview</h2>
+      <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Today's Production Overview</h2>
       <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex-shrink-0 flex items-center justify-center w-full md:w-100">
+          <ProductionDonutChart data={chartData}/>
+      </div>
         {/* table */}
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           <table className="min-w-full border rounded">
@@ -61,6 +68,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
                 <th className="px-4 py-2 text-left">Machine Name</th>
                 <th className="px-4 py-2 text-left">Quantity</th>
                 <th className="px-4 py-2 text-left">Status</th>
+                <th className="px-4 py-2 text-left">Estimate Time</th>
               </tr>
             </thead>
             <tbody>
@@ -74,7 +82,9 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
                       <span className={prod.status === 'pending' ? 'text-yellow-400': 'text-blue-500'}>
                         {prod.status === 'pending' ? "Pending":"In Progress"}
                         </span>
-                      }</td>
+                      }
+                    </td>
+                    <td className='px-4 py-2'>{prod.estimateTime}</td>
                   </tr>
                 ))
               ) : (
@@ -84,14 +94,8 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
                   </td>
                 </tr>
               )}
-
             </tbody>
           </table>
-
-        </div>
-
-        <div className="flex-shrink-0 flex items-center justify-center w-full md:w-100">
-          <ProductionDonutChart data={chartData}/>
         </div>
       </div>
     </div>
