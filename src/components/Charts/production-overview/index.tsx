@@ -89,8 +89,8 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-4 py-2 text-center text-gray-400">
-                    No Pending or In Progress Productions.
+                  <td colSpan={5} className="px-4 py-2 text-center text-gray-400">
+                    No Pending or In Progress Productions of Today.
                   </td>
                 </tr>
               )}
