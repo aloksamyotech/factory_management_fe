@@ -1,5 +1,4 @@
 "use client";
-
 import { compactFormat } from "@/lib/format-number";
 import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
@@ -12,13 +11,13 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export function DonutChart({ data }: PropsType) {
+export function ProductionDonutChart({ data }: PropsType) {
   const chartOptions: ApexOptions = {
     chart: {
       type: "donut",
       fontFamily: "inherit",
     },
-    colors: ["#5750F1", "#5475E5", "#8099EC", "#ADBCF2"],
+    colors: ['#ffff57','#87CEEB','#90ff7e'],
     labels: data.map((item) => item.name),
     legend: {
       show: true,
@@ -35,14 +34,14 @@ export function DonutChart({ data }: PropsType) {
     plotOptions: {
       pie: {
         donut: {
-          size: "80%",
+          size: "60%",
           background: "transparent",
           labels: {
             show: true,
             total: {
               show: true,
               showAlways: true,
-              label: "Visitors",
+              label: "Production Status",
               fontSize: "16px",
               fontWeight: "400",
             },
@@ -64,7 +63,7 @@ export function DonutChart({ data }: PropsType) {
         breakpoint: 2600,
         options: {
           chart: {
-            width: 415,
+            width: 412,
           },
         },
       },

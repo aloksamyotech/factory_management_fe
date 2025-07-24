@@ -1,43 +1,40 @@
 import * as logos from "@/assets/logos";
+import { getApi } from "@/common/api";
+import { urls } from "@/common/url";
 
+function getProductProfit(product:any, orders:any){
+  return orders
+        .filter((order:any) => order.productId === product.id)
+        .reduce((sum:any, order:any)=> sum + (order.totalAmount || 0), 0);
+}
 export async function getTopProducts() {
-  // Fake delay
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const [productResult, orderResult] = await Promise.all([
+    getApi(urls?.endpoints?.product.product),
+    getApi(urls?.endpoints?.order.order),
+  ]);
 
-  return [
-    {
-      image: "/images/product/product-01.png",
-      name: "Apple Watch Series 7",
-      category: "Electronics",
-      price: 296,
-      sold: 22,
-      profit: 45,
-    },
-    {
-      image: "/images/product/product-02.png",
-      name: "Macbook Pro M1",
-      category: "Electronics",
-      price: 546,
-      sold: 12,
-      profit: 125,
-    },
-    {
-      image: "/images/product/product-03.png",
-      name: "Dell Inspiron 15",
-      category: "Electronics",
-      price: 443,
-      sold: 64,
-      profit: 247,
-    },
-    {
-      image: "/images/product/product-04.png",
-      name: "HP Probook 450",
-      category: "Electronics",
-      price: 499,
-      sold: 72,
-      profit: 103,
-    },
-  ];
+  const products = productResult?.data?.data[0] || 0;
+  const orders = orderResult?.data?.data[0] || 0;
+
+  const productStats = products.map((product:any) => {
+
+    const ordersOfProduct = orders.filter((order:any) => order.productId == product.id);
+
+    const sold = ordersOfProduct.reduce((sum:any, order:any)=>sum + (order.totalAmount || 1), 0);
+
+    const profit = getProductProfit(product, ordersOfProduct);
+
+    return {
+      name: product.name,
+      category: product.category,
+      price: product.price || 0,
+      sold,
+      profit,
+    };  
+  });
+  productStats.sort((a:any,b:any)=>b.sold - a.sold);
+
+  return productStats.slice(0,5);
 }
 
 export async function getInvoiceTableData() {

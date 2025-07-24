@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText, InputAdornment } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText, InputAdornment } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
@@ -30,6 +30,7 @@ const Form = (props: any) => {
     const initialValues = {
         title: '',
         description: '',
+        // quantity:'',
         unit: '',
         price: '',
     };
@@ -93,8 +94,22 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
+                            {/* <Grid size={6}>
+                                <FormControl fullWidth>
+                                    <FormLabel>Quantity</FormLabel>
+                                    <TextField
+                                        id="quantity"
+                                        name="quantity"
+                                        size="small"
+                                        type='number'
+                                        value={formik?.values?.quantity}
+                                        onChange={formik?.handleChange}
+                                        error={formik?.touched?.quantity && Boolean(formik?.errors?.quantity)}
+                                        helperText={formik?.touched?.quantity && formik?.errors?.quantity ? String(formik?.errors?.quantity) : ''}
+                                    />
+                                </FormControl>
+                            </Grid> */}
                             <Grid size={6}>
-
                                 <FormControl fullWidth>
                                     <FormLabel>Unit*</FormLabel>
                                     <Select

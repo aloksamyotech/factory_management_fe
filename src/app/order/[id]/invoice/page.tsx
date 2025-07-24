@@ -23,18 +23,6 @@ const InvoicePage = () => {
     getOrderDetails();
   }, [])
 
-  // const handleDownloadInvoice = async() =>{
-  //   const element = invoiceRef.current;
-  //   const canvas = await html2canvas(element);
-  //   const imgData = canvas.toDataURL('image/jpg');
-  //   const pdf = new jsPDF('p','mm','a4');
-  //   const imgProps = pdf.getImageProperties(imgData);
-  //   const pdfWidth = pdf.internal.pageSize.getWidth();
-  //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  //   pdf.addImage(imgData, 'jpg', 0, 0, pdfWidth, pdfHeight);
-  //   pdf.save(`Invoice_${orderDetails?.id}.pdf`);
-  // };
-
   const handlePrintInvoice =()=>{
     setTimeout(()=>{
       window.print();

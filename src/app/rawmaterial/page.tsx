@@ -56,6 +56,17 @@ const Rawmaterial = () => {
             }
         },
         {
+            field: 'quantity',
+            headerName: 'Quantity',
+            headerAlign: 'center',
+            align: 'center',
+            flex: 0.5,
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params)=>{
+                return params.value ? params.value : '-';
+            }
+        },
+        {
             field: 'unit',
             headerName: 'Unit',
             headerAlign: 'center',
