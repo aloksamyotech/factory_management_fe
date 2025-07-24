@@ -28,10 +28,10 @@ export function UserInfo() {
   const logout = async()=>{
     await postApi(`${urls?.endpoints?.employee.employee}/logout`, {});
     localStorage.clear();
+    document.cookie = "token=; path=/; max-age=0; SameSite=Lax";
+    console.log("logout called");
     router.push("/sign-in");
-    setTimeout(()=>{
       window.location.reload();
-    }, 1800);
   }
 
   return (
