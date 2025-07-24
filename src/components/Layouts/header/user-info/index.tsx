@@ -31,7 +31,7 @@ export function UserInfo() {
     router.push("/sign-in");
     setTimeout(()=>{
       window.location.reload();
-    }, 1800);
+    }, 2500);
   }
 
   return (

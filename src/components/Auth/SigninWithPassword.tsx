@@ -20,7 +20,7 @@ export default function SigninWithPassword() {
     setLoading(true);
     
     try{      
-      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, {email, password},{withCredentials: true})
+      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, {email, password})
       localStorage.setItem('jwt', res?.data?.token)
       
       if(res?.success){
