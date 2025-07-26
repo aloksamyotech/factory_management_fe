@@ -139,6 +139,10 @@ const OrderViewPage = () => {
     useEffect(() => {
         getDetails(setData, setDetails, params.id);
     }, [params.id])
+    
+    const refreshData = () => {
+        getDetails(setData, setDetails, params.id);
+    };
 
     const navigate = useRouter()
     const handleNavigate = (id: any) => {
@@ -147,7 +151,7 @@ const OrderViewPage = () => {
 
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={getDetails} />
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={refreshData} />
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>

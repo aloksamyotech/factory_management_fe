@@ -190,7 +190,7 @@ const Production = () => {
     return (
         <>
             <Formm open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
-            <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={getData} />
+            <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={refreshData} />
             <Breadcrumb pageName="Production" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

@@ -108,9 +108,13 @@ const PurchaseViewPage = () => {
         GetDetails(setData, setDetails, params.id)
     }, [params.id])
 
+    const refreshData = () => {
+        GetDetails(setData, setDetails, params.id)
+    };
+
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={GetDetails} />
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={refreshData} />
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>
