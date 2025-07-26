@@ -21,11 +21,6 @@ const status = (props: any) => {
     handleClose();
   }
 
-
-  useEffect(() => {
-
-  }, [productionId]);
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='xs' fullWidth>
       <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>

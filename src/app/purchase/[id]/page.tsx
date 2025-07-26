@@ -10,6 +10,24 @@ import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
 
+const GetDetails = async (setData: any, setDetails: any, id: any) => {
+    const url = `${urls?.endpoints?.purchase?.purchase}/${id}`
+    const response = await getApi(url);
+    setDetails(response?.data?.data);
+
+    const modifiedData = response?.data?.data?.itemId
+        ?.map((item: any, index: number) => ({
+            id: item?.rawMaterial?.id,
+            index: index + 1,
+            item: item?.rawMaterial?.title,
+            price: item?.rawMaterial?.price,
+            unit: item?.rawMaterial?.unit,
+            quantity: item?.quantity,
+            status: item?.status,
+        }));
+    setData(modifiedData)
+}
+
 const PurchaseViewPage = () => {
     const params = useParams();
     const [value, setValue] = useState(0);
@@ -86,31 +104,13 @@ const PurchaseViewPage = () => {
         navigate.push(`/rawmaterial/${id}`)
     }
 
-    const GetDetails = async () => {
-        const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
-        const response = await getApi(url);
-        setDetails(response?.data?.data);
-
-        const modifiedData = response?.data?.data?.itemId
-            ?.map((item: any, index: number) => ({
-                id: item?.rawMaterial?.id,
-                index: index + 1,
-                item: item?.rawMaterial?.title,
-                price: item?.rawMaterial?.price,
-                unit: item?.rawMaterial?.unit,
-                quantity: item?.quantity,
-                status: item?.status,
-            }));
-        setData(modifiedData)
-    }
-
     useEffect(() => {
-        GetDetails()
-    }, [])
+        GetDetails(setData, setDetails, params.id)
+    }, [params.id])
 
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={GetDetails}/>
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={GetDetails} />
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>
@@ -126,11 +126,11 @@ const PurchaseViewPage = () => {
                                             <Grid>
                                                 <CardContent>
                                                     <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
-                                                    <Typography sx={{mt:'5px'}}><span style={{fontWeight:'bold'}}>Status: </span><span style={{
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
+                                                    <Typography sx={{ mt: '5px' }}><span style={{ fontWeight: 'bold' }}>Status: </span><span style={{
                                                         borderRadius: '5px',
                                                         padding: '5px 10px',
                                                         textTransform: 'capitalize',

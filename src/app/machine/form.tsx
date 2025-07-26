@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
@@ -87,7 +87,9 @@ const Form = (props: any) => {
                                     >
                                         <MenuItem value={'test'}>Test</MenuItem>
                                     </Select>
-                                    <FormHelperText sx={{ color: '#d74242' }}>{formik?.touched?.type && formik?.errors?.type}</FormHelperText>
+                                    <FormHelperText sx={{ color: '#d74242' }}>
+                                        {formik?.touched?.type && typeof formik?.errors?.type === 'string' ? formik.errors.type : ''}
+                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid size={12}>

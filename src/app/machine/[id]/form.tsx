@@ -12,9 +12,9 @@ const validationSchema = Yup.object().shape({
     .min(new Date(), "Next Maintenance date must be today or later.")
     .required("Next Maintenance date is required")
 });
-const form = (props: any) => {
+const Forum = (props: any) => {
   const { open, handleClose, getData, machineId } = props;
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<any>([]);
   const [loading, setLoading] = useState(false);
 
   const getEmployees = async () => {
@@ -70,7 +70,7 @@ const form = (props: any) => {
                       options={employees}
                       loading={loading}
                       getOptionLabel={(option: any) => option.fullName}
-                      value={employees.find(e => e.id === Number(values.employeeId)) || null}
+                      value={employees.find((e: { id: any }) => e.id === Number(values.employeeId)) || null}
                       onChange={(e, val) => setFieldValue('employeeId', val?.id || '')}
                       renderInput={(params) => (
                         <TextField
@@ -127,4 +127,4 @@ const form = (props: any) => {
   )
 }
 
-export default form
+export default Forum

@@ -11,6 +11,27 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import moment from "moment";
+
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.production?.create}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => {
+        const formattedDate = moment(item?.createdAt).format('ll');
+        return {
+            id: item?.id,
+            index: index + 1,
+            productName: item?.product?.name,
+            quantity: item?.quantity,
+            machine: item?.machine?.name,
+            estimateTime: item?.estimationTime,
+            date: formattedDate,
+            status: item?.status
+        }
+    });
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1] || 0);
+};
+
 const Production = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const [openStatus, setOpenStatus] = useState(false);
@@ -95,26 +116,26 @@ const Production = () => {
                                 status === 'cancelled' ? "Cancelled" : "";
                 };
                 return (
-                <Typography sx={{
-                    padding: params.value === 'pending' ? '5px 20px' : 
-                             params.value === 'completed' ? '5px 13px' : 
-                             params.value === 'in_progress'? '5px 11px' : 
-                             params.value === 'cancelled' ? '5px 14px' : "",
-                    borderRadius: '10px',
-                    bgcolor: params.value === 'pending' ? '#ffff8f' : 
-                             params.value === 'completed' ? '#cdffdf' : 
-                             params.value === 'in_progress'? '#cdf0ff' : 
-                             params.value === 'cancelled' ? '#ffc1b9' : "",
-                    color: params.value === 'pending' ? '#ffd300' : 
-                             params.value === 'completed' ? '#00dc4f' : 
-                             params.value === 'in_progress'? '#19bdff' : 
-                             params.value === 'cancelled' ? '#f01d00' : "",
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    display: 'inline'
-                }}>
-                    {format(params.value)}
-                </Typography>
+                    <Typography sx={{
+                        padding: params.value === 'pending' ? '5px 20px' :
+                            params.value === 'completed' ? '5px 13px' :
+                                params.value === 'in_progress' ? '5px 11px' :
+                                    params.value === 'cancelled' ? '5px 14px' : "",
+                        borderRadius: '10px',
+                        bgcolor: params.value === 'pending' ? '#ffff8f' :
+                            params.value === 'completed' ? '#cdffdf' :
+                                params.value === 'in_progress' ? '#cdf0ff' :
+                                    params.value === 'cancelled' ? '#ffc1b9' : "",
+                        color: params.value === 'pending' ? '#ffd300' :
+                            params.value === 'completed' ? '#00dc4f' :
+                                params.value === 'in_progress' ? '#19bdff' :
+                                    params.value === 'cancelled' ? '#f01d00' : "",
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        display: 'inline'
+                    }}>
+                        {format(params.value)}
+                    </Typography>
                 );
             }
         },
@@ -138,29 +159,13 @@ const Production = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.production?.create}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => {
-            const formattedDate = moment(item?.createdAt).format('ll');
-            return {
-                id: item?.id,
-                index: index + 1,
-                productName: item?.product?.name,
-                quantity: item?.quantity,
-                machine: item?.machine?.name,
-                estimateTime: item?.estimationTime,
-                date: formattedDate,
-                status: item?.status
-            }
-        });
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1] || 0);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -184,7 +189,7 @@ const Production = () => {
 
     return (
         <>
-            <Formm open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Formm open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Status open={openStatus} handleClose={handleStatusClose} productionId={selectedId} getData={getData} />
             <Breadcrumb pageName="Production" />
             <Card sx={{ height: 600, width: '100%' }}>

@@ -9,6 +9,31 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 
+const getData = async (setData:any,setDataRaw:any,setRowCount:any,page:any,PageSize:any) => {
+    const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0]?.filter((item:any) => item?.type === 'product')?.map((item: any, index: number) => ({
+        index: index + 1,
+        id: item?.productId?.id || item?.rawMaterialId?.id,
+        quantity: item?.quantity,
+        unit: item?.unit,
+        title: item?.productId?.name || item?.rawMaterialId?.title,
+        price: item?.productId?.price || item?.rawMaterialId?.price,
+    }));
+    setData(modifiedData);
+    
+    const modifiedDataRaw = response?.data?.data[0]?.filter((item:any) => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
+        index: index + 1,
+        id: item?.productId?.id || item?.rawMaterialId?.id,
+        quantity: item?.quantity,
+        unit: item?.unit,
+        title: item?.productId?.name || item?.rawMaterialId?.title,
+        price: item?.productId?.price || item?.rawMaterialId?.price,
+    }));
+    setDataRaw(modifiedDataRaw);
+    setRowCount(response?.data?.data[1]);
+};
+
 const Order = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
@@ -84,33 +109,8 @@ const Order = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0]?.filter((item:any) => item?.type === 'product')?.map((item: any, index: number) => ({
-            index: index + 1,
-            id: item?.productId?.id || item?.rawMaterialId?.id,
-            quantity: item?.quantity,
-            unit: item?.unit,
-            title: item?.productId?.name || item?.rawMaterialId?.title,
-            price: item?.productId?.price || item?.rawMaterialId?.price,
-        }));
-        setData(modifiedData);
-        
-        const modifiedDataRaw = response?.data?.data[0]?.filter((item:any) => item?.type === 'rawMaterial')?.map((item: any, index: number) => ({
-            index: index + 1,
-            id: item?.productId?.id || item?.rawMaterialId?.id,
-            quantity: item?.quantity,
-            unit: item?.unit,
-            title: item?.productId?.name || item?.rawMaterialId?.title,
-            price: item?.productId?.price || item?.rawMaterialId?.price,
-        }));
-        setDataRaw(modifiedDataRaw);
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData,setDataRaw,setRowCount,page,PageSize);
     }, [page]);
 
     const CustomToolbar = () => {
