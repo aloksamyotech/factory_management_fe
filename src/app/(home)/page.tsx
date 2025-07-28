@@ -43,7 +43,6 @@ export default async function Home({ searchParams }: PropsType) {
           </Suspense>
         </div>
       </div>
-      Dashboard
     </>
   );
 }
