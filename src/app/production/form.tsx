@@ -32,8 +32,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const Formm = ({ open, handleClose, getData }: any) => {
-  const [products, setProducts] = useState<DropdownOption[]>([]);
-  const [machines, setMachines] = useState<DropdownOption[]>([]);
+
+  const [products, setProducts] = useState<any>([]);
+  const [machines, setMachines] = useState<any>([]);
   const [rawMaterial, setRawMaterial] = useState<DropdownOption[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -111,7 +112,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                       options={products}
                       loading={loading}
                       getOptionLabel={(option: any) => option.title}
-                      value={products.find(v => v.id === values.product) || null}
+                      value={products.find((v: { id: any }) => v.id === values.product) || null}
                       onChange={(e, val) => setFieldValue('product', val?.id || '')}
                       renderInput={(params) => (
                         <TextField
@@ -142,7 +143,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                       options={machines}
                       loading={loading}
                       getOptionLabel={(option: any) => option.title}
-                      value={machines.find(v => v.id === values.machine) || null}
+                      value={machines.find((v: { id: any }) => v.id === values.machine) || null}
                       onChange={(e, val) => setFieldValue('machine', val?.id || '')}
                       renderInput={(params) => (
                         <TextField

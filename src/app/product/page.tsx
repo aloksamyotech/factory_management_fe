@@ -9,6 +9,18 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.product?.product}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+        ...item,
+        index: index + 1
+    }));
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1]);
+};
 
 const Product = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -41,8 +53,7 @@ const Product = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: () =>
                 <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
-                    <img src='/images/product/products.png' alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
-                    {/* <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} /> */}
+                    <Image src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
                 </Box>
         },
         {
@@ -86,7 +97,7 @@ const Product = () => {
             flex: 1.5,
             cellClassName: 'name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.rawMaterial?.map((item:any) => item.title).join(', ') || 'N/A';
+                const itemIds = params.row.rawMaterial?.map((item: any) => item.title).join(', ') || 'N/A';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -107,20 +118,13 @@ const Product = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.product?.product}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            ...item,
-            index: index + 1
-        }));
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -144,7 +148,7 @@ const Product = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Product" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

@@ -13,7 +13,21 @@ import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTheme } from "next-themes";
 
-
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+        id: item.id,
+        index: index + 1,
+        fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
+        phoneNumber: item?.phoneNumber,
+        email: item?.email,
+        date: formattedDate
+    }));
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1]);
+};
 const CustomerManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
@@ -83,25 +97,13 @@ const CustomerManagement = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            id: item.id,
-            index: index + 1,
-            fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
-            phoneNumber: item?.phoneNumber,
-            email: item?.email,
-            date: formattedDate
-        }));
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -125,7 +127,7 @@ const CustomerManagement = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Customer" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

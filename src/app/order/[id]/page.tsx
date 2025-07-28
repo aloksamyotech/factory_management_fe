@@ -4,13 +4,50 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
 
-const OrderViewPage = ({ params }: { params: { id: string } }) => {
+const getDetails = async (setData: any, setDetails: any, id: any) => {
+    const url = `${urls?.endpoints?.order?.order}/${id}`;
+    const urlInventory = urls?.endpoints?.inventory?.inventory;
+
+    const response = await getApi(url);
+    const responseInventory = await getApi(urlInventory);
+
+    const inventoryData = responseInventory?.data?.data[0] || [];
+    const orderItems = response?.data?.data.itemId || [];
+
+    const modifiedData = orderItems.map((item: any, index: number) => {
+        const productId = item?.productId?.id;
+        const inventoryItem = inventoryData.find((inv: any) => inv?.productId?.id == productId);
+        const availableQty = inventoryItem?.quantity || 0;
+        const orderedQty = item?.quantity || 0;
+
+        let status = "Out of Stock";
+        if (availableQty >= orderedQty) {
+            status = "Fulfilled";
+        }
+        return {
+            id: productId,
+            index: index + 1,
+            item: item?.productId?.name,
+            price: item?.productId?.price,
+            quantity: orderedQty,
+            inventoryQuantity: availableQty,
+            status,
+        };
+    });
+    setData(modifiedData);
+    setDetails(response?.data?.data);
+
+
+}
+
+const OrderViewPage = () => {
+    const params = useParams() as { id: string };
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
     const [details, setDetails] = useState<any | null>([]);
@@ -98,45 +135,13 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
         }
     ];
 
-    const getDetails = async () => {
-        const url = `${urls?.endpoints?.order?.order}/${params.id}`;
-        const urlInventory = urls?.endpoints?.inventory?.inventory;
-
-        const response = await getApi(url);
-        const responseInventory = await getApi(urlInventory);
-
-        const inventoryData = responseInventory?.data?.data[0] || [];
-        const orderItems = response?.data?.data.itemId || [];
-
-        const modifiedData = orderItems.map((item: any, index: number) => {
-            const productId = item?.productId?.id;
-            const inventoryItem = inventoryData.find((inv: any) => inv?.productId?.id == productId);
-            const availableQty = inventoryItem?.quantity || 0;
-            const orderedQty = item?.quantity || 0;
-
-            let status = "Out of Stock";
-            if (availableQty >= orderedQty) {
-                status = "Fulfilled";
-            }
-            return {
-                id: productId,
-                index: index + 1,
-                item: item?.productId?.name,
-                price: item?.productId?.price,
-                quantity: orderedQty,
-                inventoryQuantity: availableQty,
-                status,
-            };
-        });
-        setData(modifiedData);
-        setDetails(response?.data?.data);
-
-
-    }
-
     useEffect(() => {
-        getDetails();
-    }, [])
+        getDetails(setData, setDetails, params.id);
+    }, [params.id])
+    
+    const refreshData = () => {
+        getDetails(setData, setDetails, params.id);
+    };
 
     const navigate = useRouter()
     const handleNavigate = (id: any) => {
@@ -148,7 +153,7 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
     }
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={getDetails} />
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={refreshData} />
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>

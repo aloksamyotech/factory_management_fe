@@ -30,6 +30,16 @@ const Form = (props: any) => {
         ],
         expectedDeliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     };
+    const [formikValues, setFormikValues] = useState({
+        vendor: null,
+        items: [
+            {
+                productId: '',
+                quantity: 1
+            }
+        ],
+        expectedDeliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    });
 
     const validationSchema = yup.object({
         vendor: yup.string().required('Please Select Vendor.')
@@ -60,6 +70,20 @@ const Form = (props: any) => {
         fetchProducts();
     }, []);
 
+    useEffect(() => {
+        
+        const items = formikValues.items;
+        const total = items.reduce((sum: number, item: any) => {
+            const product = products.find(p => p.id === item.productId);
+            const qty = parseFloat(item?.quantity || 0);
+            const price = parseFloat(product?.price || 0);
+            return sum + qty * price;
+        }, 0);
+
+        setTotalAmount(total);
+    }, [formikValues.items, products]);
+
+
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -85,16 +109,7 @@ const Form = (props: any) => {
                 }}
             >
                 {({ values, setFieldValue, handleChange, handleSubmit, errors, touched }) => {
-                    useEffect(() => {
-                        const total = values.items.reduce((sum, item) => {
-                            const product = products.find(p => p.id === item.productId);
-                            const qty = parseFloat(item?.quantity || 0);
-                            const price = parseFloat(product?.price || 0);
-                            return sum + qty * price;
-                        }, 0);
-                        setTotalAmount(total);
-                    }, [values.items, products]);
-
+                    setFormikValues(values);
                     return (
                         <>
                             <DialogContent dividers>
