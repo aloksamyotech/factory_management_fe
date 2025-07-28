@@ -13,8 +13,6 @@ export const postApi = async (url: any, data: any, customHeaders = {}) => {
       ...customHeaders
     }
     const response = await axios.post(url, data, { headers, withCredentials:true});
-    console.log(response);
-
     toast.success(response?.data?.message || 'Success');
     return response.data;
   } catch (error: any) {
