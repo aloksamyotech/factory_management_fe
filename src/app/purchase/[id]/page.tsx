@@ -112,6 +112,9 @@ const PurchaseViewPage = () => {
         GetDetails(setData, setDetails, params.id)
     };
 
+    const goToPurchaseInvoice = () =>{
+        navigate.push(`/purchase/${params.id}/invoice`);
+    }
     return (
         <>
             <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={refreshData} />
@@ -153,7 +156,10 @@ const PurchaseViewPage = () => {
                             </Grid>
                         </Box>
                     )}
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginRight: '40px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between',marginLeft: '40px', marginRight: '40px' }}>
+                        <Button variant="contained" color="primary" onClick={goToPurchaseInvoice}>
+                            Download Invoice
+                        </Button>
                         <Button
                             variant='contained'
                             color='primary'
@@ -163,7 +169,7 @@ const PurchaseViewPage = () => {
                             Update Purchase Status
                         </Button>
                     </Box>
-                    <Tabs value={valueOrder} onChange={handleTabOrderChange}>
+                    <Tabs value={valueOrder} onChange={handleTabOrderChange} sx={{mt:'15px'}}>
                         <Tab label="Items Details" />
                     </Tabs>
                     {value === 0 && (

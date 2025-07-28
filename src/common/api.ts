@@ -12,7 +12,7 @@ export const postApi = async (url: any, data: any, customHeaders = {}) => {
       // ...defaultHeaders,
       ...customHeaders
     }
-    const response = await axios.post(url, data, { headers });
+    const response = await axios.post(url, data, { headers});
     console.log(response);
 
     toast.success(response?.data?.message || 'Success');
@@ -63,3 +63,12 @@ export const patchApi = async (url: any, data: any) => {
     console.log(err);
   }
 }
+
+export const getRoleFromToken = () => {
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+      return false;
+  }else{
+    return true;
+  }
+};

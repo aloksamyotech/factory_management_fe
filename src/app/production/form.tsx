@@ -7,13 +7,23 @@ import {
   DialogContent,
   DialogActions,
   Grid,
-  FormLabel
+  FormLabel,
+  Box,
+  FormControl,
+  OutlinedInput,
+  InputAdornment,
+  IconButton
 } from '@mui/material';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { getApi, postApi } from '@/common/api';
 import { urls } from '@/common/url';
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+type DropdownOption = {
+  id: string; title: string;unit:string
+};
 
 const validationSchema = Yup.object().shape({
   product: Yup.string().required("Product is required"),
@@ -22,12 +32,22 @@ const validationSchema = Yup.object().shape({
 });
 
 const Formm = ({ open, handleClose, getData }: any) => {
+
   const [products, setProducts] = useState<any>([]);
   const [machines, setMachines] = useState<any>([]);
+  const [rawMaterial, setRawMaterial] = useState<DropdownOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchDropdowns = async () => {
     setLoading(true);
+
+    const rawMaterialRes = await getApi(urls?.endpoints?.rawMaterial?.getAll);
+    const formattedRaw = rawMaterialRes?.data?.data?.map((r:any)=>({
+        id: r.id,
+        title:r.title,
+        unit: r.unit
+    })); 
+    setRawMaterial(formattedRaw || [])
 
     const productRes = await getApi(urls?.endpoints?.product?.getAll);
     const formatted = productRes?.data?.data[0]?.map((r: any) => ({
@@ -53,6 +73,12 @@ const Formm = ({ open, handleClose, getData }: any) => {
     quantity: '',
     machine: null,
     estimationTime: '',
+    items: [
+      {
+        rawMaterialId: '',
+        quantity: 1
+      }
+    ]
   };
 
   const handleSubmit = async (values: any) => {
@@ -141,6 +167,71 @@ const Formm = ({ open, handleClose, getData }: any) => {
                     />
                   </Grid>
                 </Grid>
+                {/* <FieldArray name='items'>
+                  {({push, remove}) => (
+                    <Box sx={{border: '1px solid #ccc',
+                              borderRadius: '5px',
+                              padding:2,
+                              height: 150,
+                              overflowY: 'auto',
+                              mt:2,
+                              mb:2
+                    }}>
+                      {values.items.map((item, index)=> (
+                        <Grid container spacing={2} key={index} alignItems="center" sx={{mt:1}}>
+                          <Grid size={5}>
+                            <FormControl fullWidth>
+                            <FormLabel>Select Raw Material*</FormLabel>
+                            <Autocomplete 
+                              size='small'
+                              options={rawMaterial}
+                              getOptionLabel={(option:any)=>option.title}
+                              value={rawMaterial.find(r => r.id === item.rawMaterialId) || null}
+                              onChange={(e, val)=>setFieldValue(`items[${index}].rawMaterialId`, val?.id || '')}
+                              renderInput={(params)=>(
+                                <TextField 
+                                {...params}
+                                placeholder='Select Raw Material' 
+                                />
+                              )}
+                              />
+                            </FormControl>
+                          </Grid>
+                          <Grid size={5}>
+                            <FormControl fullWidth>
+                                <FormLabel>Quantity</FormLabel>
+                                <OutlinedInput
+                                    size="small"
+                                    type="number"
+                                    name={`items[${index}].quantity`}
+                                    value={item.quantity}
+                                    onChange={handleChange}
+                                    endAdornment={
+                                        <InputAdornment position="end">{rawMaterial?.find(r => r.id === item.rawMaterialId)?.unit || ''}</InputAdornment>}
+                                />
+                            </FormControl>
+                            </Grid>
+                            <Grid size={2}>
+                              <IconButton
+                                  onClick={()=>remove(index)}
+                                  disabled={values.items.length === 1}
+                                  sx={{ mt:3 }}
+                                  >
+                                <DeleteIcon color='error'/>
+                              </IconButton>
+                            </Grid>
+                        </Grid>
+                      ))}
+                      <Button
+                        variant="outlined"
+                        onClick={() => push({ rawMaterialId: '', quantity: 1 })}
+                        sx={{ mt: 2 }}
+                    >
+                        + Add Item
+                    </Button>
+                    </Box>
+                  )}
+                </FieldArray> */}
               </DialogContent>
               <DialogActions>
                 <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>

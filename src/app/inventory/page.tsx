@@ -145,7 +145,8 @@ const Order = () => {
 
     return (
         <>
-            <Breadcrumb pageName="inventory" />
+            {/* <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} /> */}
+            <Breadcrumb pageName="Inventory" />
             <Box sx={{ width: "100%" }}>
                 <Tabs value={value} onChange={handleTabChange} sx={{ mb: '5px' }}>
                     <Tab label="Product" />

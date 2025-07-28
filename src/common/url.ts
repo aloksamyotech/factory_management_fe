@@ -8,7 +8,9 @@ export const urls = Object.freeze({
         },
         employee: {
             employee: `${BASE_URL}${API_VERSION}/employee`,
-            getAll: `${BASE_URL}${API_VERSION}/employee`
+            login: `${BASE_URL}${API_VERSION}/employee/login`,
+            getAll: `${BASE_URL}${API_VERSION}/employee`,
+            logout: `${BASE_URL}${API_VERSION}/employee/logout`
         },
         vendor: {
             vendor: `${BASE_URL}${API_VERSION}/vendor`,

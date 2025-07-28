@@ -30,6 +30,7 @@ const Form = (props: any) => {
     const initialValues = {
         title: '',
         description: '',
+        // quantity:'',
         unit: '',
         price: '',
     };
@@ -93,8 +94,22 @@ const Form = (props: any) => {
                                     />
                                 </FormControl>
                             </Grid>
+                            {/* <Grid size={6}>
+                                <FormControl fullWidth>
+                                    <FormLabel>Quantity</FormLabel>
+                                    <TextField
+                                        id="quantity"
+                                        name="quantity"
+                                        size="small"
+                                        type='number'
+                                        value={formik?.values?.quantity}
+                                        onChange={formik?.handleChange}
+                                        error={formik?.touched?.quantity && Boolean(formik?.errors?.quantity)}
+                                        helperText={formik?.touched?.quantity && formik?.errors?.quantity ? String(formik?.errors?.quantity) : ''}
+                                    />
+                                </FormControl>
+                            </Grid> */}
                             <Grid size={6}>
-
                                 <FormControl fullWidth>
                                     <FormLabel>Unit*</FormLabel>
                                     <Select
