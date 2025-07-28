@@ -8,20 +8,20 @@ import jsPDF from 'jspdf';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
+const getOrderDetails = async (id:any,setOrderDetails:any) =>{
+  const url = `${urls?.endpoints?.order?.order}/${id}`;
+  const response = await getApi(url);
+  setOrderDetails(response?.data?.data);
+}
+
 const InvoicePage = () => {
   const params = useParams();
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const invoiceRef = useRef(null);
 
-  const getOrderDetails = async () =>{
-    const url = `${urls?.endpoints?.order?.order}/${params?.id}`;
-    const response = await getApi(url);
-    setOrderDetails(response?.data?.data);
-  }
-
   useEffect(()=>{
-    getOrderDetails();
-  }, [])
+    getOrderDetails(params?.id,setOrderDetails);
+  }, [params?.id])
 
   const handlePrintInvoice =()=>{
     setTimeout(()=>{

@@ -54,7 +54,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
   ].filter(item => item.amount > 0);
   return (
     <div className={cn("grid grid-cols-1 grid-rows-[auto_1fr] gap-9 rounded-[10px] bg-white p-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card",className)}>
-      <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Today's Production Overview</h2>
+      <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Todays Production Overview</h2>
       <div className="flex flex-col md:flex-row gap-6">
       <div className="flex-shrink-0 flex items-center justify-center w-full md:w-100">
           <ProductionDonutChart data={chartData}/>
