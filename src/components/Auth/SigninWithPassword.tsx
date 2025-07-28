@@ -20,14 +20,14 @@ export default function SigninWithPassword() {
     setLoading(true);
     
     try{      
-      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, {email, password})
+      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, {email, password}, {Credential:true})
       localStorage.setItem('jwt', res?.data?.token)
       
       if(res?.success){
         router.push("/");
         setTimeout(()=>{
           window.location.reload();
-        }, 2000);
+        }, 3000);
       }
     }
     catch(error){
