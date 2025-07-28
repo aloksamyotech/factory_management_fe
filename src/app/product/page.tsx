@@ -41,7 +41,8 @@ const Product = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: () =>
                 <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
-                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                    <img src='/images/product/products.png' alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                    {/* <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} /> */}
                 </Box>
         },
         {

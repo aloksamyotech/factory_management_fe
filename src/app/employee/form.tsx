@@ -14,6 +14,12 @@ const validation = Yup.object({
   lastName: Yup
     .string()
     .max(15, "Last Name cannot exceed 15 characters"),
+  password: Yup
+    .string()
+    .required("Please enter your Password")
+    .min(8, "Password must contain at least 8 characters")
+    .max(15, "Password cannot exceed 15 characters")
+  ,
   email: Yup
     .string()
     .max(50, "Email cannot exceed 50 characters")
@@ -43,6 +49,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
   const initialValues = {
     firstName: '',
     lastName: '',
+    password: '',
     email: '',
     phoneNumber: '',
     salary: undefined,
@@ -104,6 +111,20 @@ const Formm = ({ open, handleClose, getData }: any) => {
                       onChange={handleChange}
                       error={touched?.lastName && Boolean(errors.lastName)}
                       helperText={touched?.lastName && errors.lastName}
+                    />
+                  </Grid>
+                  <Grid size={6}>
+                    <FormLabel>Password*</FormLabel>
+                    <TextField
+                      id='password'
+                      name='password'
+                      type='password'
+                      size='small'
+                      fullWidth
+                      value={values.password}
+                      onChange={handleChange}
+                      error={touched?.password && Boolean(errors.password)}
+                      helperText={touched?.password && errors.password}
                     />
                   </Grid>
                   <Grid size={6}>

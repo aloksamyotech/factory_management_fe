@@ -22,7 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 type DropdownOption = {
-  id: string; title: string
+  id: string; title: string;unit:string
 };
 
 const validationSchema = Yup.object().shape({
@@ -44,8 +44,8 @@ const Formm = ({ open, handleClose, getData }: any) => {
     const formattedRaw = rawMaterialRes?.data?.data?.map((r:any)=>({
         id: r.id,
         title:r.title,
+        unit: r.unit
     })); 
-    console.log(rawMaterialRes);
     setRawMaterial(formattedRaw || [])
 
     const productRes = await getApi(urls?.endpoints?.product?.getAll);
@@ -72,12 +72,12 @@ const Formm = ({ open, handleClose, getData }: any) => {
     quantity: '',
     machine: null,
     estimationTime: '',
-    // items: [
-    //   {
-    //     rawMaterialId: '',
-    //     quantity: 1
-    //   }
-    // ]
+    items: [
+      {
+        rawMaterialId: '',
+        quantity: 1
+      }
+    ]
   };
 
   const handleSubmit = async (values: any) => {
@@ -206,7 +206,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                     value={item.quantity}
                                     onChange={handleChange}
                                     endAdornment={
-                                        <InputAdornment position="end">{rawMaterial.find(r => r.id === item.rawMaterialId) || ''}</InputAdornment>}
+                                        <InputAdornment position="end">{rawMaterial?.find(r => r.id === item.rawMaterialId)?.unit || ''}</InputAdornment>}
                                 />
                             </FormControl>
                             </Grid>

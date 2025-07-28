@@ -16,18 +16,18 @@ export async function getTopProducts() {
   const products = productResult?.data?.data[0] || 0;
   const orders = orderResult?.data?.data[0] || 0;
 
-  const productStats = products.map((product:any) => {
+  const productStats = products?.map((product:any) => {
 
-    const ordersOfProduct = orders.filter((order:any) => order.productId == product.id);
+    const ordersOfProduct = orders?.filter((order:any) => order?.productId == product?.id);
 
-    const sold = ordersOfProduct.reduce((sum:any, order:any)=>sum + (order.totalAmount || 1), 0);
+    const sold = ordersOfProduct?.reduce((sum:any, order:any)=>sum + (order?.totalAmount || 1), 0);
 
     const profit = getProductProfit(product, ordersOfProduct);
 
     return {
-      name: product.name,
-      category: product.category,
-      price: product.price || 0,
+      name: product?.name,
+      category: product?.category,
+      price: product?.price || 0,
       sold,
       profit,
     };  
