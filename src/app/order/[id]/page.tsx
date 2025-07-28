@@ -1,7 +1,7 @@
 'use client'
 import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button, CardMedia } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useRouter } from "next/navigation";
@@ -98,7 +98,7 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
         }
     ];
 
-    const getDetails = async () => {
+    const getDetails = useCallback(async () => {
         const url = `${urls?.endpoints?.order?.order}/${params.id}`;
         const urlInventory = urls?.endpoints?.inventory?.inventory;
 
@@ -132,11 +132,11 @@ const OrderViewPage = ({ params }: { params: { id: string } }) => {
         setDetails(response?.data?.data);
 
 
-    }
+    },[])
 
     useEffect(() => {
         getDetails();
-    }, [])
+    }, [getDetails])
 
     const navigate = useRouter()
     const handleNavigate = (id: any) => {

@@ -35,7 +35,7 @@ export async function TopProducts() {
               key={product.name + product.profit}
             >
               <TableCell className="flex min-w-fit items-center gap-3 pl-5 sm:pl-6 xl:pl-7.5">
-                <img
+                <Image
                   // src='https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'
                   src='/images/product/products.png' 
                   className="aspect-[6/5] w-15 rounded-[5px] object-cover"

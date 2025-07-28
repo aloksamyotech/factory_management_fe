@@ -5,7 +5,7 @@ import { Card, Tab, Tabs, Box, Grid, CardContent, Typography, Button, DialogCont
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import moment from 'moment';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Form from './form';
 
 interface MaintenanceInterface {
@@ -29,13 +29,13 @@ const MachineMaintanence = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   }
-  const fetchMachineDetails = async () => {
+  const fetchMachineDetails = useCallback(async () => {
     const url = `${urls?.endpoints?.machine?.machine}/${machineId}`;
     const response = await getApi(url);
     setMachineDetails(response?.data?.data);
-  }
+  },[])
 
-  const getData = async()=>{
+  const getData = useCallback(async()=>{
     const url = `${urls?.endpoints?.machine?.maintenance}?machineId=${machineId}`;
     const response = await getApi(url);
     const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
@@ -47,14 +47,14 @@ const MachineMaintanence = () => {
       createdAt: moment(item?.createdAt).format('ll'),
     }))
     setMaintenances(modifiedData);
-  };
+  },[]);
 
   useEffect(()=>{
     if(machineId){
       fetchMachineDetails();
       getData();
     }
-  }, [machineId]);
+  }, [machineId, fetchMachineDetails,getData]);
 
   const columns: GridColDef[] = [
     {

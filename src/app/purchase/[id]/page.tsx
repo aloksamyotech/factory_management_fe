@@ -1,7 +1,7 @@
 'use client'
 import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button, CardMedia } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useParams, useRouter } from "next/navigation";
@@ -86,7 +86,7 @@ const PurchaseViewPage = () => {
         navigate.push(`/rawmaterial/${id}`)
     }
 
-    const GetDetails = async () => {
+    const GetDetails = useCallback(async () => {
         const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
         const response = await getApi(url);
         setDetails(response?.data?.data);
@@ -102,11 +102,11 @@ const PurchaseViewPage = () => {
                 status: item?.status,
             }));
         setData(modifiedData)
-    }
+    },[]);
 
     useEffect(() => {
         GetDetails()
-    }, [])
+    }, [GetDetails])
 
     const goToPurchaseInvoice = () =>{
         navigate.push(`/purchase/${params.id}/invoice`);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     Typography, Button, Dialog, DialogContentText, Grid, FormControl,
     FormLabel, TextField, Autocomplete, Box, IconButton,
@@ -35,7 +35,7 @@ const Form = (props: any) => {
         vendor: yup.string().required('Please Select Vendor.')
     });
 
-    const fetchVendors = async () => {
+    const fetchVendors = useCallback(async () => {
         const res = await getApi(urls.endpoints.vendor.getAll);
         const formatted = res?.data?.data?.map((v: any) => ({
             id: v.id,
@@ -43,8 +43,8 @@ const Form = (props: any) => {
             phoneNumber: v.phoneNumber
         }));
         setVendors(formatted);
-    };
-    const fetchProducts = async () => {
+    },[]);
+    const fetchProducts = useCallback(async () => {
         const res = await getApi(urls.endpoints.rawMaterial.getAll);
         const formatted = res?.data?.data?.map((r: any) => ({
             id: r.id,
@@ -53,12 +53,12 @@ const Form = (props: any) => {
             unit: r.unit
         }));
         setProducts(formatted);
-    };
+    },[]);
 
     useEffect(() => {
         fetchVendors();
         fetchProducts();
-    }, []);
+    }, [fetchVendors,fetchProducts]);
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>

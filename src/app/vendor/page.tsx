@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridTool
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Form from "./form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
@@ -85,25 +85,25 @@ const VendorManagement = () => {
         }
     ];
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         const url = `${urls?.endpoints?.vendor?.vendor}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+        // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
             id: item.id,
             index: index + 1,
             fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
             phoneNumber: item?.phoneNumber,
             email: item?.email,
-            date: formattedDate
+            date: moment(item?.createdAt).format('ll')
         }));
         setData(modifiedData);
         setRowCount(response?.data?.data[1]);
-    };
+    },[]);
 
     useEffect(() => {
         getData();
-    }, [page]);
+    }, [page, getData]);
 
     const CustomToolbar = () => {
         return (

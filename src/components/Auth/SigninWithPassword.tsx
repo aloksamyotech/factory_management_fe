@@ -24,11 +24,13 @@ export default function SigninWithPassword() {
       localStorage.setItem('jwt', res?.data?.token)
 
       if(res?.success){
+      setTimeout(()=>{
+        router.push("/");
         setTimeout(()=>{
           window.location.reload()
-        }, 1000);
-        router.push("/");
-      }
+        }, 2500);
+      }, 1000);
+        }
     }
     catch(error){
       toast.error("Error Login");

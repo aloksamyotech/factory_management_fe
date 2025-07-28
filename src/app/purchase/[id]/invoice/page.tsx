@@ -6,22 +6,22 @@ import moment from 'moment';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 const InvoicePage = () => {
   const params = useParams();
   const [purchaseDetails, setPurchaseDetails] = useState<any>(null);
   const invoiceRef = useRef(null);
 
-  const getPurchaseDetails = async () =>{
+  const getPurchaseDetails = useCallback(async () =>{
     const url = `${urls?.endpoints?.purchase?.purchase}/${params?.id}`;
     const response = await getApi(url);
     setPurchaseDetails(response?.data?.data);
-  }
+  },[]);
 
   useEffect(()=>{
     getPurchaseDetails();
-  }, [])
+  }, [getPurchaseDetails])
 
   const handlePrintInvoice =()=>{
     setTimeout(()=>{

@@ -9,21 +9,45 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
-import { postApi } from "@/common/api";
+import { getApi, postApi } from "@/common/api";
 import { urls } from "@/common/url";
 import { useRouter } from "next/navigation";
+import {jwtDecode} from "jwt-decode";
 
 export function UserInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<any>();
   const router = useRouter();
 
-  const USER = {
-    name: "John Smith",
-    email: "johnson@nextadmin.com",
-    img: "/images/user/user-03.png",
-  };
+  const decodingToken = ()=>{
+  const token = localStorage.getItem("jwt");
+  if(token){
+    const decoded:any = jwtDecode(token);
+    return decoded?.id;
+  }
+  return null;
+};
+
+  const getEmployee = useCallback(async()=> {
+    const empId = decodingToken();
+    if(!empId) return;
+    const res = await getApi(`${urls?.endpoints?.employee?.getAll}`)
+    const allEmp = res?.data?.data[0]
+    const empData = allEmp.find((emp:any)=>emp.id === empId);
+    setData({
+      id:empData.id,
+      fullName: `${empData.firstName} ${empData.lastName ?? ""}`,
+      phoneNumber: empData.phoneNumber,
+      email:empData.email,
+      department: empData.department,
+    })
+  },[]);
+
+  useEffect(()=>{
+    getEmployee()
+  },[getEmployee]);
 
   const logout = async()=>{
     await postApi(`${urls?.endpoints?.employee.employee}/logout`, {});
@@ -34,6 +58,7 @@ export function UserInfo() {
       window.location.reload();
   }
 
+  if(!data) return null;
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger className="rounded align-middle outline-none ring-primary ring-offset-2 focus-visible:ring-1 dark:ring-offset-gray-dark">
@@ -41,15 +66,15 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-3">
           <Image
-            src={USER.img}
+            src='/images/user/employee.png'
             className="size-12"
-            alt={`Avatar of ${USER.name}`}
+            alt={`Avatar of ${data.fullName}`}
             role="presentation"
             width={200}
             height={200}
           />
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{data.fullName}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -71,9 +96,9 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           <Image
-            src={USER.img}
+            src='/images/user/employee.png'
             className="size-12"
-            alt={`Avatar for ${USER.name}`}
+            alt={`Avatar for ${data.fullName}`}
             role="presentation"
             width={200}
             height={200}
@@ -81,10 +106,10 @@ export function UserInfo() {
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {USER.name}
+              {data.fullName}
             </div>
 
-            <div className="leading-none text-gray-6">{USER.email}</div>
+            <div className="leading-none text-gray-6">{data.email}</div>
           </figcaption>
         </figure>
 

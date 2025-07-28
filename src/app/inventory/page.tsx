@@ -3,7 +3,7 @@ import { Box, Button, Card, Grid, Tab, Tabs } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
@@ -84,7 +84,7 @@ const Order = () => {
         }
     ];
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
         const modifiedData = response?.data?.data[0]?.filter((item:any) => item?.type === 'product')?.map((item: any, index: number) => ({
@@ -107,11 +107,11 @@ const Order = () => {
         }));
         setDataRaw(modifiedDataRaw);
         setRowCount(response?.data?.data[1]);
-    };
+    }, []);
 
     useEffect(() => {
         getData();
-    }, [page]);
+    }, [page, getData]);
 
     const CustomToolbar = () => {
         return (
@@ -127,11 +127,11 @@ const Order = () => {
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <GridToolbarQuickFilter />
-                    <AddCircleOutlineIcon fontSize='large' sx={{
+                    {/* <AddCircleOutlineIcon fontSize='large' sx={{
                         // color: '#5750f1',
                         // cursor: 'pointer'
                         color: '#9d9e9f',
-                    }} />
+                    }} /> */}
                 </Box>
             </GridToolbarContainer>
         );

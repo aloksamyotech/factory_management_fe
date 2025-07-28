@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridTool
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Form from "./form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
@@ -139,7 +139,7 @@ const Order = () => {
         }
     ];
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         const url = `${urls?.endpoints?.order?.order}?page=${page + 1}&limit=${PageSize}`;
         const response = await getApi(url);
         const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => {
@@ -158,11 +158,11 @@ const Order = () => {
         setData(modifiedData);
 
         setRowCount(response?.data?.data[1]);
-    };
+    }, []);
 
     useEffect(() => {
         getData();
-    }, [page]);
+    }, [page, getData]);
 
     const CustomToolbar = () => {
         return (

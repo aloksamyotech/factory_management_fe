@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
     .min(new Date(), "Next Maintenance date must be today or later.")
     .required("Next Maintenance date is required")
 });
-const form = (props: any) => {
+const Formm = (props: any) => {
   const { open, handleClose, getData, machineId } = props;
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -127,4 +127,4 @@ const form = (props: any) => {
   )
 }
 
-export default form
+export default Formm;

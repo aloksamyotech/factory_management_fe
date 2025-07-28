@@ -26,7 +26,7 @@ const RawViewPage = () => {
     const GetPurchase = async () => {
         const url = `${urls?.endpoints?.purchase?.purchase}`
         const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+        // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0]
             ?.filter((item: any) => item.itemId.some((i: any) => i?.rawMaterial?.id == id))
             ?.map((item: any, index: number) => ({
@@ -37,7 +37,7 @@ const RawViewPage = () => {
                 items: item?.itemId,
                 totalAmount: item?.totalAmount,
                 status: item?.status,
-                date: formattedDate
+                date: moment(item?.createdAt).format("ll"),
             }));
         setData(modifiedData)
     }

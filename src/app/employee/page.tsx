@@ -1,6 +1,6 @@
 'use client';
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { urls } from "@/common/url";
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid";
@@ -91,7 +91,7 @@ const EmployeeManagement = () => {
     }
   ];
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const url = `${urls?.endpoints?.employee.getAll}?page=${page + 1}&limit=${pageSize}`;
     const response = await getApi(url);
 
@@ -112,11 +112,11 @@ const EmployeeManagement = () => {
     })) || [];
     setEmployees(rows);
     setRowCount(response?.data?.data[1] || 0);
-  };
+  }, []);
 
   useEffect(() => {
     getData();
-  }, [page]);
+  }, [page, getData]);
 
   const CustomToolbar = () => {
     return (

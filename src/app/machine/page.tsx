@@ -34,7 +34,7 @@ const MachineManagement = () => {
             field: 'index',
             headerName: '#',
             flex: 0.3,
-            cellClassName: 'name-column--cell name-column--cell--capitalize'
+            cellClassName: 'name-column--cell name-column--cell--capitalize',
         },
         {
             field: 'machine',
@@ -116,7 +116,7 @@ const MachineManagement = () => {
                 }}>
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <GridToolbarQuickFilter />
+                    <GridToolbarQuickFilter/>
                     <AddCircleOutlineIcon fontSize='large' sx={{ color: '#5750f1', cursor: 'pointer' }} onClick={handleOpenAdd} />
                 </Box>
             </GridToolbarContainer>

@@ -72,12 +72,12 @@ const Formm = ({ open, handleClose, getData }: any) => {
     quantity: '',
     machine: null,
     estimationTime: '',
-    items: [
-      {
-        rawMaterialId: '',
-        quantity: 1
-      }
-    ]
+    // items: [
+    //   {
+    //     rawMaterialId: '',
+    //     quantity: 1
+    //   }
+    // ]
   };
 
   const handleSubmit = async (values: any) => {

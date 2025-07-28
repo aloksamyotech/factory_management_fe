@@ -1,7 +1,7 @@
 'use client'
 import { Box, Container, Tab, Tabs, Typography, Grid, Card, CardContent, Button, CardMedia } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useParams, useRouter } from "next/navigation";
@@ -14,29 +14,29 @@ const CustomerViewPage = () => {
     const id = params?.id
     const [Details, setDetails] = useState<any | null>(null)
     const [data, setData] = useState([])
-    const GetDetails = async () => {
+    const GetDetails = useCallback(async () => {
         const url = `${urls?.endpoints?.customer?.customer}/${id}`
         const response = await getApi(url);
         setDetails(response?.data?.data);
-    }
-    const GetPurchase = async () => {
+    },[]);
+    const GetPurchase = useCallback(async () => {
         const url = `${urls?.endpoints?.order?.order}?customerId=${id}`
         const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+        // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
         const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
             index: index + 1,
-            createdAt: formattedDate,
+            createdAt: moment(item?.createdAt).format("ll"),
             id: item.id,
             item: item?.itemId,
             totalAmount: item?.totalAmount,
             status: item?.status
         }));
         setData(modifiedData)
-    }
+    },[]);
     useEffect(() => {
         GetDetails();
         GetPurchase();
-    }, [])
+    }, [GetDetails,GetPurchase])
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
 

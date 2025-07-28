@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { Form, Formik } from 'formik';
 import { urls } from '@/common/url';
 import { patchApi } from '@/common/api';
-const status = (props: any) => {
+const Status = (props: any) => {
   const { open, handleClose, productionId, getData } = props;
 
   const initialValues = {
@@ -21,10 +21,6 @@ const status = (props: any) => {
     handleClose();
   }
 
-
-  useEffect(() => {
-
-  }, [productionId]);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='xs' fullWidth>
@@ -72,4 +68,4 @@ const status = (props: any) => {
   );
 }
 
-export default status;
+export default Status;

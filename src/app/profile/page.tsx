@@ -3,9 +3,12 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CameraIcon } from "./_components/icons";
 import { SocialAccounts } from "./_components/social-accounts";
+import { jwtDecode } from "jwt-decode";
+import { getApi } from "@/common/api";
+import { urls } from "@/common/url";
 
 export default function Page() {
   const [data, setData] = useState({
@@ -13,29 +16,59 @@ export default function Page() {
     profilePhoto: "/images/user/user-03.png",
     coverPhoto: "/images/cover/cover-01.png",
   });
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = (e: any) => {
-    if (e.target.name === "profilePhoto" ) {
-      const file = e.target?.files[0];
-
-      setData({
-        ...data,
-        profilePhoto: file && URL.createObjectURL(file),
-      });
-    } else if (e.target.name === "coverPhoto") {
-      const file = e.target?.files[0];
-
-      setData({
-        ...data,
-        coverPhoto: file && URL.createObjectURL(file),
-      });
-    } else {
-      setData({
-        ...data,
-        [e.target.name]: e.target.value,
-      });
+  const decodingToken = ()=>{
+    const token = localStorage.getItem("jwt");
+    if(token){
+      const decoded:any = jwtDecode(token);
+      return decoded?.id;
     }
+    return null;
   };
+  
+    const getEmployee = async()=> {
+      const empId = decodingToken();
+      if(!empId) return;
+      const res = await getApi(`${urls?.endpoints?.employee?.getAll}`)
+      const allEmp = res?.data?.data[0]
+      const empData = allEmp.find((emp:any)=>emp.id === empId);
+      setData({
+        name: `${empData.firstName} ${empData.lastName ?? ""}`,
+        department: empData.department,
+        profilePhoto: empData.profilePhoto || "/images/user/user-03.png",
+        coverPhoto: empData.coverPhoto || "/images/cover/cover-01.png",
+      })
+    };
+  
+    useEffect(()=>{
+      getEmployee().finally(()=> setLoading(false));
+    },[]);
+
+    if (loading) return <div style={{display: 'flex', justifyContent:'center', alignItems:'center'}}>Loading...</div>;
+
+  // const handleChange = (e: any) => {
+  //   if (e.target.name === "profilePhoto" ) {
+  //     const file = e.target?.files[0];
+
+  //     setData({
+  //       ...data,
+  //       profilePhoto: file && URL.createObjectURL(file),
+  //     });
+  //   } else if (e.target.name === "coverPhoto") {
+  //     const file = e.target?.files[0];
+
+  //     setData({
+  //       ...data,
+  //       coverPhoto: file && URL.createObjectURL(file),
+  //     });
+  //   } else {
+  //     setData({
+  //       ...data,
+  //       [e.target.name]: e.target.value,
+  //     });
+  //   }
+  // };
 
   return (
     <div className="mx-auto w-full max-w-[970px]">
@@ -64,7 +97,7 @@ export default function Page() {
                 name="coverPhoto"
                 id="coverPhoto"
                 className="sr-only"
-                onChange={handleChange}
+                // onChange={handleChange}
                 accept="image/png, image/jpg, image/jpeg"
               />
 
@@ -98,7 +131,7 @@ export default function Page() {
                       name="profilePhoto"
                       id="profilePhoto"
                       className="sr-only"
-                      onChange={handleChange}
+                      // onChange={handleChange}
                       accept="image/png, image/jpg, image/jpeg"
                     />
                   </label>
@@ -110,7 +143,7 @@ export default function Page() {
             <h3 className="mb-1 text-heading-6 font-bold text-dark dark:text-white">
               {data?.name}
             </h3>
-            <p className="font-medium">Ui/Ux Designer</p>
+            <p className="font-medium">{data?.department}</p>
             <div className="mx-auto mb-5.5 mt-5 grid max-w-[370px] grid-cols-3 rounded-[5px] border border-stroke py-[9px] shadow-1 dark:border-dark-3 dark:bg-dark-2 dark:shadow-card">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-dark-3 xsm:flex-row">
                 <span className="font-medium text-dark dark:text-white">
