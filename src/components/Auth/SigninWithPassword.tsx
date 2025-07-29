@@ -14,25 +14,22 @@ export default function SigninWithPassword() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    
-    try{      
-      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, {email, password})
+
+    try {
+      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, { email, password })
       localStorage.setItem('jwt', res?.data?.token)
-      
-      if(res?.success){
-        router.push("/");
-        setTimeout(()=>{
-          window.location.reload();
-        }, 3000);
+
+      if (res?.success) {
+        window.location.href = "/";
       }
     }
-    catch(error){
+    catch (error) {
       toast.error("Error Login");
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -46,7 +43,7 @@ export default function SigninWithPassword() {
         placeholder="Enter your email"
         name="email"
         value={email}
-        handleChange={e=> setEmail(e.target.value)}
+        handleChange={e => setEmail(e.target.value)}
         required
         icon={<EmailIcon />}
       />
@@ -58,7 +55,7 @@ export default function SigninWithPassword() {
         placeholder="Enter your password"
         name="password"
         value={password}
-        handleChange={e=> setPassword(e.target.value)}
+        handleChange={e => setPassword(e.target.value)}
         required
         icon={<PasswordIcon />}
       />
@@ -70,7 +67,7 @@ export default function SigninWithPassword() {
           withIcon="check"
           minimal
           radius="md"
-        
+
         />
 
         <Link
@@ -89,10 +86,10 @@ export default function SigninWithPassword() {
         >
           {loading ? (
             <>
-            Signing In...
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
+              Signing In...
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
             </>
-          ) : ( "Sign In")
+          ) : ("Sign In")
           }
         </button>
       </div>
