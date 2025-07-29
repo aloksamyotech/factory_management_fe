@@ -1,18 +1,20 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// const defaultHeaders = {
-//   authorization: `Bearer ${localStorage.getItem("token")}`
-// };
+const defaultHeaders = {
+  authorization: typeof window !== "undefined"
+    ? `Bearer ${localStorage.getItem("jwt")}`
+    : "",
+};
 
 export const postApi = async (url: any, data: any, customHeaders = {}) => {
   try {
 
     const headers = {
-      // ...defaultHeaders,
+      ...defaultHeaders,
       ...customHeaders
     }
-    const response = await axios.post(url, data, { headers, withCredentials:true});
+    const response = await axios.post(url, data, { headers, withCredentials: true });
     toast.success(response?.data?.message || 'Success');
     return response.data;
   } catch (error: any) {
@@ -25,7 +27,7 @@ export const postApi = async (url: any, data: any, customHeaders = {}) => {
 export const putApi = async (url: any, data: any, customHeaders = {}) => {
   try {
     const headers = {
-      // ...defaultHeaders,
+      ...defaultHeaders,
       ...customHeaders
     }
     const response = await axios.put(url, data, { headers });
@@ -41,8 +43,8 @@ export const putApi = async (url: any, data: any, customHeaders = {}) => {
 
 export const getApi = async (url: any) => {
   try {
-    // const response = await axios.get(url, { headers: defaultHeaders });
-    const response = await axios.get(url);
+    const response = await axios.get(url, { headers: defaultHeaders });
+    // const response = await axios.get(url);
     return response;
   } catch (error) {
     // toast.error(error?.response?.data?.message);
@@ -51,9 +53,13 @@ export const getApi = async (url: any) => {
   }
 };
 
-export const patchApi = async (url: any, data: any) => {
+export const patchApi = async (url: any, data: any, customHeaders = {}) => {
   try {
-    const response = await axios.patch(url, data);
+    const headers = {
+      ...defaultHeaders,
+      ...customHeaders
+    }
+    const response = await axios.patch(url, data, { headers });
     toast.success(response?.data?.message);
     return response.data;
   }
@@ -65,8 +71,9 @@ export const patchApi = async (url: any, data: any) => {
 export const getRoleFromToken = () => {
   const token = localStorage.getItem('jwt');
   if (!token) {
-      return false;
-  }else{
+    return false;
+  } else {
+
     return true;
   }
 };
