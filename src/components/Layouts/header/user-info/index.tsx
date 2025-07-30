@@ -28,10 +28,7 @@ export function UserInfo() {
   const logout = async()=>{
     await postApi(`${urls?.endpoints?.employee.employee}/logout`, {});
     localStorage.clear();
-    router.push("/sign-in");
-    setTimeout(()=>{
-      window.location.reload();
-    }, 2500);
+    window.location.href = "/sign-in";
   }
 
   return (

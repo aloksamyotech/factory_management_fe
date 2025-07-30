@@ -3,8 +3,6 @@ import { getApi } from '@/common/api';
 import { urls } from '@/common/url';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
 import moment from 'moment';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 

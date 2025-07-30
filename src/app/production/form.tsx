@@ -1,7 +1,10 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+"use client";
+import React, { useEffect, useState } from "react";
 import {
-  TextField, Button, Autocomplete, Typography,
+  TextField,
+  Button,
+  Autocomplete,
+  Typography,
   DialogTitle,
   Dialog,
   DialogContent,
@@ -12,42 +15,61 @@ import {
   FormControl,
   OutlinedInput,
   InputAdornment,
-  IconButton
-} from '@mui/material';
-import { Formik, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
-import { getApi, postApi } from '@/common/api';
-import { urls } from '@/common/url';
-import ClearIcon from '@mui/icons-material/Clear';
-import DeleteIcon from '@mui/icons-material/Delete';
+  IconButton,
+} from "@mui/material";
+import { Formik, Form, FieldArray } from "formik";
+import * as Yup from "yup";
+import { getApi, postApi } from "@/common/api";
+import { urls } from "@/common/url";
+import ClearIcon from "@mui/icons-material/Clear";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type DropdownOption = {
-  id: string; title: string;unit:string
+  id: string;
+  title: string;
+  unit: string;
+  quantity: number;
 };
 
 const validationSchema = Yup.object().shape({
   product: Yup.string().required("Product is required"),
-  quantity: Yup.number().typeError("Quantity must be a number").required("Quantity is required"),
-  estimationTime: Yup.string().required("Estimate time is required").matches(/^(\d{1,2}):([0-5][0-9])$/, 'Enter time in HH:MM format'),
+  quantity: Yup.number()
+    .typeError("Quantity must be a number")
+    .required("Quantity is required"),
+  estimationTime: Yup.string()
+    .required("Estimate time is required")
+    .matches(/^(\d{1,2}):([0-5][0-9])$/, "Enter time in HH:MM format"),
 });
 
 const Formm = ({ open, handleClose, getData }: any) => {
-
   const [products, setProducts] = useState<any>([]);
   const [machines, setMachines] = useState<any>([]);
+  const [inventory, setInventory] = useState<any>([]);
   const [rawMaterial, setRawMaterial] = useState<DropdownOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchDropdowns = async () => {
     setLoading(true);
 
+    const inventoryRes = await getApi(urls?.endpoints?.inventory.inventory);
+    const inventory = inventoryRes?.data?.data[0].reduce(
+      (acc: any, item: any) => {
+        const rmID = item?.rawMaterialId?.id;
+        acc[rmID] = (acc[rmID] || 0) + item.quantity;
+        return acc;
+      },
+      {},
+    );
+    setInventory(inventory);
+
     const rawMaterialRes = await getApi(urls?.endpoints?.rawMaterial?.getAll);
-    const formattedRaw = rawMaterialRes?.data?.data?.map((r:any)=>({
-        id: r.id,
-        title:r.title,
-        unit: r.unit
-    })); 
-    setRawMaterial(formattedRaw || [])
+    const formattedRaw = rawMaterialRes?.data?.data?.map((r: any) => ({
+      id: r.id,
+      title: r.title,
+      unit: r.unit,
+      quantity: inventory[r.id] || 0,
+    }));
+    setRawMaterial(formattedRaw || []);
 
     const productRes = await getApi(urls?.endpoints?.product?.getAll);
     const formatted = productRes?.data?.data[0]?.map((r: any) => ({
@@ -69,16 +91,16 @@ const Formm = ({ open, handleClose, getData }: any) => {
   }, []);
 
   const initialValues = {
-    product: '',
-    quantity: '',
+    product: "",
+    quantity: "",
     machine: null,
-    estimationTime: '',
+    estimationTime: "",
     items: [
       {
-        rawMaterialId: '',
-        quantity: 1
-      }
-    ]
+        rawMaterialId: null,
+        quantity: null,
+      },
+    ],
   };
 
   const handleSubmit = async (values: any) => {
@@ -91,9 +113,9 @@ const Formm = ({ open, handleClose, getData }: any) => {
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h6" >Add Production</Typography>
-        <ClearIcon onClick={handleClose} style={{ cursor: 'pointer' }} />
+      <DialogTitle style={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h6">Add Production</Typography>
+        <ClearIcon onClick={handleClose} style={{ cursor: "pointer" }} />
       </DialogTitle>
       <Formik
         initialValues={initialValues}
@@ -108,12 +130,18 @@ const Formm = ({ open, handleClose, getData }: any) => {
                   <Grid size={6}>
                     <FormLabel>Select Product*</FormLabel>
                     <Autocomplete
-                      size='small'
+                      size="small"
                       options={products}
                       loading={loading}
                       getOptionLabel={(option: any) => option.title}
-                      value={products.find((v: { id: any }) => v.id === values.product) || null}
-                      onChange={(e, val) => setFieldValue('product', val?.id || '')}
+                      value={
+                        products.find(
+                          (v: { id: any }) => v.id === values.product,
+                        ) || null
+                      }
+                      onChange={(e, val) =>
+                        setFieldValue("product", val?.id || "")
+                      }
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -127,9 +155,9 @@ const Formm = ({ open, handleClose, getData }: any) => {
                     <FormLabel>Quantity*</FormLabel>
                     <TextField
                       name="quantity"
-                      size='small'
+                      size="small"
                       fullWidth
-                      type='number'
+                      type="number"
                       value={values.quantity}
                       onChange={handleChange}
                       error={touched.quantity && Boolean(errors.quantity)}
@@ -139,12 +167,18 @@ const Formm = ({ open, handleClose, getData }: any) => {
                   <Grid size={6}>
                     <FormLabel>Select Machine</FormLabel>
                     <Autocomplete
-                      size='small'
+                      size="small"
                       options={machines}
                       loading={loading}
                       getOptionLabel={(option: any) => option.title}
-                      value={machines.find((v: { id: any }) => v.id === values.machine) || null}
-                      onChange={(e, val) => setFieldValue('machine', val?.id || '')}
+                      value={
+                        machines.find(
+                          (v: { id: any }) => v.id === values.machine,
+                        ) || null
+                      }
+                      onChange={(e, val) =>
+                        setFieldValue("machine", val?.id || "")
+                      }
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -157,88 +191,188 @@ const Formm = ({ open, handleClose, getData }: any) => {
                   <Grid size={6}>
                     <FormLabel>Time Estimation*</FormLabel>
                     <TextField
-                      size='small'
-                      name='estimationTime'
+                      size="small"
+                      name="estimationTime"
                       fullWidth
                       value={values.estimationTime}
                       onChange={handleChange}
-                      error={touched.estimationTime && Boolean(errors.estimationTime)}
-                      helperText={touched.estimationTime && errors.estimationTime}
+                      error={
+                        touched.estimationTime && Boolean(errors.estimationTime)
+                      }
+                      helperText={
+                        touched.estimationTime && errors.estimationTime
+                      }
                     />
                   </Grid>
                 </Grid>
-                {/* <FieldArray name='items'>
-                  {({push, remove}) => (
-                    <Box sx={{border: '1px solid #ccc',
-                              borderRadius: '5px',
-                              padding:2,
-                              height: 150,
-                              overflowY: 'auto',
-                              mt:2,
-                              mb:2
-                    }}>
-                      {values.items.map((item, index)=> (
-                        <Grid container spacing={2} key={index} alignItems="center" sx={{mt:1}}>
-                          <Grid size={5}>
+                <FieldArray name="items">
+                  {({ push, remove }) => (
+                    <Box
+                      sx={{
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                        padding: 2,
+                        height: 150,
+                        overflowY: "auto",
+                        mt: 2,
+                        mb: 2,
+                      }}
+                    >
+                      {values.items.map((item, index) => (
+                        <Grid
+                          container
+                          spacing={2}
+                          key={index}
+                          alignItems="center"
+                          sx={{ mt: 1 }}
+                        >
+                          <Grid size={4.5}>
                             <FormControl fullWidth>
-                            <FormLabel>Select Raw Material*</FormLabel>
-                            <Autocomplete 
-                              size='small'
-                              options={rawMaterial}
-                              getOptionLabel={(option:any)=>option.title}
-                              value={rawMaterial.find(r => r.id === item.rawMaterialId) || null}
-                              onChange={(e, val)=>setFieldValue(`items[${index}].rawMaterialId`, val?.id || '')}
-                              renderInput={(params)=>(
-                                <TextField 
-                                {...params}
-                                placeholder='Select Raw Material' 
-                                />
-                              )}
+                              <FormLabel>Select Raw Material*</FormLabel>
+                              <Autocomplete
+                                size="small"
+                                options={rawMaterial}
+                                getOptionLabel={(option: any) => option.title}
+                                renderOption={(props, option) => (
+                                  <li
+                                    {...props}
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                    }}
+                                  >
+                                    <span>{option.title}</span>
+                                    <span
+                                      style={{
+                                        backgroundColor: "limegreen",
+                                        fontSize: "13px",
+                                        borderRadius: "10px",
+                                        marginLeft: "10px",
+                                        padding: "1px 5px",
+                                      }}
+                                    >
+                                      {" "}
+                                      Qty:{option.quantity}
+                                    </span>
+                                  </li>
+                                )}
+                                value={
+                                  rawMaterial.find(
+                                    (r) => r.id === item.rawMaterialId,
+                                  ) || null
+                                }
+                                onChange={(e, val) =>
+                                  setFieldValue(
+                                    `items[${index}].rawMaterialId`,
+                                    val?.id || "",
+                                  )
+                                }
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    placeholder="Select Raw Material"
+                                  />
+                                )}
                               />
                             </FormControl>
                           </Grid>
-                          <Grid size={5}>
+                          <Grid size={4.5}>
                             <FormControl fullWidth>
-                                <FormLabel>Quantity</FormLabel>
-                                <OutlinedInput
-                                    size="small"
-                                    type="number"
-                                    name={`items[${index}].quantity`}
-                                    value={item.quantity}
-                                    onChange={handleChange}
-                                    endAdornment={
-                                        <InputAdornment position="end">{rawMaterial?.find(r => r.id === item.rawMaterialId)?.unit || ''}</InputAdornment>}
-                                />
+                              <FormLabel>Quantity</FormLabel>
+                              <OutlinedInput
+                                size="small"
+                                type="number"
+                                name={`items[${index}].quantity`}
+                                value={item.quantity}
+                                onChange={handleChange}
+                                endAdornment={
+                                  <InputAdornment position="end">
+                                    {rawMaterial?.find(
+                                      (r) => r.id === item.rawMaterialId,
+                                    )?.unit || ""}
+                                  </InputAdornment>
+                                }
+                              />
                             </FormControl>
-                            </Grid>
-                            <Grid size={2}>
-                              <IconButton
-                                  onClick={()=>remove(index)}
-                                  disabled={values.items.length === 1}
-                                  sx={{ mt:3 }}
-                                  >
-                                <DeleteIcon color='error'/>
-                              </IconButton>
-                            </Grid>
+                          </Grid>
+                          <Grid size={1}>
+                            <IconButton
+                              onClick={() => remove(index)}
+                              disabled={values.items.length === 1}
+                              sx={{ mt: 3 }}
+                            >
+                              <DeleteIcon color="error" />
+                            </IconButton>
+                          </Grid>
+                          <Grid size={2} sx={{ mt: "17px" }}>
+                            {item.rawMaterialId &&
+                              (() => {
+                                // const raw = rawMaterial.find((r)=> r.id === item.rawMaterialId);
+                                const avail =
+                                  inventory[item.rawMaterialId] || 0;
+                                const enteredQty = item?.quantity;
+                                if (enteredQty && enteredQty > avail) {
+                                  return (
+                                    <Typography
+                                      variant="caption"
+                                      color="error"
+                                      sx={{
+                                        fontSize: "11px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Not Enough Stock
+                                    </Typography>
+                                  );
+                                } else {
+                                  return (
+                                    <Typography
+                                      variant="caption"
+                                      color="success"
+                                      sx={{
+                                        fontSize: "13px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Available
+                                    </Typography>
+                                  );
+                                }
+                              })()}
+                          </Grid>
                         </Grid>
                       ))}
                       <Button
                         variant="outlined"
-                        onClick={() => push({ rawMaterialId: '', quantity: 1 })}
+                        onClick={() => push({ rawMaterialId: "", quantity: 1 })}
                         sx={{ mt: 2 }}
-                    >
+                      >
                         + Add Item
-                    </Button>
+                      </Button>
                     </Box>
                   )}
-                </FieldArray> */}
+                </FieldArray>
               </DialogContent>
               <DialogActions>
-                <Button type='submit' variant='contained' onSubmit={handleSubmit}>Save</Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  onSubmit={handleSubmit}
+                  disabled={values.items.some(
+                    (item) =>
+                      item.rawMaterialId && item?.quantity &&
+                      item?.quantity > (inventory[item.rawMaterialId] || 0),
+                  )}
+                >
+                  Save
+                </Button>
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={() => { handleClose() }}>
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
                   Cancel
                 </Button>
               </DialogActions>
