@@ -232,14 +232,28 @@ const Formm = ({ open, handleClose, getData }: any) => {
                               <Autocomplete
                                 size="small"
                                 options={rawMaterial}
-                                getOptionLabel={(option:any)=>option.title}
-                                renderOption={(props, option)=>(
-                                  <li {...props} style={{display:'flex', justifyContent:'space-between'}}>
+                                getOptionLabel={(option: any) => option.title}
+                                renderOption={(props, option) => (
+                                  <li
+                                    {...props}
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                    }}
+                                  >
                                     <span>{option.title}</span>
-                                    <span style={{
-                                      backgroundColor: 'limegreen', 
-                                      fontSize:'13px' ,borderRadius:'10px', marginLeft:'10px', padding:'1px 5px'}} 
-                                    > Qty:{option.quantity}</span>
+                                    <span
+                                      style={{
+                                        backgroundColor: "limegreen",
+                                        fontSize: "13px",
+                                        borderRadius: "10px",
+                                        marginLeft: "10px",
+                                        padding: "1px 5px",
+                                      }}
+                                    >
+                                      {" "}
+                                      Qty:{option.quantity}
+                                    </span>
                                   </li>
                                 )}
                                 value={
@@ -290,26 +304,41 @@ const Formm = ({ open, handleClose, getData }: any) => {
                               <DeleteIcon color="error" />
                             </IconButton>
                           </Grid>
-                          <Grid size={2} sx={{mt:'17px'}}>
-                            {item.rawMaterialId && (() => {
-                              // const raw = rawMaterial.find((r)=> r.id === item.rawMaterialId);
-                              const avail = inventory[item.rawMaterialId] || 0;
-                              const enteredQty = item.quantity;
-                              if(enteredQty > avail){
-                                return (
-                                  <Typography variant="caption" color="error" sx={{fontSize: '11px', fontWeight:'bold'}}>
-                                    Not Enough Stock
-                                  </Typography>
-                                )
-                              }else{
-                                return (
-                                  <Typography variant="caption" color='success' sx={{fontSize: '13px', fontWeight:'bold'}}>
-                                    Available
-                                  </Typography>
-                                )
-                              }
-                            })()
-                            }
+                          <Grid size={2} sx={{ mt: "17px" }}>
+                            {item.rawMaterialId &&
+                              (() => {
+                                // const raw = rawMaterial.find((r)=> r.id === item.rawMaterialId);
+                                const avail =
+                                  inventory[item.rawMaterialId] || 0;
+                                const enteredQty = item?.quantity;
+                                if (enteredQty && enteredQty > avail) {
+                                  return (
+                                    <Typography
+                                      variant="caption"
+                                      color="error"
+                                      sx={{
+                                        fontSize: "11px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Not Enough Stock
+                                    </Typography>
+                                  );
+                                } else {
+                                  return (
+                                    <Typography
+                                      variant="caption"
+                                      color="success"
+                                      sx={{
+                                        fontSize: "13px",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      Available
+                                    </Typography>
+                                  );
+                                }
+                              })()}
                           </Grid>
                         </Grid>
                       ))}
@@ -329,13 +358,11 @@ const Formm = ({ open, handleClose, getData }: any) => {
                   type="submit"
                   variant="contained"
                   onSubmit={handleSubmit}
-                  disabled={
-                    values.items.some(
-                      (item) =>
-                        item.rawMaterialId &&
-                        item.quantity > (inventory[item.rawMaterialId] || 0)
-                    )
-                  }
+                  disabled={values.items.some(
+                    (item) =>
+                      item.rawMaterialId && item?.quantity &&
+                      item?.quantity > (inventory[item.rawMaterialId] || 0),
+                  )}
                 >
                   Save
                 </Button>
