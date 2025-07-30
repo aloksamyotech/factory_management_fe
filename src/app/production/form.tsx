@@ -48,7 +48,6 @@ const Formm = ({ open, handleClose, getData }: any) => {
   const [rawMaterial, setRawMaterial] = useState<DropdownOption[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // console.log(inventory);
   const fetchDropdowns = async () => {
     setLoading(true);
 
