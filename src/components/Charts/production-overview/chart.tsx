@@ -18,7 +18,7 @@ export function ProductionDonutChart({ data }: PropsType) {
       fontFamily: "inherit",
     },
     colors: ['#ffff57','#87CEEB','#90ff7e'],
-    labels: data.map((item) => item.name),
+    labels: data?.map((item) => item?.name),
     legend: {
       show: true,
       position: "bottom",
@@ -89,7 +89,7 @@ export function ProductionDonutChart({ data }: PropsType) {
   return (
     <Chart
       options={chartOptions}
-      series={data.map((item) => item.amount)}
+      series={data?.map((item) => item?.amount)}
       type="donut"
     />
   );

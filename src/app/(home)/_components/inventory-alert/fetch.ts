@@ -8,33 +8,33 @@ export async function getInventoryAlerts() {
   const LOW_STOCK_THRESHOLD = 10;
 
   // Products
-  const lowStockProducts = inventory.filter(
+  const lowStockProducts = inventory?.filter(
     (item: any) =>
-      item.type === "product" &&
-      item.productId &&
-      item.quantity > 0 &&
-      item.quantity < LOW_STOCK_THRESHOLD
+      item?.type === "product" &&
+      item?.productId &&
+      item?.quantity > 0 &&
+      item?.quantity < LOW_STOCK_THRESHOLD
   );
-  const outOfStockProducts = inventory.filter(
+  const outOfStockProducts = inventory?.filter(
     (item: any) =>
-      item.type === "product" &&
-      item.productId &&
-      item.quantity === 0
+      item?.type === "product" &&
+      item?.productId &&
+      item?.quantity === 0
   );
 
   // Raw Materials
-  const lowStockRawMaterials = inventory.filter(
+  const lowStockRawMaterials = inventory?.filter(
     (item: any) =>
-      item.type === "rawMaterial" &&
-      item.rawMaterialId &&
-      item.quantity > 0 &&
-      item.quantity < LOW_STOCK_THRESHOLD
+      item?.type === "rawMaterial" &&
+      item?.rawMaterialId &&
+      item?.quantity > 0 &&
+      item?.quantity < LOW_STOCK_THRESHOLD
   );
-  const outOfStockRawMaterials = inventory.filter(
+  const outOfStockRawMaterials = inventory?.filter(
     (item: any) =>
-      item.type === "rawMaterial" &&
-      item.rawMaterialId &&
-      item.quantity === 0
+      item?.type === "rawMaterial" &&
+      item?.rawMaterialId &&
+      item?.quantity === 0
   );
 
   return {

@@ -15,28 +15,28 @@ export async function getOverviewData() {
   
   return {
     orders: {
-      value: orderResult?.data?.data[0].length || 0,
+      value: orderResult?.data?.data[0]?.length || 0,
     },
     profit: {
-      value: orderResult?.data?.data[0].reduce((sum:any, order: any)=>sum+(order.totalAmount || 0), 0) || 0,
+      value: orderResult?.data?.data[0]?.reduce((sum:any, order: any)=>sum+(order?.totalAmount || 0), 0) || 0,
     },
     products: {
-      value: productResult?.data?.data[0].length || 0,
+      value: productResult?.data?.data[0]?.length || 0,
     },
     customers: {
-      value: customerResult?.data?.data[0].length || 0,
+      value: customerResult?.data?.data[0]?.length || 0,
     },
     inventory: {
-      value: inventoryResult?.data?.data[0].length || 0,
+      value: inventoryResult?.data?.data[0]?.length || 0,
     },
     rawMaterial: {
-      value: rawMaterialResult?.data?.data[0].length || 0,
+      value: rawMaterialResult?.data?.data[0]?.length || 0,
     },
     machines: {
-      value: machineResult?.data?.data[0].length || 0,
+      value: machineResult?.data?.data[0]?.length || 0,
     },
     employees: {
-      value: employeeResult?.data?.data[0].length || 0,
+      value: employeeResult?.data?.data[0]?.length || 0,
     }
   };
 }

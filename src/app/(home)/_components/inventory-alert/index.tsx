@@ -4,19 +4,19 @@ export async function InventoryAlerts() {
   const { lowStockProducts, outOfStockProducts, lowStockRawMaterials, outOfStockRawMaterials} = await getInventoryAlerts();
   
   const renderProductRow = (item: any, status: string)=>(
-    <tr key={item.productId.id}>
-      <td className="px-4 py-2 font-medium">{item.productId.name}</td>
-      <td className="px-4 py-2">{item.productId.category}</td>
-      <td className="px-4 py-2">{item.quantity}</td>
+    <tr key={item?.productId?.id}>
+      <td className="px-4 py-2 font-medium">{item?.productId?.name}</td>
+      <td className="px-4 py-2">{item?.productId?.category}</td>
+      <td className="px-4 py-2">{item?.quantity}</td>
       <td className="px-4 py-2">{status}</td>
     </tr>
   );
 
   const renderRawMaterialRow = (item:any, status:string)=>(
-    <tr key={item.rawMaterialId.id}>
-      <td className="px-4 py-2 font-medium">{item.rawMaterialId.title}</td>
-      <td className="px-4 py-2">{item.rawMaterialId.description}</td>
-      <td className="px-4 py-2">{item.quantity}</td>
+    <tr key={item?.rawMaterialId?.id}>
+      <td className="px-4 py-2 font-medium">{item?.rawMaterialId?.title}</td>
+      <td className="px-4 py-2">{item?.rawMaterialId?.description}</td>
+      <td className="px-4 py-2">{item?.quantity}</td>
       <td className="px-4 py-2">{status}</td>
     </tr>
   );
@@ -38,9 +38,9 @@ export async function InventoryAlerts() {
             </tr>
           </thead>
           <tbody>
-            {lowStockProducts.map((item:any) => renderProductRow(item, "Low Stock"))}
-            {outOfStockProducts.map((item:any) => renderProductRow(item, "Out of Stock"))}
-            {lowStockProducts.length === 0 && outOfStockProducts.length === 0 && (
+            {lowStockProducts?.map((item:any) => renderProductRow(item, "Low Stock"))}
+            {outOfStockProducts?.map((item:any) => renderProductRow(item, "Out of Stock"))}
+            {lowStockProducts?.length === 0 && outOfStockProducts?.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-2 text-center text-gray-400">
                   All products sufficiently stocked
@@ -63,9 +63,9 @@ export async function InventoryAlerts() {
             </tr>
           </thead>
           <tbody>
-            {lowStockRawMaterials.map((item:any) => renderRawMaterialRow(item, "Low Stock"))}
-            {outOfStockRawMaterials.map((item:any) => renderRawMaterialRow(item, "Out of Stock"))}
-            {lowStockRawMaterials.length === 0 && outOfStockRawMaterials.length === 0 && (
+            {lowStockRawMaterials?.map((item:any) => renderRawMaterialRow(item, "Low Stock"))}
+            {outOfStockRawMaterials?.map((item:any) => renderRawMaterialRow(item, "Out of Stock"))}
+            {lowStockRawMaterials?.length === 0 && outOfStockRawMaterials?.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-2 text-center text-gray-400">
                   All raw materials sufficiently stocked

@@ -15,30 +15,30 @@ export async function getProductionStatusOverview() {
   const today = new Date();
   const todayStr = today.toISOString().slice(0,10);
   
-  const todaysProduction = production.filter((prod:any)=>{
+  const todaysProduction = production?.filter((prod:any)=>{
     if(!prod.createdAt) return false;
     const prodDate = new Date(prod.createdAt).toISOString().slice(0,10);
     return prodDate === todayStr;
   })
 
-  const statusCounts = todaysProduction.reduce((acc: Record<string, number>, prod: any) => {
+  const statusCounts = todaysProduction?.reduce((acc: Record<string, number>, prod: any) => {
     const status = (prod.status || "").toLowerCase();
     acc[status] = (acc[status] || 0) + 1;
     return acc; 
   }, {});
 
-  const inProduction = todaysProduction.filter(
+  const inProduction = todaysProduction?.filter(
     (prod:any) => 
-      prod.status?.toLowerCase() === 'pending' || prod.status?.toLowerCase() === 'in_progress'
+      prod?.status?.toLowerCase() === 'pending' || prod?.status?.toLowerCase() === 'in_progress'
   );
 
-  const productsInProduction = inProduction.map((prod:any)=> ({
-    productName: prod.product.name || "",
-    machineName: prod.machine.name || "",
-    quantity: prod.quantity || 0,
-    status: prod.status,
-    estimateTime: prod.estimationTime,
-    id: prod.id, 
+  const productsInProduction = inProduction?.map((prod:any)=> ({
+    productName: prod?.product?.name || "",
+    machineName: prod?.machine?.name || "",
+    quantity: prod?.quantity || 0,
+    status: prod?.status,
+    estimateTime: prod?.estimationTime,
+    id: prod?.id, 
   }));
 
   return {statusCounts, productsInProduction};
@@ -51,7 +51,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
     {name: 'Pending', amount: statusCounts["pending"]},
     {name: 'In Progress', amount: statusCounts["in_progress"]},
     {name: 'Completed', amount: statusCounts["completed"]},
-  ].filter(item => item.amount > 0);
+  ]?.filter(item => item.amount > 0);
   return (
     <div className={cn("grid grid-cols-1 grid-rows-[auto_1fr] gap-9 rounded-[10px] bg-white p-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card",className)}>
       <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Todays Production Overview</h2>
@@ -72,19 +72,19 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
               </tr>
             </thead>
             <tbody>
-              {productsInProduction.length > 0 ? (
-                productsInProduction.map((prod:any)=>(
+              {productsInProduction?.length > 0 ? (
+                productsInProduction?.map((prod:any)=>(
                   <tr key={prod.id}>
-                    <td className="px-4 py-2">{prod.productName}</td>
-                    <td className="px-4 py-2">{prod.machineName}</td>
-                    <td className="px-4 py-2">{prod.quantity}</td>
+                    <td className="px-4 py-2">{prod?.productName}</td>
+                    <td className="px-4 py-2">{prod?.machineName}</td>
+                    <td className="px-4 py-2">{prod?.quantity}</td>
                     <td className="px-4 py-2">{
-                      <span className={prod.status === 'pending' ? 'text-yellow-400': 'text-blue-500'}>
-                        {prod.status === 'pending' ? "Pending":"In Progress"}
+                      <span className={prod?.status === 'pending' ? 'text-yellow-400': 'text-blue-500'}>
+                        {prod?.status === 'pending' ? "Pending":"In Progress"}
                         </span>
                       }
                     </td>
-                    <td className='px-4 py-2'>{prod.estimateTime}</td>
+                    <td className='px-4 py-2'>{prod?.estimateTime}</td>
                   </tr>
                 ))
               ) : (

@@ -12,7 +12,7 @@ export async function OverviewCardsGroup() {
         label="Total Orders"
         data={{
           ...orders,
-          value: compactFormat(orders.value),
+          value: compactFormat(orders?.value),
         }}
         Icon={icons.Views}
       />
@@ -21,7 +21,7 @@ export async function OverviewCardsGroup() {
         label="Total Profit"
         data={{
           ...profit,
-          value: "₹" + compactFormat(profit.value),
+          value: "₹" + compactFormat(profit?.value),
         }}
         Icon={icons.Profit}
       />
@@ -30,7 +30,7 @@ export async function OverviewCardsGroup() {
         label="Total Products"
         data={{
           ...products,
-          value: compactFormat(products.value),
+          value: compactFormat(products?.value),
         }}
         Icon={icons.Product}
       />
@@ -39,7 +39,7 @@ export async function OverviewCardsGroup() {
         label="Total Customers"
         data={{
           ...customers,
-          value: compactFormat(customers.value),
+          value: compactFormat(customers?.value),
         }}
         Icon={icons.Users}
       />
@@ -48,7 +48,7 @@ export async function OverviewCardsGroup() {
         label="Total Inventory"
         data={{
           ...inventory,
-          value: compactFormat(inventory.value),
+          value: compactFormat(inventory?.value),
         }}
         Icon={icons.Inventory}
       />
@@ -57,7 +57,7 @@ export async function OverviewCardsGroup() {
         label="Total Raw Materials"
         data={{
           ...rawMaterial,
-          value: compactFormat(rawMaterial.value),
+          value: compactFormat(rawMaterial?.value),
         }}
         Icon={icons.Product}
       />
@@ -66,7 +66,7 @@ export async function OverviewCardsGroup() {
         label="Total Employees"
         data={{
           ...employees,
-          value: compactFormat(employees.value),
+          value: compactFormat(employees?.value),
         }}
         Icon={icons.Users}
       />
@@ -75,7 +75,7 @@ export async function OverviewCardsGroup() {
         label="Total Machines"
         data={{
           ...machines,
-          value: compactFormat(machines.value),
+          value: compactFormat(machines?.value),
         }}
         Icon={icons.Machine}
       />

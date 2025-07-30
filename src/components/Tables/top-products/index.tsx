@@ -29,10 +29,10 @@ export async function TopProducts() {
         </TableHeader>
 
         <TableBody>
-          {data.map((product:any) => (
+          {data?.map((product:any) => (
             <TableRow
               className="text-base font-medium text-dark dark:text-white"
-              key={product.name + product.profit}
+              key={product?.name + product?.profit}
             >
               <TableCell className="flex min-w-fit items-center gap-3 pl-5 sm:pl-6 xl:pl-7.5">
                 <Image
@@ -44,17 +44,17 @@ export async function TopProducts() {
                   alt={"Image for product " + product.name}
                   role="presentation"
                 />
-                <div>{product.name}</div>
+                <div>{product?.name}</div>
               </TableCell>
 
-              <TableCell>{product.category}</TableCell>
+              <TableCell>{product?.category}</TableCell>
 
-              <TableCell>₹{product.price}</TableCell>
+              <TableCell>₹{product?.price}</TableCell>
 
-              <TableCell>{product.sold}</TableCell>
+              <TableCell>{product?.sold}</TableCell>
 
               <TableCell className="pr-5 text-right text-green-light-1 sm:pr-6 xl:pr-7.5">
-                ₹{product.profit}
+                ₹{product?.profit}
               </TableCell>
             </TableRow>
           ))}
