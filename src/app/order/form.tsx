@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
     Typography, Button, Dialog, Grid, FormControl,
     FormLabel, TextField, Autocomplete, Box, IconButton,
-    OutlinedInput, InputAdornment
+    OutlinedInput, InputAdornment,
+    CircularProgress
 } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -14,7 +15,7 @@ import { urls } from '@/common/url';
 
 const Form = (props: any) => {
     const { open, handleClose, getData } = props;
-
+    const [isSubmit, setIsSubmit] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [vendors, setVendors] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
@@ -91,6 +92,7 @@ const Form = (props: any) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { resetForm }) => {
+                    setIsSubmit(true);
                     const data = {
                         customerId: values.vendor,
                         productId: values?.items,
@@ -102,6 +104,9 @@ const Form = (props: any) => {
                     const response = await postApi(url, data)
                     handleClose();
                     getData();
+                    setTimeout(()=>{
+                        setIsSubmit(false);
+                    },1000)
                     resetForm();
                 }}
             >
@@ -216,8 +221,8 @@ const Form = (props: any) => {
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button variant="contained" onClick={() => handleSubmit()}>
-                                        Add Order
+                                    <Button variant="contained" onClick={() => handleSubmit()} disabled={isSubmit}>
+                                        {isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Add Order")}
                                     </Button>
                                     <Button
                                         variant="outlined"

@@ -135,7 +135,7 @@ const PurchaseViewPage = () => {
                                                     <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
                                                     <Typography><span style={{ fontWeight: 'bold' }}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
                                                     <Typography><span style={{ fontWeight: 'bold' }}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
-                                                    <Typography><span style={{ fontWeight: 'bold' }}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Purchase Date: </span>{moment(details?.createdAt).format('ll')}</Typography>
                                                     <Typography><span style={{ fontWeight: 'bold' }}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
                                                     <Typography sx={{ mt: '5px' }}><span style={{ fontWeight: 'bold' }}>Status: </span><span style={{
                                                         borderRadius: '5px',

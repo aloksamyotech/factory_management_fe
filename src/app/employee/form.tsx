@@ -1,8 +1,8 @@
 import { postApi } from '@/common/api'
 import { urls } from '@/common/url'
 import * as Yup from 'yup'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material'
-import React from 'react'
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import ClearIcon from '@mui/icons-material/Clear'
 import { Form, Formik } from 'formik'
 
@@ -45,7 +45,7 @@ const validation = Yup.object({
     .required("Please select your Date of Joining"),
 });
 const Formm = ({ open, handleClose, getData }: any) => {
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const initialValues = {
     firstName: '',
     lastName: '',
@@ -58,6 +58,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
   };
 
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const [day, month, year] = values.dateOfJoining.split('/');
     const isoDate = new Date(`${year}-${month}-${day}`).toISOString();
     const payload = {
@@ -68,6 +69,9 @@ const Formm = ({ open, handleClose, getData }: any) => {
     await postApi(urls?.endpoints?.employee.employee, payload);
     getData();
     handleClose();
+    setTimeout(()=>{
+      setIsSubmit(false);
+    },1000);
   };
 
   return (
@@ -196,7 +200,8 @@ const Formm = ({ open, handleClose, getData }: any) => {
                 </Grid>
               </DialogContent>
               <DialogActions style={{ position: 'sticky', bottom: 0, background: '#fff', zIndex: 2 }}>
-                <Button type='submit' variant='contained' >Save</Button>
+                <Button type='submit' variant='contained' disabled={isSubmit}
+                >{isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Save")}</Button>
                 <Button variant='outlined' color='error' onClick={() => { handleClose(); }}>Cancel</Button>
               </DialogActions>
             </Form>

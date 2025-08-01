@@ -15,7 +15,7 @@ import moment from "moment";
 const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
     const url = `${urls?.endpoints?.purchase?.purchase}?page=${page + 1}&limit=${PageSize}`;
     const response = await getApi(url);
-    const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
     const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
         id: item.id,
         index: index + 1,
@@ -24,7 +24,7 @@ const getData = async (setData: any, setRowCount: any, page: any, PageSize: any)
         items: item?.itemId,
         totalAmount: item?.totalAmount,
         status: item?.status,
-        date: formattedDate
+        date: moment(item?.createdAt).format("ll")
     }));
     setData(modifiedData);
     setRowCount(response?.data?.data[1]);

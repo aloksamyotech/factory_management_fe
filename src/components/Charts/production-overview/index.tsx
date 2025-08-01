@@ -9,7 +9,7 @@ type ProductionOverviewProps = {
 };
 
 export async function getProductionStatusOverview() {
-  const response = await getApi(urls?.endpoints?.production.getAll);
+  const response = await getApi(`${urls?.endpoints?.production.getAll}?page=1&limit=10000`);
   const production = response?.data?.data[0] || [];
 
   const today = new Date();
@@ -60,9 +60,9 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
           <ProductionDonutChart data={chartData}/>
       </div>
         {/* table */}
-        <div className="flex-1 overflow-x-auto overflow-y-auto">
-          <table className="min-w-full border rounded">
-            <thead>
+        <div className="flex-1 overflow-x-auto overflow-y-auto max-h-96">  
+          <table className="min-w-[650px] border rounded">
+            <thead className="sticky top-0 bg-gray-100 dark:bg-gray-dark z-10">
               <tr className="bg-gray-100 dark:bg-gray-dark dark:text-white dark:border-y">
                 <th className="px-4 py-2 text-left">Product Name</th>
                 <th className="px-4 py-2 text-left">Machine Name</th>

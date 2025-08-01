@@ -12,6 +12,14 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 });
 
 export function ProductionDonutChart({ data }: PropsType) {
+  // const total = data?.reduce((sum, item)=> sum + item.amount, 0);
+  // const chartData = data?.map((item)=>{
+  //   const percent = total>0? ((item.amount / total)*100).toFixed(2):"0.00";
+  //   return {
+  //     ...item,
+  //     label: `${item.name}: ${percent}%`,
+  //   };
+  // });
   const chartOptions: ApexOptions = {
     chart: {
       type: "donut",
@@ -29,6 +37,8 @@ export function ProductionDonutChart({ data }: PropsType) {
       formatter: (legendName, opts) => {
         const { seriesPercent } = opts.w.globals;
         return `${legendName}: ${seriesPercent[opts.seriesIndex]}%`;
+        // const label = chartData.find((item)=> item.name === legendName)?.label;
+        // return label ?? legendName;
       },
     },
     plotOptions: {

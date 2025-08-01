@@ -3,7 +3,8 @@ import {
     Typography, Button, Dialog, DialogContentText, Grid, FormControl,
     FormLabel, TextField, Autocomplete, Box, IconButton,
     OutlinedInput,
-    InputAdornment
+    InputAdornment,
+    CircularProgress
 } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -15,7 +16,7 @@ import { urls } from '@/common/url';
 
 const Form = (props: any) => {
     const { open, handleClose, getData } = props;
-
+    const [isSubmit, setIsSubmit] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [vendors, setVendors] = useState<any[]>([]);
     const [products, setProducts] = useState<any[]>([]);
@@ -95,6 +96,7 @@ const Form = (props: any) => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values, { resetForm }) => {
+                   setIsSubmit(true);
                     const data = {
                         vendorId: values.vendor,
                         productId: values?.items,
@@ -106,6 +108,9 @@ const Form = (props: any) => {
                     handleClose();
                     resetForm();
                     getData()
+                    setTimeout(()=>{
+                        setIsSubmit(false);
+                    },1000);
                 }}
             >
                 {({ values, setFieldValue, handleChange, handleSubmit, errors, touched }) => {
@@ -217,8 +222,8 @@ const Form = (props: any) => {
                                 </form>
                             </DialogContent>
                             <DialogActions>
-                                <Button variant="contained" onClick={() => handleSubmit()}>
-                                    Add Purchase
+                                <Button variant="contained" onClick={() => handleSubmit()} disabled={isSubmit}>
+                                    {isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Add Purchase")}
                                 </Button>
                                 <Button
                                     variant="outlined"
