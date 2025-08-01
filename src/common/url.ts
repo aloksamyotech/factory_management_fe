@@ -1,5 +1,5 @@
-export const BASE_URL = 'http://localhost:3001';
-// export const BASE_URL = 'http://139.59.19.212:3001';
+// export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = 'http://139.59.19.212:3001';
 const API_VERSION = '/api/v1';
 
 export const urls = Object.freeze({
