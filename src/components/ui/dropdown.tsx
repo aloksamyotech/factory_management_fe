@@ -137,3 +137,12 @@ export function DropdownClose({ children }: PropsWithChildren) {
 
   return <div onClick={handleClose}>{children}</div>;
 }
+export default function PrintButton() {
+  
+  const handlePrint = () => {
+    window.print();
+  };
+  return (
+    <button onClick={handlePrint} className="font-medium gap-2.5 px-4 py-2 bg-primary text-white rounded-md">Print Production</button>
+  );
+}

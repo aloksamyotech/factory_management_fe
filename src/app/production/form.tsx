@@ -223,7 +223,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                         mb: 2,
                       }}
                     >
-                      {values.items.map((item, index) => (
+                      {values.items?.map((item, index) => (
                         <Grid
                           container
                           spacing={2}
@@ -263,7 +263,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                 )}
                                 value={
                                   rawMaterial.find(
-                                    (r) => r.id === item.rawMaterialId,
+                                    (r) => r.id === item?.rawMaterialId,
                                   ) || null
                                 }
                                 onChange={(e, val) =>
@@ -288,12 +288,12 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                 size="small"
                                 type="number"
                                 name={`items[${index}].quantity`}
-                                value={item.quantity}
+                                value={item?.quantity}
                                 onChange={handleChange}
                                 endAdornment={
                                   <InputAdornment position="end">
                                     {rawMaterial?.find(
-                                      (r) => r.id === item.rawMaterialId,
+                                      (r) => r.id === item?.rawMaterialId,
                                     )?.unit || ""}
                                   </InputAdornment>
                                 }
@@ -310,11 +310,11 @@ const Formm = ({ open, handleClose, getData }: any) => {
                             </IconButton>
                           </Grid>
                           <Grid size={2} sx={{ mt: "17px" }}>
-                            {item.rawMaterialId &&
+                            {item?.rawMaterialId &&
                               (() => {
                                 // const raw = rawMaterial.find((r)=> r.id === item.rawMaterialId);
                                 const avail =
-                                  inventory[item.rawMaterialId] || 0;
+                                  inventory[item?.rawMaterialId] || 0;
                                 const enteredQty = item?.quantity;
                                 if (enteredQty && enteredQty > avail) {
                                   return (
@@ -364,8 +364,8 @@ const Formm = ({ open, handleClose, getData }: any) => {
                   variant="contained"
                   disabled={isSubmit || values.items.some(
                     (item) =>
-                      item.rawMaterialId && item?.quantity &&
-                      item?.quantity > (inventory[item.rawMaterialId] || 0),
+                      item?.rawMaterialId && item?.quantity &&
+                      item?.quantity > (inventory[item?.rawMaterialId] || 0),
                   )}
                 >
                   {isSubmit ? (<CircularProgress size={22} color="inherit" />) : ("Save")}

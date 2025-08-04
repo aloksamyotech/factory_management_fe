@@ -119,35 +119,3 @@
     font-display: swap;
     font-style: italic;
 }
-
-@media print {
-  body * {
-    visibility: hidden !important;
-    box-shadow: none !important;
-    background: none !important;
-  }
-
-  .print-only, .print-only * {
-    visibility: visible !important;
-  }
-
-  .print-only {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: white !important;
-    box-shadow: none !important;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  @page {
-    size: A4;
-    margin: 20mm;
-  }
-}

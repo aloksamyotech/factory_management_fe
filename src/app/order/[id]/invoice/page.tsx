@@ -35,7 +35,7 @@ const InvoicePage = () => {
   return (
     <Box p={4}>
 
-      <Card ref={invoiceRef} sx={{p:4, maxWidth: '90%', margin: '0 auto', boxShadow: 2}} className='print-only'>
+      <Card ref={invoiceRef} sx={{p:4, maxWidth: '90%', margin: '0 auto', boxShadow: 2}} className='invoice-print'>
           <span style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <Typography variant='h4' fontWeight={'bold'}>Invoice</Typography>
           </span>
