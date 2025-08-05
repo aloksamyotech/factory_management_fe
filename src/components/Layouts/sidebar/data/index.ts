@@ -34,7 +34,7 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Machine",
+        title: "Machines",
         url: "/machine",
         icon: icons.IconBuildingFactory2,
         items: [],
@@ -52,25 +52,25 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Customer",
+        title: "Customers",
         url: "/customer",
         icon: Icons.User,
         items: [],
       },
       {
-        title: "Product",
+        title: "Products",
         url: "/product",
         icon: icons.IconSitemap,
         items: []
       },
       {
-        title: "Order",
+        title: "Orders",
         url: "/order",
         icon: icons.IconTruckDelivery,
         items: []
       },
       {
-        title: "Vendor",
+        title: "Vendors",
         url: "/vendor",
         icon: icons.IconUserUp,
         items: [],
@@ -88,7 +88,7 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Employee",
+        title: "Employees",
         url: "/employee",
         icon: Icons.User,
         items: [],

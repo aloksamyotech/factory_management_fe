@@ -49,7 +49,7 @@ const Rawmaterial = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: () =>
                 <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
-                    <Image src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                    <Image src="/images/product/products.png" alt='img' height={45} width={45} objectFit= 'cover' />
                 </Box>
         },
         {

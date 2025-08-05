@@ -10,7 +10,7 @@ type PropsType = {
 };
 
 async function getOrderStatusChart(timeFrame: string='monthly'){
-  const res = await getApi(urls?.endpoints?.order.order);
+  const res = await getApi(`${urls?.endpoints?.order.order}?page=1&limit=10000`);
   const orders = res?.data?.data[0] || [];
 
   const uppercaseConversion = (status: string)=>{

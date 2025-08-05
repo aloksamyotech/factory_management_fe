@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from 'react'
 import { urls } from '@/common/url';
@@ -16,7 +16,7 @@ const Forum = (props: any) => {
   const { open, handleClose, getData, machineId } = props;
   const [employees, setEmployees] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const getEmployees = async () => {
     setLoading(true);
 
@@ -40,6 +40,7 @@ const Forum = (props: any) => {
     nextMaintenance: '',
   }
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const payload = {
       ...values,
       employeeId: Number(values.employeeId),
@@ -50,6 +51,9 @@ const Forum = (props: any) => {
     await postApi(url, payload)
     getData();
     handleClose();
+    setTimeout(()=>{
+      setIsSubmit(false)
+    },1000)
   }
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -116,7 +120,13 @@ const Forum = (props: any) => {
                 </Grid>
               </DialogContent>
               <DialogActions>
-                <Button type='submit' variant='contained' color='primary' onSubmit={handleSubmit}>Save</Button>
+                <Button type='submit' 
+                        variant='contained' 
+                        color='primary' 
+                        disabled={isSubmit}
+                        onSubmit={handleSubmit}>
+                        {isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Save")}
+                        </Button>
                 <Button variant='outlined' color='error' onClick={() => handleClose()}>Cancel</Button>
               </DialogActions>
             </Form>

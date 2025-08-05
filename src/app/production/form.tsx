@@ -16,6 +16,7 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
@@ -47,6 +48,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
   const [inventory, setInventory] = useState<any>([]);
   const [rawMaterial, setRawMaterial] = useState<DropdownOption[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const fetchDropdowns = async () => {
     setLoading(true);
@@ -104,11 +106,14 @@ const Formm = ({ open, handleClose, getData }: any) => {
   };
 
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const url = urls?.endpoints?.production?.create;
     await postApi(url, values);
     getData();
     handleClose();
-    getData();
+    setTimeout(()=>{
+      setIsSubmit(false)
+    },1000)
   };
 
   return (
@@ -218,7 +223,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                         mb: 2,
                       }}
                     >
-                      {values.items.map((item, index) => (
+                      {values.items?.map((item, index) => (
                         <Grid
                           container
                           spacing={2}
@@ -258,7 +263,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                 )}
                                 value={
                                   rawMaterial.find(
-                                    (r) => r.id === item.rawMaterialId,
+                                    (r) => r.id === item?.rawMaterialId,
                                   ) || null
                                 }
                                 onChange={(e, val) =>
@@ -283,12 +288,12 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                 size="small"
                                 type="number"
                                 name={`items[${index}].quantity`}
-                                value={item.quantity}
+                                value={item?.quantity}
                                 onChange={handleChange}
                                 endAdornment={
                                   <InputAdornment position="end">
                                     {rawMaterial?.find(
-                                      (r) => r.id === item.rawMaterialId,
+                                      (r) => r.id === item?.rawMaterialId,
                                     )?.unit || ""}
                                   </InputAdornment>
                                 }
@@ -305,11 +310,11 @@ const Formm = ({ open, handleClose, getData }: any) => {
                             </IconButton>
                           </Grid>
                           <Grid size={2} sx={{ mt: "17px" }}>
-                            {item.rawMaterialId &&
+                            {item?.rawMaterialId &&
                               (() => {
                                 // const raw = rawMaterial.find((r)=> r.id === item.rawMaterialId);
                                 const avail =
-                                  inventory[item.rawMaterialId] || 0;
+                                  inventory[item?.rawMaterialId] || 0;
                                 const enteredQty = item?.quantity;
                                 if (enteredQty && enteredQty > avail) {
                                   return (
@@ -357,14 +362,13 @@ const Formm = ({ open, handleClose, getData }: any) => {
                 <Button
                   type="submit"
                   variant="contained"
-                  onSubmit={handleSubmit}
-                  disabled={values.items.some(
+                  disabled={isSubmit || values.items.some(
                     (item) =>
-                      item.rawMaterialId && item?.quantity &&
-                      item?.quantity > (inventory[item.rawMaterialId] || 0),
+                      item?.rawMaterialId && item?.quantity &&
+                      item?.quantity > (inventory[item?.rawMaterialId] || 0),
                   )}
                 >
-                  Save
+                  {isSubmit ? (<CircularProgress size={22} color="inherit" />) : ("Save")}
                 </Button>
                 <Button
                   variant="outlined"

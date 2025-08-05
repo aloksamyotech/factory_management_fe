@@ -204,12 +204,12 @@ const Order = () => {
                             fontWeight: 'bold',
                         },
                     }}
-                // paginationModel={{ page: page, pageSize: PageSize }}
-                // paginationMode="server"
-                // rowCount={rowCount}
-                // onPaginationModelChange={(newPaginationModel) => {
-                //     setPage(newPaginationModel.page);
-                // }}
+                paginationModel={{ page: page, pageSize: PageSize }}
+                paginationMode="server"
+                rowCount={rowCount}
+                onPaginationModelChange={(newPaginationModel) => {
+                    setPage(newPaginationModel.page);
+                }}
                 />
             </Card>
         </>

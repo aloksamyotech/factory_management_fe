@@ -26,7 +26,7 @@ const getData = async (setData:any,setDataRaw:any,setRowCount:any,page:any,PageS
         index: index + 1,
         id: item?.productId?.id || item?.rawMaterialId?.id,
         quantity: item?.quantity,
-        unit: item?.unit,
+        unit: item?.rawMaterialId?.unit,
         title: item?.productId?.name || item?.rawMaterialId?.title,
         price: item?.productId?.price || item?.rawMaterialId?.price,
     }));

@@ -26,10 +26,10 @@ const GetDetails = async (setDetails: any, id: any) => {
 const GetPurchase = async (setData: any, id: any) => {
     const url = `${urls?.endpoints?.purchase?.purchase}?vendorId=${id}`
     const response = await getApi(url);
-    const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
     const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
         index: index + 1,
-        createdAt: formattedDate,
+        createdAt: moment(item?.createdAt).format("ll"),
         id: item.id,
         item: item?.itemId,
         totalAmount: item?.totalAmount,

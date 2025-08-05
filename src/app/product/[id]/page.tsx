@@ -18,7 +18,7 @@ const GetDetails = async (setDetails: any, id: any) => {
 const GetPurchase = async (setData: any, id: any) => {
     const url = `${urls?.endpoints?.order?.order}`
     const response = await getApi(url);
-    const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
     const modifiedData = response?.data?.data[0]
         ?.filter((item: any) => item.itemId.some((i: any) => i?.productId?.id == id))
         ?.map((item: any, index: number) => ({
@@ -29,7 +29,7 @@ const GetPurchase = async (setData: any, id: any) => {
             items: item?.itemId,
             totalAmount: item?.totalAmount,
             status: item?.status,
-            date: formattedDate
+            date: moment(item?.createdAt).format("ll")
         }));
     setData(modifiedData)
 }

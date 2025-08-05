@@ -1,15 +1,15 @@
-import { cn } from "@/lib/utils";
 import { getApi } from "@/common/api";
 import { urls } from "@/common/url";
-// import { getProductionStatusOverview } from "@/services/charts.services";
+import { cn } from "@/lib/utils";
 import { ProductionDonutChart } from "./chart";
+import PrintButton from "@/components/ui/dropdown";
 
 type ProductionOverviewProps = {
   className?: string;
 };
 
 export async function getProductionStatusOverview() {
-  const response = await getApi(urls?.endpoints?.production.getAll);
+  const response = await getApi(`${urls?.endpoints?.production.getAll}?page=1&limit=10000`);
   const production = response?.data?.data[0] || [];
 
   const today = new Date();
@@ -54,21 +54,26 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
   ]?.filter(item => item.amount > 0);
   return (
     <div className={cn("grid grid-cols-1 grid-rows-[auto_1fr] gap-9 rounded-[10px] bg-white p-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card",className)}>
+      <div className="flex justify-between items-center mb-3 ml-2 mr-2">
       <h2 className="text-body-2xlg font-bold text-dark dark:text-white mb-3">Todays Production Overview</h2>
+      <PrintButton />
+      </div>
       <div className="flex flex-col md:flex-row gap-6">
       <div className="flex-shrink-0 flex items-center justify-center w-full md:w-100">
           <ProductionDonutChart data={chartData}/>
       </div>
         {/* table */}
-        <div className="flex-1 overflow-x-auto overflow-y-auto">
-          <table className="min-w-full border rounded">
-            <thead>
+        <div className="flex-1 overflow-x-auto overflow-y-auto max-h-96 production-print" id="print-section">
+          <h1 className="only-print-heading hidden text-xl font-bold mb-4 text-center">Todays Production</h1>  
+          <table className="min-w-[650px] border rounded production-table">
+            <thead className="sticky top-0 bg-gray-100 dark:bg-gray-dark z-10">
               <tr className="bg-gray-100 dark:bg-gray-dark dark:text-white dark:border-y">
                 <th className="px-4 py-2 text-left">Product Name</th>
                 <th className="px-4 py-2 text-left">Machine Name</th>
                 <th className="px-4 py-2 text-left">Quantity</th>
                 <th className="px-4 py-2 text-left">Status</th>
                 <th className="px-4 py-2 text-left">Estimate Time</th>
+                <th className="px-4 py-2 text-left only-print hidden">Note</th>
               </tr>
             </thead>
             <tbody>
@@ -85,6 +90,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
                       }
                     </td>
                     <td className='px-4 py-2'>{prod?.estimateTime}</td>
+                    <td className='px-4 py-2 only-print hidden'></td>
                   </tr>
                 ))
               ) : (

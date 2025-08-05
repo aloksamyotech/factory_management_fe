@@ -41,7 +41,7 @@ export async function TopProducts() {
                   className="aspect-[6/5] w-15 rounded-[5px] object-cover"
                   width={60}
                   height={50}
-                  alt={"Image for product " + product.name}
+                  alt={"Image for product " + product?.name}
                   role="presentation"
                 />
                 <div>{product?.name}</div>
