@@ -19,7 +19,6 @@ const getUser = (setUser:any)=>{
   if(!token) return "N/A";
   const decode:decodeToken = jwtDecode(token);
   const { name, department} = decode;
-  // console.log("Name: ",name, "Department: ", department)
   setUser({name, department});
 }
 export default function Page() {
