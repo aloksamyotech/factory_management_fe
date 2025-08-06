@@ -64,7 +64,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
       </div>
         {/* table */}
         <div className="flex-1 overflow-x-auto overflow-y-auto max-h-96 production-print" id="print-section">
-          <h1 className="only-print-heading hidden text-xl font-bold mb-4 text-center">Todays Production</h1>  
+          <h1 className="only-print-heading hidden text-xl font-bold mb-4 text-center">Todays Production ({new Date()})</h1>  
           <table className="min-w-[650px] border rounded production-table">
             <thead className="sticky top-0 bg-gray-100 dark:bg-gray-dark z-10">
               <tr className="bg-gray-100 dark:bg-gray-dark dark:text-white dark:border-y">
