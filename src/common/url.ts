@@ -1,5 +1,8 @@
 // export const BASE_URL = 'http://localhost:3001';
-export const BASE_URL = 'http://139.59.19.212:3001';
+// export const BASE_URL = 'http://139.59.19.212:3001';
+// export const BASE_URL = 'http://159.89.170.59:3001';
+export const BASE_URL = 'https://factory.samyotech.in';
+
 const API_VERSION = '/api/v1';
 
 export const urls = Object.freeze({
