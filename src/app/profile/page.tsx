@@ -1,25 +1,27 @@
 "use client";
-
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
-
 import { useEffect, useState } from "react";
 import { CameraIcon } from "./_components/icons";
 import { SocialAccounts } from "./_components/social-accounts";
 import { jwtDecode } from "jwt-decode";
-
-interface decodeToken{
+import { Box, Button, Divider, FormControl, FormHelperText, Grid, Input, Paper, Typography } from "@mui/material";
+import * as yup from 'yup';
+import { useFormik } from 'formik';
+import { urls } from "@/common/url";
+import { putApi } from "@/common/api";
+interface decodeToken {
   id: string,
   name: string,
-  email:string,
+  email: string,
   department: string,
 }
-const getUser = (setUser:any)=>{
+const getUser = (setUser: any) => {
   const token = localStorage.getItem("jwt");
-  if(!token) return "N/A";
-  const decode:decodeToken = jwtDecode(token);
-  const { name, department} = decode;
-  setUser({name, department});
+  if (!token) return "N/A";
+  const decode: decodeToken = jwtDecode(token);
+  const { name, department } = decode;
+  setUser({ name, department });
 }
 export default function Page() {
   const [user, setUser] = useState<any>();
@@ -29,11 +31,11 @@ export default function Page() {
     coverPhoto: "/images/cover/cover-01.png",
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     getUser(setUser);
-  },[])
+  }, [])
   const handleChange = (e: any) => {
-    if (e.target.name === "profilePhoto" ) {
+    if (e.target.name === "profilePhoto") {
       const file = e.target?.files[0];
 
       setData({
@@ -54,7 +56,39 @@ export default function Page() {
       });
     }
   };
+  const validationSchema = yup.object({
+    file: yup
+      .mixed()
+      .required("Please Upload Your Logo File")
+      .test(
+        "fileFormat",
+        "Invalid File Format",
+        (value: any) => {
+          if (!value) return false;
+          return value.type.startsWith("image/");
+        }
+      )
+  });
 
+  const initialValues = {
+    file: null,
+  };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async (values: any) => {
+      const formData = new FormData();
+      for (const key in values) {
+        formData?.append(key, values[key]);
+      }
+      const url = urls?.endpoints?.employee?.logo;
+      const customHeaders = { 'Content-Type': 'multipart/form-data', };
+      await putApi(url, values, customHeaders);
+      formik?.resetForm();
+      window.location.reload();
+    }
+  });
   return (
     <div className="mx-auto w-full max-w-[970px]">
       <Breadcrumb pageName="Profile" />
@@ -149,6 +183,48 @@ export default function Page() {
                 <span className="text-body-sm-sm">Following</span>
               </div>
             </div> */}
+            <Divider />
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '20px' }}>
+              <Paper elevation={4} sx={{ p: '10px', width: '60%' }}>
+                <Grid container direction='column' >
+                  <Grid>
+                    <Typography variant='h6' sx={{ my: '10px' }}>Update Company Logo</Typography>
+                    <Divider />
+                    <Typography sx={{ fontSize: '10px' }}>(800px * 200px)</Typography>
+                  </Grid>
+                  <Grid sx={{ my: '20px', mx: '10px' }}>
+                    <form>
+                      <FormControl>
+                        <Input
+                          id="file"
+                          name="file"
+                          type="file"
+                          size="small"
+                          inputProps={{ accept: "image/png, image/jpeg, image/jpg" }}
+                          onChange={(event: any) => {
+                            formik?.setFieldValue('file', event?.currentTarget?.files[0]);
+                          }}
+                          error={formik?.touched?.file && Boolean(formik?.errors?.file)}
+                        />
+                        <FormHelperText sx={{ color: '#c34c51' }}>{formik?.touched?.file && formik?.errors?.file as any}</FormHelperText>
+                      </FormControl>
+                    </form>
+                  </Grid>
+                  <Grid container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} spacing={2}>
+                    <Grid>
+                      <Button type="submit" variant="contained" onClick={()=>formik?.handleSubmit()} style={{ textTransform: 'capitalize' }} color="primary">
+                        Upload Logo
+                      </Button>
+                    </Grid>
+                    <Grid>
+                      <Button type="submit" size='small' variant="outlined" onClick={() => { formik?.resetForm() }} style={{ textTransform: 'capitalize' }} color="primary">
+                        Cancel
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Box>
 
             <div className="mx-auto max-w-[720px] mt-5">
               <h4 className="font-medium text-dark dark:text-white">
