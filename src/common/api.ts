@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
 
 const defaultHeaders = {
   authorization: typeof window !== "undefined"
-    ? `Bearer ${localStorage.getItem("jwt")}`
+    ? `Bearer ${localStorage.getItem("9x4kz5t7e2m1lqf")}`
     : "",
 };
 
@@ -69,11 +70,17 @@ export const patchApi = async (url: any, data: any, customHeaders = {}) => {
 }
 
 export const getRoleFromToken = () => {
-  const token = localStorage.getItem('jwt');
+  const token = localStorage.getItem('9x4kz5t7e2m1lqf');
   if (!token) {
     return false;
-  } else {
-
-    return true;
+  }
+  try {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken) {
+      return true
+    }
+  } catch (error) {
+    console.error('Invalid token', error);
+    return false;
   }
 };
