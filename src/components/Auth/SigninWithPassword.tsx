@@ -20,10 +20,9 @@ export default function SigninWithPassword() {
     setLoading(true);
 
     try {
-      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, { email, password })
-      localStorage.setItem('jwt', res?.data?.token)
-
+      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, { email, password })      
       if (res?.success) {
+        localStorage.setItem('9x4kz5t7e2m1lqf', res?.data?.token)
         window.location.href = "/";
       }
     }
