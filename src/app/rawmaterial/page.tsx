@@ -10,6 +10,18 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import { Props } from "react-apexcharts";
+import Image from "next/image";
+
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
+        ...item,
+        index: index + 1
+    }));
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1]);
+};
 
 const Rawmaterial = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -37,7 +49,7 @@ const Rawmaterial = () => {
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: () =>
                 <Box sx={{ m: '2px', display: 'flex', justifyContent: 'center' }}>
-                    <img src={'https://img.freepik.com/premium-photo/close-up-cake-basket_1048944-13476612.jpg?w=1380'} alt='img' style={{ height: '45px', width: '45px', objectFit: 'cover' }} />
+                    <Image src="/images/product/products.png" alt='img' height={45} width={45} objectFit= 'cover' />
                 </Box>
         },
         {
@@ -92,20 +104,13 @@ const Rawmaterial = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
-            ...item,
-            index: index + 1
-        }));
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -128,13 +133,13 @@ const Rawmaterial = () => {
     };
 
     const navigate = useRouter()
-    const handleNavigate = (id:any) => {
+    const handleNavigate = (id: any) => {
         navigate.push(`/rawmaterial/${id}`)
     }
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Raw Material" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

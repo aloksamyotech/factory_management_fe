@@ -1,30 +1,29 @@
 'use client'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, MenuItem, Select, Typography } from '@mui/material'
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, MenuItem, Select, Typography } from '@mui/material'
 import ClearIcon from "@mui/icons-material/Clear";
-import React, { useEffect } from 'react'
 import { Form, Formik } from 'formik';
 import { urls } from '@/common/url';
 import { patchApi } from '@/common/api';
-const status = (props: any) => {
+import { useState } from 'react';
+const Status = (props: any) => {
   const { open, handleClose, productionId, getData } = props;
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const initialValues = {
     status: 'pending'
   };
 
   const handleSubmit = async (values: any) => {
     if (!productionId) return;
+    setIsSubmit(true);
     const url = urls?.endpoints?.production?.status(productionId);
     const body = { status: values.status };
     await patchApi(url, body);
     getData();
     handleClose();
+    setTimeout(()=>{
+      setIsSubmit(false)
+    },1000)
   }
-
-
-  useEffect(() => {
-
-  }, [productionId]);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth='xs' fullWidth>
@@ -61,7 +60,10 @@ const status = (props: any) => {
                 <Typography variant='body2' fontSize={'10px'} sx={{ pl: '10px' }}>*Once the status is updated to Complete/Cancelled, it cannot be changed later.</Typography>
               </DialogContent>
               <DialogActions>
-                <Button type='submit' color='primary' variant='contained' onSubmit={handleSubmit}>Update</Button>
+                <Button type='submit' color='primary' variant='contained' onSubmit={handleSubmit} disabled={isSubmit}
+                >{isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Update")}</Button>
+                {/* <Button type='submit' color='primary' variant='contained' onSubmit={handleSubmit}
+                >Update</Button> */}
                 <Button onClick={handleClose} variant='outlined' color='error'>Cancel</Button>
               </DialogActions>
             </Form>
@@ -72,4 +74,4 @@ const status = (props: any) => {
   );
 }
 
-export default status;
+export default Status;

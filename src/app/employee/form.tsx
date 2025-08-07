@@ -1,8 +1,8 @@
 import { postApi } from '@/common/api'
 import { urls } from '@/common/url'
 import * as Yup from 'yup'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material'
-import React from 'react'
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import ClearIcon from '@mui/icons-material/Clear'
 import { Form, Formik } from 'formik'
 
@@ -14,6 +14,12 @@ const validation = Yup.object({
   lastName: Yup
     .string()
     .max(15, "Last Name cannot exceed 15 characters"),
+  password: Yup
+    .string()
+    .required("Please enter your Password")
+    .min(8, "Password must contain at least 8 characters")
+    .max(15, "Password cannot exceed 15 characters")
+  ,
   email: Yup
     .string()
     .max(50, "Email cannot exceed 50 characters")
@@ -39,10 +45,11 @@ const validation = Yup.object({
     .required("Please select your Date of Joining"),
 });
 const Formm = ({ open, handleClose, getData }: any) => {
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const initialValues = {
     firstName: '',
     lastName: '',
+    password: '',
     email: '',
     phoneNumber: '',
     salary: undefined,
@@ -51,6 +58,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
   };
 
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const [day, month, year] = values.dateOfJoining.split('/');
     const isoDate = new Date(`${year}-${month}-${day}`).toISOString();
     const payload = {
@@ -61,6 +69,9 @@ const Formm = ({ open, handleClose, getData }: any) => {
     await postApi(urls?.endpoints?.employee.employee, payload);
     getData();
     handleClose();
+    setTimeout(()=>{
+      setIsSubmit(false);
+    },1000);
   };
 
   return (
@@ -104,6 +115,20 @@ const Formm = ({ open, handleClose, getData }: any) => {
                       onChange={handleChange}
                       error={touched?.lastName && Boolean(errors.lastName)}
                       helperText={touched?.lastName && errors.lastName}
+                    />
+                  </Grid>
+                  <Grid size={6}>
+                    <FormLabel>Password*</FormLabel>
+                    <TextField
+                      id='password'
+                      name='password'
+                      type='password'
+                      size='small'
+                      fullWidth
+                      value={values.password}
+                      onChange={handleChange}
+                      error={touched?.password && Boolean(errors.password)}
+                      helperText={touched?.password && errors.password}
                     />
                   </Grid>
                   <Grid size={6}>
@@ -175,7 +200,8 @@ const Formm = ({ open, handleClose, getData }: any) => {
                 </Grid>
               </DialogContent>
               <DialogActions style={{ position: 'sticky', bottom: 0, background: '#fff', zIndex: 2 }}>
-                <Button type='submit' variant='contained' >Save</Button>
+                <Button type='submit' variant='contained' disabled={isSubmit}
+                >{isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Save")}</Button>
                 <Button variant='outlined' color='error' onClick={() => { handleClose(); }}>Cancel</Button>
               </DialogActions>
             </Form>

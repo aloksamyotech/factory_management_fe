@@ -4,15 +4,15 @@ import { OverviewCard } from "./card";
 import * as icons from "./icons";
 
 export async function OverviewCardsGroup() {
-  const { views, profit, products, users } = await getOverviewData();
+  const { orders, profit, products, customers, inventory, rawMaterial, machines,employees } = await getOverviewData();
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4 2xl:gap-7.5">
       <OverviewCard
-        label="Total Views"
+        label="Total Orders"
         data={{
-          ...views,
-          value: compactFormat(views.value),
+          ...orders,
+          value: compactFormat(orders?.value),
         }}
         Icon={icons.Views}
       />
@@ -21,7 +21,7 @@ export async function OverviewCardsGroup() {
         label="Total Profit"
         data={{
           ...profit,
-          value: "$" + compactFormat(profit.value),
+          value: "₹" + compactFormat(profit?.value),
         }}
         Icon={icons.Profit}
       />
@@ -30,18 +30,54 @@ export async function OverviewCardsGroup() {
         label="Total Products"
         data={{
           ...products,
-          value: compactFormat(products.value),
+          value: compactFormat(products?.value),
         }}
         Icon={icons.Product}
       />
 
       <OverviewCard
-        label="Total Users"
+        label="Total Customers"
         data={{
-          ...users,
-          value: compactFormat(users.value),
+          ...customers,
+          value: compactFormat(customers?.value),
         }}
         Icon={icons.Users}
+      />
+
+      <OverviewCard
+        label="Total Inventory"
+        data={{
+          ...inventory,
+          value: compactFormat(inventory?.value),
+        }}
+        Icon={icons.Inventory}
+      />
+
+      <OverviewCard
+        label="Total Raw Materials"
+        data={{
+          ...rawMaterial,
+          value: compactFormat(rawMaterial?.value),
+        }}
+        Icon={icons.Product}
+      />
+
+      <OverviewCard
+        label="Total Employees"
+        data={{
+          ...employees,
+          value: compactFormat(employees?.value),
+        }}
+        Icon={icons.Users}
+      />
+
+      <OverviewCard
+        label="Total Machines"
+        data={{
+          ...machines,
+          value: compactFormat(machines?.value),
+        }}
+        Icon={icons.Machine}
       />
     </div>
   );

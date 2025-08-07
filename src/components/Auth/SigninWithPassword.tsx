@@ -4,32 +4,34 @@ import Link from "next/link";
 import React, { useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
 import { Checkbox } from "../FormElements/checkbox";
+import { postApi } from "@/common/api";
+import { urls } from "@/common/url";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function SigninWithPassword() {
-  const [data, setData] = useState({
-    email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
-    password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
-    remember: false,
-  });
-
+  const [email, setEmail] = useState("neer@gmail.com");
+  const [password, setPassword] = useState("12345678");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // You can remove this code block
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await postApi(`${urls?.endpoints?.employee.employee}/login`, { email, password })
+      localStorage.setItem('jwt', res?.data?.token)
+
+      if (res?.success) {
+        window.location.href = "/";
+      }
+    }
+    catch (error) {
+      toast.error("Error Login");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -40,8 +42,9 @@ export default function SigninWithPassword() {
         className="mb-4 [&_input]:py-[15px]"
         placeholder="Enter your email"
         name="email"
-        handleChange={handleChange}
-        value={data.email}
+        value={email}
+        handleChange={e => setEmail(e.target.value)}
+        required
         icon={<EmailIcon />}
       />
 
@@ -51,8 +54,9 @@ export default function SigninWithPassword() {
         className="mb-5 [&_input]:py-[15px]"
         placeholder="Enter your password"
         name="password"
-        handleChange={handleChange}
-        value={data.password}
+        value={password}
+        handleChange={e => setPassword(e.target.value)}
+        required
         icon={<PasswordIcon />}
       />
 
@@ -63,12 +67,7 @@ export default function SigninWithPassword() {
           withIcon="check"
           minimal
           radius="md"
-          onChange={(e) =>
-            setData({
-              ...data,
-              remember: e.target.checked,
-            })
-          }
+
         />
 
         <Link
@@ -82,12 +81,16 @@ export default function SigninWithPassword() {
       <div className="mb-4.5">
         <button
           type="submit"
+          disabled={loading}
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
         >
-          Sign In
-          {loading && (
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
-          )}
+          {loading ? (
+            <>
+              Signing In...
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
+            </>
+          ) : ("Sign In")
+          }
         </button>
       </div>
     </form>

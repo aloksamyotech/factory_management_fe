@@ -13,13 +13,22 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 });
 
 export function DonutChart({ data }: PropsType) {
+  // const total = data.reduce((sum, item) => sum + item.amount, 0);
+
+  // const chartData = data.map((item) => {
+  //   const percent = total > 0 ? ((item.amount / total) * 100).toFixed(2) : "0.00";
+  //   return {
+  //     ...item,
+  //     label: `${item.name}: ${percent}%`,
+  //   };
+  // });
   const chartOptions: ApexOptions = {
     chart: {
       type: "donut",
       fontFamily: "inherit",
     },
-    colors: ["#5750F1", "#5475E5", "#8099EC", "#ADBCF2"],
-    labels: data.map((item) => item.name),
+    colors: ['#ffff57','#90ff7e','#ff735f'],
+    labels: data?.map((item) => item.name),
     legend: {
       show: true,
       position: "bottom",
@@ -30,19 +39,21 @@ export function DonutChart({ data }: PropsType) {
       formatter: (legendName, opts) => {
         const { seriesPercent } = opts.w.globals;
         return `${legendName}: ${seriesPercent[opts.seriesIndex]}%`;
+        // const label = chartData.find((item) => item.name === legendName)?.label;
+        // return label ?? legendName;
       },
     },
     plotOptions: {
       pie: {
         donut: {
-          size: "80%",
+          size: "60%",
           background: "transparent",
           labels: {
             show: true,
             total: {
               show: true,
               showAlways: true,
-              label: "Visitors",
+              label: "Order Status",
               fontSize: "16px",
               fontWeight: "400",
             },
@@ -90,7 +101,7 @@ export function DonutChart({ data }: PropsType) {
   return (
     <Chart
       options={chartOptions}
-      series={data.map((item) => item.amount)}
+      series={data?.map((item) => item.amount)}  
       type="donut"
     />
   );

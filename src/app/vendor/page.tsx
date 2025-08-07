@@ -13,6 +13,22 @@ import Grid from '@mui/material/Grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import moment from 'moment';
 
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.vendor?.vendor}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+        id: item.id,
+        index: index + 1,
+        fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
+        phoneNumber: item?.phoneNumber,
+        email: item?.email,
+        date: moment(item?.createdAt).format("ll"),
+    }));
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1]);
+};
+
 const VendorManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
@@ -85,25 +101,13 @@ const VendorManagement = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.vendor?.vendor}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            id: item.id,
-            index: index + 1,
-            fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
-            phoneNumber: item?.phoneNumber,
-            email: item?.email,
-            date: formattedDate
-        }));
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -127,7 +131,7 @@ const VendorManagement = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Vendor" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid

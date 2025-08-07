@@ -24,23 +24,39 @@ export function Sidebar() {
     // );
   };
 
-  useEffect(() => {
-    // Keep collapsible open, when it's subpage is active
-    NAV_DATA.some((section) => {
-      return section.items.some((item) => {
-        return item.items.some((subItem) => {
-          if (subItem.url === pathname) {
-            if (!expandedItems.includes(item.title)) {
-              toggleExpanded(item.title);
-            }
+  // useEffect(() => {
+  //   // Keep collapsible open, when it's subpage is active
+  //   NAV_DATA.some((section) => {
+  //     return section.items.some((item) => {
+  //       return item.items.some((subItem) => {
+  //         if (subItem.url === pathname) {
+  //           if (!expandedItems.includes(item.title)) {
+  //             toggleExpanded(item.title);
+  //           }
 
-            // Break the loop
+  //           // Break the loop
+  //           return true;
+  //         }
+  //       });
+  //     });
+  //   });
+  // }, [pathname]);
+
+  useEffect(() => {
+    NAV_DATA.some((section: any) =>
+      section.items.some((item: any) =>
+        item.items.some((subItem: any) => {
+          if (subItem.url === pathname && !expandedItems.includes(item.title)) {
+            setExpandedItems((prev) =>
+              prev.includes(item.title) ? prev : [item.title],
+            );
             return true;
           }
-        });
-      });
-    });
-  }, [pathname]);
+        }),
+      ),
+    );
+  }, [pathname, expandedItems]);
+
 
   return (
     <>
@@ -95,13 +111,13 @@ export function Sidebar() {
 
                 <nav role="navigation" aria-label={section.label}>
                   <ul className="space-y-2">
-                    {section.items.map((item) => (
+                    {section.items.map((item: any) => (
                       <li key={item.title}>
                         {item.items.length ? (
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                                ({ url }: { url: any }) => url === pathname,
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -116,7 +132,7 @@ export function Sidebar() {
                                 className={cn(
                                   "ml-auto rotate-180 transition-transform duration-200",
                                   expandedItems.includes(item.title) &&
-                                    "rotate-0",
+                                  "rotate-0",
                                 )}
                                 aria-hidden="true"
                               />
@@ -127,7 +143,7 @@ export function Sidebar() {
                                 className="ml-9 mr-0 space-y-1.5 pb-[15px] pr-0 pt-2"
                                 role="menu"
                               >
-                                {item.items.map((subItem) => (
+                                {item.items.map((subItem: any) => (
                                   <li key={subItem.title} role="none">
                                     <MenuItem
                                       as="link"
@@ -147,7 +163,7 @@ export function Sidebar() {
                               "url" in item
                                 ? item.url + ""
                                 : "/" +
-                                  item.title.toLowerCase().split(" ").join("-");
+                                item.title.toLowerCase().split(" ").join("-");
 
                             return (
                               <MenuItem

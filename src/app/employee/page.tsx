@@ -13,6 +13,28 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import moment from "moment";
 import { toast } from "react-toastify";
 
+const getData = async (setEmployees:any,setRowCount:any,page:any,pageSize:any) => {
+  const url = `${urls?.endpoints?.employee.getAll}?page=${page + 1}&limit=${pageSize}`;
+  const response = await getApi(url);
+
+  if (!response) {
+    setEmployees([]);
+    setRowCount(0);
+    return;
+  }
+
+  const rows = response?.data?.data[0].map((item: any, index: number) => ({
+    id: item.id,
+    index: index + 1,
+    fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
+    email: item.email,
+    phoneNumber: item?.phoneNumber,
+    department: item.department,
+    dateOfJoining: moment(item.dateOfJoining).format("ll")
+  })) || [];
+  setEmployees(rows);
+  setRowCount(response?.data?.data[1] || 0);
+};
 
 const EmployeeManagement = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -90,33 +112,14 @@ const EmployeeManagement = () => {
           }} />
     }
   ];
-
-  const getData = async () => {
-    const url = `${urls?.endpoints?.employee.getAll}?page=${page + 1}&limit=${pageSize}`;
-    const response = await getApi(url);
-
-    if (!response) {
-      setEmployees([]);
-      setRowCount(0);
-      return;
-    }
-
-    const rows = response?.data?.data[0].map((item: any, index: number) => ({
-      id: item.id,
-      index: index + 1,
-      fullName: `${item?.firstName} ${item.lastName ? item.lastName : ''}`,
-      email: item.email,
-      phoneNumber: item?.phoneNumber,
-      department: item.department,
-      dateOfJoining: moment(item.dateOfJoining).format("ll")
-    })) || [];
-    setEmployees(rows);
-    setRowCount(response?.data?.data[1] || 0);
-  };
-
+  
   useEffect(() => {
-    getData();
+    getData(setEmployees,setRowCount,page,pageSize);
   }, [page]);
+
+  const refreshData = () => {
+    getData(setEmployees,setRowCount,page,pageSize);
+};
 
   const CustomToolbar = () => {
     return (
@@ -140,7 +143,7 @@ const EmployeeManagement = () => {
 
   return (
     <>
-      <Formm open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+      <Formm open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
       <Breadcrumb pageName="Employee" />
       <Card sx={{ height: 600, width: '100%' }}>
         <DataGrid

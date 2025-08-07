@@ -10,6 +10,24 @@ import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
 
+const GetDetails = async (setData: any, setDetails: any, id: any) => {
+    const url = `${urls?.endpoints?.purchase?.purchase}/${id}`
+    const response = await getApi(url);
+    setDetails(response?.data?.data);
+
+    const modifiedData = response?.data?.data?.itemId
+        ?.map((item: any, index: number) => ({
+            id: item?.rawMaterial?.id,
+            index: index + 1,
+            item: item?.rawMaterial?.title,
+            price: item?.rawMaterial?.price,
+            unit: item?.rawMaterial?.unit,
+            quantity: item?.quantity,
+            status: item?.status,
+        }));
+    setData(modifiedData)
+}
+
 const PurchaseViewPage = () => {
     const params = useParams();
     const [value, setValue] = useState(0);
@@ -86,31 +104,20 @@ const PurchaseViewPage = () => {
         navigate.push(`/rawmaterial/${id}`)
     }
 
-    const GetDetails = async () => {
-        const url = `${urls?.endpoints?.purchase?.purchase}/${params.id}`
-        const response = await getApi(url);
-        setDetails(response?.data?.data);
-
-        const modifiedData = response?.data?.data?.itemId
-            ?.map((item: any, index: number) => ({
-                id: item?.rawMaterial?.id,
-                index: index + 1,
-                item: item?.rawMaterial?.title,
-                price: item?.rawMaterial?.price,
-                unit: item?.rawMaterial?.unit,
-                quantity: item?.quantity,
-                status: item?.status,
-            }));
-        setData(modifiedData)
-    }
-
     useEffect(() => {
-        GetDetails()
-    }, [])
+        GetDetails(setData, setDetails, params.id)
+    }, [params.id])
 
+    const refreshData = () => {
+        GetDetails(setData, setDetails, params.id)
+    };
+
+    const goToPurchaseInvoice = () =>{
+        navigate.push(`/purchase/${params.id}/invoice`);
+    }
     return (
         <>
-            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={GetDetails}/>
+            <Update open={openAdd} handleClose={handleCloseAdd} purchaseId={params?.id} GetDetails={refreshData} />
             <Card sx={{ minHeight: '100vh' }}>
                 <Box sx={{ width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange}>
@@ -126,11 +133,11 @@ const PurchaseViewPage = () => {
                                             <Grid>
                                                 <CardContent>
                                                     <Typography variant="h6" fontWeight={'bold'}>Purchase Id: <span style={{ textDecoration: 'underline' }}>{details?.id}</span></Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Purchase Date: </span>{moment(details?.vendorId?.createdAt).format('ll')}</Typography>
-                                                    <Typography><span style={{fontWeight:'bold'}}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
-                                                    <Typography sx={{mt:'5px'}}><span style={{fontWeight:'bold'}}>Status: </span><span style={{
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Vendor Name: </span>{details?.vendorId?.firstName}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Phone: </span>{details?.vendorId?.phoneNumber}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Purchase Date: </span>{moment(details?.createdAt).format('ll')}</Typography>
+                                                    <Typography><span style={{ fontWeight: 'bold' }}>Total Amount: </span>₹ {details?.totalAmount}</Typography>
+                                                    <Typography sx={{ mt: '5px' }}><span style={{ fontWeight: 'bold' }}>Status: </span><span style={{
                                                         borderRadius: '5px',
                                                         padding: '5px 10px',
                                                         textTransform: 'capitalize',
@@ -149,7 +156,10 @@ const PurchaseViewPage = () => {
                             </Grid>
                         </Box>
                     )}
-                    <Box sx={{ display: 'flex', justifyContent: 'end', marginRight: '40px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between',marginLeft: '40px', marginRight: '40px' }}>
+                        <Button variant="contained" color="primary" onClick={goToPurchaseInvoice}>
+                            Download Invoice
+                        </Button>
                         <Button
                             variant='contained'
                             color='primary'
@@ -159,7 +169,7 @@ const PurchaseViewPage = () => {
                             Update Purchase Status
                         </Button>
                     </Box>
-                    <Tabs value={valueOrder} onChange={handleTabOrderChange}>
+                    <Tabs value={valueOrder} onChange={handleTabOrderChange} sx={{mt:'15px'}}>
                         <Tab label="Items Details" />
                     </Tabs>
                     {value === 0 && (

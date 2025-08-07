@@ -24,7 +24,7 @@ const validationSchema = Yup.object().shape({
 
 const Formm = (props: any) => {
   const { open, handleClose, getData } = props;
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +49,7 @@ const Formm = (props: any) => {
   };
 
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const payload = {
       ...values,
       rawMaterial: values?.rawMaterial?.map((item: any) => item.id),
@@ -57,6 +58,9 @@ const Formm = (props: any) => {
     await postApi(url, payload);
     getData()
     handleClose()
+    setTimeout(()=>{
+      setIsSubmit(false);
+    },1000)
   };
 
   return (
@@ -156,8 +160,8 @@ const Formm = (props: any) => {
               </Form>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={() => handleSubmit()}>
-                Save
+              <Button variant="contained" onClick={() => handleSubmit()} disabled={isSubmit}>
+                {isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Save")}
               </Button>
               <Button
                 variant="outlined"

@@ -12,6 +12,27 @@ import { useRouter } from "next/navigation";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import moment from "moment";
 
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.order?.order}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => {
+        const formattedDate = moment(item?.createdAt).format('ll');
+        return {
+            index: index + 1,
+            id: item?.id,
+            customerId: `${item?.customerId?.firstName} ${item?.customerId?.lastName ? item?.customerId?.lastName : ''}`,
+            phoneNumber: item?.customerId?.phoneNumber || '',
+            item: item?.itemId,
+            totalAmount: item?.totalAmount,
+            status: item?.status,
+            createdAt: formattedDate
+        }
+    });
+    setData(modifiedData);
+
+    setRowCount(response?.data?.data[1]);
+};
+
 const Order = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const handleOpenAdd = () => setOpenAdd(true);
@@ -86,33 +107,33 @@ const Order = () => {
             align: 'center',
             cellClassName: 'name-column--cell--capitalize',
             renderCell: (params) => {
-                const format = (status: string)=>{
-                    return status === 'pending'? 'Pending' : 
-                           status === 'completed'? 'Completed':
-                           status === 'in_progress'? 'In Progress':
-                           status === 'cancelled'? 'Cancelled': ''
+                const format = (status: string) => {
+                    return status === 'pending' ? 'Pending' :
+                        status === 'completed' ? 'Completed' :
+                            status === 'in_progress' ? 'In Progress' :
+                                status === 'cancelled' ? 'Cancelled' : ''
                 }
                 return (
-                <Typography sx={{
-                    padding: params.value === 'pending' ? '5px 20px' : 
-                             params.value === 'completed' ? '5px 13px' : 
-                             params.value === 'in_progress'? '5px 11px' : 
-                             params.value === 'cancelled' ? '5px 14px' : "",
-                    borderRadius: '10px',
-                    bgcolor: params.value === 'pending' ? '#ffff8f' : 
-                             params.value === 'completed' ? '#cdffdf' : 
-                             params.value === 'in_progress'? '#cdf0ff' : 
-                             params.value === 'cancelled' ? '#ffc1b9' : "",
-                    color: params.value === 'pending' ? '#ffd300' : 
-                             params.value === 'completed' ? '#00dc4f' : 
-                             params.value === 'in_progress'? '#19bdff' : 
-                             params.value === 'cancelled' ? '#f01d00' : "",
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    display: 'inline'
-                }}>
-                    {format(params.value)}
-                </Typography>
+                    <Typography sx={{
+                        padding: params.value === 'pending' ? '5px 20px' :
+                            params.value === 'completed' ? '5px 13px' :
+                                params.value === 'in_progress' ? '5px 11px' :
+                                    params.value === 'cancelled' ? '5px 14px' : "",
+                        borderRadius: '10px',
+                        bgcolor: params.value === 'pending' ? '#ffff8f' :
+                            params.value === 'completed' ? '#cdffdf' :
+                                params.value === 'in_progress' ? '#cdf0ff' :
+                                    params.value === 'cancelled' ? '#ffc1b9' : "",
+                        color: params.value === 'pending' ? '#ffd300' :
+                            params.value === 'completed' ? '#00dc4f' :
+                                params.value === 'in_progress' ? '#19bdff' :
+                                    params.value === 'cancelled' ? '#f01d00' : "",
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        display: 'inline'
+                    }}>
+                        {format(params.value)}
+                    </Typography>
                 )
             }
         },
@@ -139,30 +160,13 @@ const Order = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.order?.order}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => {
-            const formattedDate = moment(item?.createdAt).format('ll');
-            return {
-                index: index + 1,
-                id: item?.id,
-                customerId: `${item?.customerId?.firstName} ${item?.customerId?.lastName ? item?.customerId?.lastName : ''}`,
-                phoneNumber: item?.customerId?.phoneNumber || '',
-                item: item?.itemId,
-                totalAmount: item?.totalAmount,
-                status: item?.status,
-                createdAt: formattedDate
-            }
-        });
-        setData(modifiedData);
-
-        setRowCount(response?.data?.data[1]);
-    };
-
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
 
     const CustomToolbar = () => {
         return (
@@ -186,7 +190,7 @@ const Order = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Order" />
             <Card sx={{ height: 600, width: '100%' }}>
                 <DataGrid
@@ -200,12 +204,12 @@ const Order = () => {
                             fontWeight: 'bold',
                         },
                     }}
-                // paginationModel={{ page: page, pageSize: PageSize }}
-                // paginationMode="server"
-                // rowCount={rowCount}
-                // onPaginationModelChange={(newPaginationModel) => {
-                //     setPage(newPaginationModel.page);
-                // }}
+                paginationModel={{ page: page, pageSize: PageSize }}
+                paginationMode="server"
+                rowCount={rowCount}
+                onPaginationModelChange={(newPaginationModel) => {
+                    setPage(newPaginationModel.page);
+                }}
                 />
             </Card>
         </>

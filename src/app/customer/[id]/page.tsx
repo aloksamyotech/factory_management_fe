@@ -9,34 +9,35 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 
+const GetDetails = async (setDetails:any,id:any) => {
+    const url = `${urls?.endpoints?.customer?.customer}/${id}`
+    const response = await getApi(url);
+    setDetails(response?.data?.data);
+}
+const GetPurchase = async (setData:any,id:any) => {
+    const url = `${urls?.endpoints?.order?.order}?customerId=${id}`
+    const response = await getApi(url);
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
+        index: index + 1,
+        createdAt: moment(item?.createdAt).format("ll"),
+        id: item.id,
+        item: item?.itemId,
+        totalAmount: item?.totalAmount,
+        status: item?.status
+    }));
+    setData(modifiedData)
+}
+
 const CustomerViewPage = () => {
     const params = useParams();
     const id = params?.id
     const [Details, setDetails] = useState<any | null>(null)
     const [data, setData] = useState([])
-    const GetDetails = async () => {
-        const url = `${urls?.endpoints?.customer?.customer}/${id}`
-        const response = await getApi(url);
-        setDetails(response?.data?.data);
-    }
-    const GetPurchase = async () => {
-        const url = `${urls?.endpoints?.order?.order}?customerId=${id}`
-        const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
-        const modifiedData = response?.data?.data[0]?.map((item: any, index: number) => ({
-            index: index + 1,
-            createdAt: formattedDate,
-            id: item.id,
-            item: item?.itemId,
-            totalAmount: item?.totalAmount,
-            status: item?.status
-        }));
-        setData(modifiedData)
-    }
     useEffect(() => {
-        GetDetails();
-        GetPurchase();
-    }, [])
+        GetDetails(setDetails,id);
+        GetPurchase(setData,id);
+    }, [id])
     const [value, setValue] = useState(0);
     const [valueOrder, setValueOrder] = useState(0);
 
@@ -99,7 +100,37 @@ const CustomerViewPage = () => {
             headerAlign: 'center',
             align: 'center',
             flex: 1,
-            cellClassName: 'name-column--cell--capitalize'
+            cellClassName: 'name-column--cell--capitalize',
+            renderCell: (params) => {
+                const format = (status: string)=>{
+                    return status === 'pending'? 'Pending' : 
+                           status === 'completed'? 'Completed' :
+                           status === 'in_progress'? 'In Progress' : 
+                           status === 'cancelled' ? 'Cancelled': '';
+                }
+                return (
+                    <Typography sx={{
+                        padding: params.value === 'pending' ? '5px 20px':
+                                 params.value === 'completed'? '5px 13px':
+                                 params.value === 'in_progress'? '5px 11px':
+                                 params.value === 'cancelled'? '5px 14': '', 
+                        borderRadius: '10px',
+                        bgcolor: params.value === 'pending'? '#ffff8f':        
+                                 params.value === 'completed'? '#cdffdf':        
+                                 params.value === 'in_progress'? '#cdf0ff':        
+                                 params.value === 'cancelled'? '#ffc1b9': "",
+                        color: params.value === 'pending'? '#ffd300': 
+                               params.value === 'completed'? '#00dc4f':
+                               params.value === 'in_progress'? '#19bdff':
+                               params.value === 'cancelled'? '#01d00': '',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        display: 'inline'
+                    }}>
+                        {format(params.value)}
+                    </Typography>
+                )
+            }
         },
         {
             field: 'action',

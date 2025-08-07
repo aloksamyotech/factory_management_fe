@@ -13,6 +13,20 @@ import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTheme } from "next-themes";
 
+const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
+    const url = `${urls?.endpoints?.machine?.machine}?page=${page + 1}&limit=${PageSize}`;
+    const response = await getApi(url);
+    const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
+        index: index + 1,
+        id: item?.id,
+        machine: item?.name,
+        description: item?.description,
+        type: item?.type,
+        status: item?.status ? 'Active' : 'Inactive',
+    }));
+    setData(modifiedData);
+    setRowCount(response?.data?.data[1]);
+};
 
 const MachineManagement = () => {
     const [openAdd, setOpenAdd] = useState(false);
@@ -64,13 +78,13 @@ const MachineManagement = () => {
             flex: 1,
             renderCell: (params) =>
                 <Typography sx={{
-                    padding:'5px 15px', 
-                    borderRadius: '10px', 
-                    bgcolor: params.value === true ? '#ffc1b9' : '#cdffdf', 
-                    color: params.value === true ? '#f01d00' : '#00dc4f', 
-                    fontSize: '12px', 
+                    padding: '5px 15px',
+                    borderRadius: '10px',
+                    bgcolor: params.value === true ? '#ffc1b9' : '#cdffdf',
+                    color: params.value === true ? '#f01d00' : '#00dc4f',
+                    fontSize: '12px',
                     fontWeight: 'bold',
-                    display:'inline',
+                    display: 'inline',
                 }}>{params.value}</Typography>
         },
         {
@@ -84,24 +98,15 @@ const MachineManagement = () => {
         }
     ];
 
-    const getData = async () => {
-        const url = `${urls?.endpoints?.machine?.machine}?page=${page + 1}&limit=${PageSize}`;
-        const response = await getApi(url);
-        const modifiedData = response?.data?.data[0].map((item: any, index: number) => ({
-            index: index + 1,
-            id: item?.id,
-            machine: item?.name,
-            description: item?.description,
-            type: item?.type,
-            status: item?.status ? 'Active' : 'Inactive',
-        }));
-        setData(modifiedData);
-        setRowCount(response?.data?.data[1]);
-    };
 
     useEffect(() => {
-        getData();
+        getData(setData, setRowCount, page, PageSize);
     }, [page]);
+
+    const refreshData = () => {
+        getData(setData, setRowCount, page, PageSize);
+    };
+
 
     const CustomToolbar = () => {
         return (
@@ -125,7 +130,7 @@ const MachineManagement = () => {
 
     return (
         <>
-            <Form open={openAdd} handleClose={handleCloseAdd} getData={getData} />
+            <Form open={openAdd} handleClose={handleCloseAdd} getData={refreshData} />
             <Breadcrumb pageName="Machine" />
             <Card sx={{ height: 600, width: '100%', bgcolor: theme == 'dark' ? '#122031' : '#fff' }}>
                 <DataGrid

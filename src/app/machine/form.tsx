@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, Grid2, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, Grid, FormControl, FormLabel, TextField, Select, MenuItem, FormHelperText, CircularProgress } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
 import * as yup from 'yup';
 import { postApi } from '@/common/api';
 import { urls } from '@/common/url';
+import { useState } from 'react';
 
 const Form = (props: any) => {
     const { open, handleClose, getData } = props;
-
+    const [isSubmit, setIsSubmit] = useState(false);
     const validationSchema = yup.object({
         name: yup
             .string()
@@ -33,10 +33,14 @@ const Form = (props: any) => {
         initialValues,
         validationSchema,
         onSubmit: async (values: any) => {
+            setIsSubmit(true);
             const url = urls?.endpoints?.machine?.machine;
             await postApi(url, values);
             handleClose()
             getData()
+            setTimeout(()=>{
+                setIsSubmit(false);
+            },1000);
             formik?.resetForm();
         }
     });
@@ -87,7 +91,9 @@ const Form = (props: any) => {
                                     >
                                         <MenuItem value={'test'}>Test</MenuItem>
                                     </Select>
-                                    <FormHelperText sx={{ color: '#d74242' }}>{formik?.touched?.type && formik?.errors?.type}</FormHelperText>
+                                    <FormHelperText sx={{ color: '#d74242' }}>
+                                        {formik?.touched?.type && typeof formik?.errors?.type === 'string' ? formik.errors.type : ''}
+                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid size={12}>
@@ -111,7 +117,13 @@ const Form = (props: any) => {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={() => formik.handleSubmit()}>Save</Button>
+                <Button variant="contained"
+                        disabled={isSubmit}
+                        color="primary" 
+                        onClick={() => formik.handleSubmit()}>
+                    {isSubmit ? (<CircularProgress size={22} color="inherit" />) : ("Save")}
+                </Button>
+
                 <Button variant="outlined" color="error" onClick={() => (handleClose(), formik.resetForm())}>Cancel</Button>
             </DialogActions>
         </Dialog>

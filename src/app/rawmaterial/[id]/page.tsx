@@ -10,6 +10,30 @@ import { getApi } from "@/common/api";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
+const GetDetails = async (setDetails: any, id: any) => {
+    const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}/${id}`
+    const response = await getApi(url);
+    setDetails(response?.data?.data);
+}
+const GetPurchase = async (setData: any, id: any) => {
+    const url = `${urls?.endpoints?.purchase?.purchase}`
+    const response = await getApi(url);
+    // const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
+    const modifiedData = response?.data?.data[0]
+        ?.filter((item: any) => item.itemId.some((i: any) => i?.rawMaterial?.id == id))
+        ?.map((item: any, index: number) => ({
+            id: item.id,
+            index: index + 1,
+            fullName: `${item?.vendorId?.firstName} ${item?.vendorId?.lastName ? item?.vendorId?.lastName : ''}`,
+            phoneNumber: item?.vendorId?.phoneNumber,
+            items: item?.itemId,
+            totalAmount: item?.totalAmount,
+            status: item?.status,
+            date: moment(item?.createdAt).format("ll")
+        }));
+    setData(modifiedData)
+}
+
 const RawViewPage = () => {
     const params = useParams();
     const id = params.id as string;
@@ -18,33 +42,10 @@ const RawViewPage = () => {
     const [data, setData] = useState([]);
     const [details, setDetails] = useState<any | null>([]);
 
-    const GetDetails = async () => {
-        const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}/${id}`
-        const response = await getApi(url);
-        setDetails(response?.data?.data);
-    }
-    const GetPurchase = async () => {
-        const url = `${urls?.endpoints?.purchase?.purchase}`
-        const response = await getApi(url);
-        const formattedDate = moment(response?.data?.data[0]?.createdAt).format('ll');
-        const modifiedData = response?.data?.data[0]
-            ?.filter((item: any) => item.itemId.some((i: any) => i?.rawMaterial?.id == id))
-            ?.map((item: any, index: number) => ({
-                id: item.id,
-                index: index + 1,
-                fullName: `${item?.vendorId?.firstName} ${item?.vendorId?.lastName ? item?.vendorId?.lastName : ''}`,
-                phoneNumber: item?.vendorId?.phoneNumber,
-                items: item?.itemId,
-                totalAmount: item?.totalAmount,
-                status: item?.status,
-                date: formattedDate
-            }));
-        setData(modifiedData)
-    }
     useEffect(() => {
-        GetDetails();
-        GetPurchase();
-    }, [])
+        GetDetails(setDetails, id);
+        GetPurchase(setData, id);
+    }, [id])
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -112,31 +113,31 @@ const RawViewPage = () => {
             align: 'center',
             cellClassName: 'name-column--cell--capitalize',
             flex: 1,
-            renderCell: (params) =>{
-                const format = (status:string)=>{
-                    return status === 'pending'? 'Pending' :
-                           status === 'in_progress' ? 'In Progress' :
-                           status === 'completed' ? 'Completed' :
-                           status === 'cancelled'? 'Cancelled' : '';
+            renderCell: (params) => {
+                const format = (status: string) => {
+                    return status === 'pending' ? 'Pending' :
+                        status === 'in_progress' ? 'In Progress' :
+                            status === 'completed' ? 'Completed' :
+                                status === 'cancelled' ? 'Cancelled' : '';
                 }
                 return (
                     <Typography sx={{
-                        padding: params.value === 'pending' ? '5px 20px' : 
-                                 params.value === 'completed'? '5px 13px':
-                                 params.value === 'in_progress' ? '5px 11px':
-                                 params.value === 'cancelled'? '5px 14px': '',
+                        padding: params.value === 'pending' ? '5px 20px' :
+                            params.value === 'completed' ? '5px 13px' :
+                                params.value === 'in_progress' ? '5px 11px' :
+                                    params.value === 'cancelled' ? '5px 14px' : '',
                         borderRadius: '10px',
-                        bgcolor: params.value === 'pending' ? '#ffff8f' : 
-                                 params.value === 'completed' ? '#cdffdf' : 
-                                 params.value === 'in_progress'? '#cdf0ff' : 
-                                 params.value === 'cancelled' ? '#ffc1b9' : "",
-                        color: params.value === 'pending' ? '#ffd300' : 
-                               params.value === 'completed' ? '#00dc4f' : 
-                               params.value === 'in_progress'? '#19bdff' : 
-                               params.value === 'cancelled' ? '#f01d00' : "",
+                        bgcolor: params.value === 'pending' ? '#ffff8f' :
+                            params.value === 'completed' ? '#cdffdf' :
+                                params.value === 'in_progress' ? '#cdf0ff' :
+                                    params.value === 'cancelled' ? '#ffc1b9' : "",
+                        color: params.value === 'pending' ? '#ffd300' :
+                            params.value === 'completed' ? '#00dc4f' :
+                                params.value === 'in_progress' ? '#19bdff' :
+                                    params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline' 
+                        display: 'inline'
                     }}>{format(params.value)}</Typography>
                 );
             }
@@ -159,7 +160,7 @@ const RawViewPage = () => {
 
         }
     ];
-    
+
     const navigate = useRouter()
     const handleNavigate = (id: any) => {
         navigate.push(`/order/${id}`)
@@ -181,9 +182,9 @@ const RawViewPage = () => {
                                         <Grid>
                                             <CardContent>
                                                 <Typography variant="h6" fontWeight={'bold'}>Product Name: <span style={{ textDecoration: 'underline' }}>{details?.title || '-'}</span></Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Category: </span>{details?.category || '-'}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Price: </span>₹{details?.price || '-'}</Typography>
-                                                <Typography><span style={{fontWeight:'bold'}}>Description: </span>{details?.description || '-'}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Category: </span>{details?.category || '-'}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Price: </span>₹{details?.price || '-'}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Description: </span>{details?.description || '-'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid sx={{ display: 'flex', alignItems: 'center' }}>
@@ -208,7 +209,7 @@ const RawViewPage = () => {
                         <DataGrid
                             rows={data}
                             columns={columns}
-                            sx={{'& .MuiDataGrid-columnHeaderTitle':{fontWeight:'bold'}}}
+                            sx={{ '& .MuiDataGrid-columnHeaderTitle': { fontWeight: 'bold' } }}
                         />
                     </Card>
                 )}

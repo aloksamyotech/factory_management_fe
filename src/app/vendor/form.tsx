@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Typography, Button, Dialog, DialogContentText, FormControl, FormLabel, TextField, Stack, Grid, Box } from '@mui/material';
+import { Typography, Button, Dialog, DialogContentText, FormControl, FormLabel, TextField, Stack, Grid, Box, CircularProgress } from '@mui/material';
 import { DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Formik, useFormik } from 'formik';
 import * as yup from 'yup';
 import { postApi } from '@/common/api';
 import { urls } from '@/common/url';
+import { useState } from 'react';
 
 const Form = (props: any) => {
     const { open, handleClose, getData } = props;
-
+    const [isSubmit, setIsSubmit] = useState(false);
     const validationSchema = yup.object({
         firstName: yup
             .string()
@@ -39,10 +39,14 @@ const Form = (props: any) => {
         initialValues,
         validationSchema,
         onSubmit: async (values: any) => {
+            setIsSubmit(true);
             const url = urls?.endpoints?.vendor?.vendor;
             await postApi(url, values);
             handleClose()
             getData()
+            setTimeout(()=>{
+                setIsSubmit(false);
+            },1000);
             formik?.resetForm();
         }
     });
@@ -128,7 +132,8 @@ const Form = (props: any) => {
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={() => formik.handleSubmit()}>Save</Button>
+                <Button variant="contained" color="primary" onClick={() => formik.handleSubmit()} disabled={isSubmit}
+                    >{isSubmit ? (<CircularProgress size={22} color='inherit'/>): ("Save")}</Button>
                 <Button variant="outlined" color="error" onClick={() => (handleClose(), formik.resetForm())}>Cancel</Button>
             </DialogActions>
         </Dialog>

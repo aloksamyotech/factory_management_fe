@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormLabel, Grid, TextField, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from 'react'
 import { urls } from '@/common/url';
@@ -12,11 +12,11 @@ const validationSchema = Yup.object().shape({
     .min(new Date(), "Next Maintenance date must be today or later.")
     .required("Next Maintenance date is required")
 });
-const form = (props: any) => {
+const Forum = (props: any) => {
   const { open, handleClose, getData, machineId } = props;
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const getEmployees = async () => {
     setLoading(true);
 
@@ -40,6 +40,7 @@ const form = (props: any) => {
     nextMaintenance: '',
   }
   const handleSubmit = async (values: any) => {
+    setIsSubmit(true);
     const payload = {
       ...values,
       employeeId: Number(values.employeeId),
@@ -50,6 +51,9 @@ const form = (props: any) => {
     await postApi(url, payload)
     getData();
     handleClose();
+    setTimeout(()=>{
+      setIsSubmit(false)
+    },1000)
   }
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -70,7 +74,7 @@ const form = (props: any) => {
                       options={employees}
                       loading={loading}
                       getOptionLabel={(option: any) => option.fullName}
-                      value={employees.find(e => e.id === Number(values.employeeId)) || null}
+                      value={employees.find((e: { id: any }) => e.id === Number(values.employeeId)) || null}
                       onChange={(e, val) => setFieldValue('employeeId', val?.id || '')}
                       renderInput={(params) => (
                         <TextField
@@ -116,7 +120,13 @@ const form = (props: any) => {
                 </Grid>
               </DialogContent>
               <DialogActions>
-                <Button type='submit' variant='contained' color='primary' onSubmit={handleSubmit}>Save</Button>
+                <Button type='submit' 
+                        variant='contained' 
+                        color='primary' 
+                        disabled={isSubmit}
+                        onSubmit={handleSubmit}>
+                        {isSubmit ? (<CircularProgress size={22} color='inherit'/>):("Save")}
+                        </Button>
                 <Button variant='outlined' color='error' onClick={() => handleClose()}>Cancel</Button>
               </DialogActions>
             </Form>
@@ -127,4 +137,4 @@ const form = (props: any) => {
   )
 }
 
-export default form
+export default Forum

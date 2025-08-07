@@ -9,17 +9,41 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
+import { postApi } from "@/common/api";
+import { urls } from "@/common/url";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
+interface DecodedToken{
+  id: string,
+  name: string,
+  email: string
+}
+const getuser = (setUser:any)=>{
+  const token = localStorage.getItem("jwt");
+  if(!token){
+    return "N/A";
+  }
+  const decoded: DecodedToken = jwtDecode(token);
+  const { id, name, email } = decoded;
+  setUser({id, name, email, img:"/images/user/user-03.png" });  
+}
 export function UserInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>();
+  const router = useRouter();
 
-  const USER = {
-    name: "John Smith",
-    email: "johnson@nextadmin.com",
-    img: "/images/user/user-03.png",
-  };
+  useEffect(()=>{
+    getuser(setUser)
+  },[])
+
+  const logout = async()=>{
+    await postApi(`${urls?.endpoints?.employee.employee}/logout`, {});
+    localStorage.clear();
+    window.location.href = "/sign-in";
+  }
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -27,16 +51,16 @@ export function UserInfo() {
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
-          <Image
-            src={USER.img}
+            <Image
+            src={user?.img || "/images/user/user-03.png"}
             className="size-12"
-            alt={`Avatar of ${USER.name}`}
+            alt={`Avatar of ${user?.name}`}
             role="presentation"
             width={200}
             height={200}
-          />
+            />
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{user?.name}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -57,21 +81,21 @@ export function UserInfo() {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          <Image
-            src={USER.img}
+            <Image
+            src={user?.img || "/images/user/user-03.png"}
             className="size-12"
-            alt={`Avatar for ${USER.name}`}
+            alt={`Avatar for ${user?.name}`}
             role="presentation"
             width={200}
             height={200}
-          />
+            />
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {USER.name}
+              {user?.name}
             </div>
 
-            <div className="leading-none text-gray-6">{USER.email}</div>
+            <div className="leading-none text-gray-6">{user?.email}</div>
           </figcaption>
         </figure>
 
@@ -88,7 +112,7 @@ export function UserInfo() {
             <span className="mr-auto text-base font-medium">View profile</span>
           </Link>
 
-          <Link
+          {/* <Link
             href={"/pages/settings"}
             onClick={() => setIsOpen(false)}
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
@@ -98,7 +122,7 @@ export function UserInfo() {
             <span className="mr-auto text-base font-medium">
               Account Settings
             </span>
-          </Link>
+          </Link> */}
         </div>
 
         <hr className="border-[#E8E8E8] dark:border-dark-3" />
@@ -106,7 +130,7 @@ export function UserInfo() {
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={() => setIsOpen(false)}
+            onClick={() => logout()}
           >
             <LogOutIcon />
 
