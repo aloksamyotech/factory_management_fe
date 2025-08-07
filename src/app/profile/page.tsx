@@ -190,7 +190,7 @@ export default function Page() {
                   <Grid>
                     <Typography variant='h6' sx={{ my: '10px' }}>Update Company Logo</Typography>
                     <Divider />
-                    <Typography sx={{ fontSize:'10px'}}>(800px * 200px)</Typography>
+                    <Typography sx={{ fontSize: '10px' }}>(800px * 200px)</Typography>
                   </Grid>
                   <Grid sx={{ my: '20px', mx: '10px' }}>
                     <form>
@@ -206,18 +206,18 @@ export default function Page() {
                           }}
                           error={formik?.touched?.file && Boolean(formik?.errors?.file)}
                         />
-                        <FormHelperText sx={{ color: '#c34c51' }}>{formik?.touched?.file && formik?.errors?.file}</FormHelperText>
+                        <FormHelperText sx={{ color: '#c34c51' }}>{formik?.touched?.file && formik?.errors?.file as any}</FormHelperText>
                       </FormControl>
                     </form>
                   </Grid>
                   <Grid container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} spacing={2}>
                     <Grid>
-                      <Button type="submit" variant="contained" onClick={formik?.handleSubmit} style={{ textTransform: 'capitalize' }} color="primary">
+                      <Button type="submit" variant="contained" onClick={()=>formik?.handleSubmit()} style={{ textTransform: 'capitalize' }} color="primary">
                         Upload Logo
                       </Button>
                     </Grid>
                     <Grid>
-                      <Button type="submit" size='small' variant="outlined" onClick={() => { formik?.resetForm(); }} style={{ textTransform: 'capitalize' }} color="primary">
+                      <Button type="submit" size='small' variant="outlined" onClick={() => { formik?.resetForm() }} style={{ textTransform: 'capitalize' }} color="primary">
                         Cancel
                       </Button>
                     </Grid>
