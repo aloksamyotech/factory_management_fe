@@ -9,18 +9,20 @@ import moment from "moment"
 import React, { useState } from "react"
 
 const FetchReportData = ()=>{
-    const [filters, setFilters] = useState(null);  
     const [totals, setTotals] = useState({
         productionTotal:0,
         ordersTotal: 0,
         purchaseTotal: 0,
-        profitTotal: 0,
+        // profitTotal: 0,
+        sales: 0,
     });
     const [tableData, setTableData] = useState({production:[],orders:[],purchases:[]});
 
     const getData = async(dateRange:any)=>{
-        setFilters(dateRange);
         const prod = await getApi(`${urls?.endpoints?.production.getAll}/report?start=${dateRange.start}&end=${dateRange.end}`);
+        const order = await getApi(`${urls?.endpoints?.order.order}/report?start=${dateRange.start}&end=${dateRange.end}`);
+        const purchase = await getApi(`${urls?.endpoints?.purchase.purchase}/report?start=${dateRange.start}&end=${dateRange.end}`);
+
         const modifiedProduction = prod?.data?.data[0].map((item:any,index:any)=>({
             index: index+1,
             id: item?.id,
@@ -31,7 +33,6 @@ const FetchReportData = ()=>{
             status: item?.status,
         }));   
         
-        const order = await getApi(`${urls?.endpoints?.order.order}/report?start=${dateRange.start}&end=${dateRange.end}`);
         const modifiedOrders = order?.data?.data[0].map((item:any, index:any)=>({
             index: index+1,
             id: item?.id,
@@ -43,7 +44,6 @@ const FetchReportData = ()=>{
             deliveryDate: moment(item?.expectedDeliveryDate).format("ll")
         }))
 
-        const purchase = await getApi(`${urls?.endpoints?.purchase.purchase}/report?start=${dateRange.start}&end=${dateRange.end}`);
         const modifiedPurchase = purchase?.data?.data[0].map((item:any, index: any)=>({
             index: index+1,
             id: item?.id,
@@ -55,16 +55,16 @@ const FetchReportData = ()=>{
         }));
 
         const totalOrderAmount = modifiedOrders.reduce((sum:any, order:any)=> sum + (order.totalAmount || 0), 0);
-        const totalPurchaseAmount = modifiedPurchase.reduce((sum:any, purchase:any)=> sum + (purchase.totalAmount || 0), 0);
-        const profit = totalOrderAmount - totalPurchaseAmount;
+        // const totalPurchaseAmount = modifiedPurchase.reduce((sum:any, purchase:any)=> sum + (purchase.totalAmount || 0), 0);
+        // const profit = totalOrderAmount - totalPurchaseAmount;
         
         setTableData({production:modifiedProduction, orders: modifiedOrders, purchases: modifiedPurchase});
-        setTotals({productionTotal:prod?.data?.data[1], ordersTotal: order?.data?.data[1], purchaseTotal: purchase?.data?.data[1], profitTotal:profit});   
+        setTotals({productionTotal:prod?.data?.data[1], ordersTotal: order?.data?.data[1], purchaseTotal: purchase?.data?.data[1], sales:totalOrderAmount});   
     }
-    return {filters, totals, getData, tableData};
+    return { totals, getData, tableData};
 }
 const Report = () => {
-    const {filters, totals, getData, tableData} = FetchReportData();
+    const { totals, getData, tableData} = FetchReportData();
     const [value, setValue] = useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue:number)=>{
@@ -265,10 +265,11 @@ const Report = () => {
                     <ReportCards title="Total Orders" value={totals.ordersTotal}/>
                 </Grid>
                 <Grid size={{ xs:12, sm:6, md:3 }}>
-                    <ReportCards title="Total Expense" value={totals.purchaseTotal}/>
+                    <ReportCards title="Total Purchases" value={totals.purchaseTotal}/>
                 </Grid>
                 <Grid size={{ xs:12, sm:6, md:3 }}>
-                    <ReportCards title="Total Profit" value={`₹${totals.profitTotal}`} color={totals.profitTotal > 0 ? "#00dc4f": totals.profitTotal == 0 ?"black":"#f01d00"}/>
+                    {/* <ReportCards title="Total Profit" value={`₹${totals.profitTotal}`} color={totals.profitTotal > 0 ? "#00dc4f": totals.profitTotal == 0 ?"black":"#f01d00"}/> */}
+                    <ReportCards title="Total Sales" value={`₹${totals.sales}`}/>
                 </Grid>
             </Grid>
             </Box>
