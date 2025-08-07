@@ -13,9 +13,11 @@ import { ToastContainer } from "react-toastify";
 import { getRoleFromToken } from "@/common/api";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Box } from "@mui/material";
+import './style.css'
 
 export default function RootLayout({ children }: PropsWithChildren) {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState<any>(null);
   const router = useRouter();
   useEffect(() => {
     const token = getRoleFromToken();
@@ -24,9 +26,38 @@ export default function RootLayout({ children }: PropsWithChildren) {
     }
     else {
       router.push('/sign-in');
+      setLogin(false)
     }
   }, []);
 
+  if (login === null) {
+    return <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        zIndex: 9999,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+        }}
+      >
+        <span className="loader"></span>
+      </Box>
+    </Box>;
+  }
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
