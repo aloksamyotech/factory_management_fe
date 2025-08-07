@@ -1,26 +1,41 @@
-import darkLogo from "@/assets/logos/dark.svg";
+import { useCallback, useEffect, useState } from "react";
+import { getApi } from "@/common/api";
+import { urls } from "@/common/url";
 import logo from "@/assets/logos/main.svg";
 import Image from "next/image";
 
 export function Logo() {
-  return (
-    <div className="relative h-8 max-w-[10.847rem]">
-      <Image
-        src={logo}
-        fill
-        className="dark:hidden"
-        alt="NextAdmin logo"
-        role="presentation"
-        quality={100}
-      />
+  const [logoUrl, setLogoUrl] = useState('');
 
+  const getData = useCallback(async () => {
+    try {
+      const url = `${urls?.endpoints?.employee?.logo}`;
+      const response = await getApi(url);
+      const path = response?.data?.data?.url;
+      
+      if (path!=='') {
+        // setLogoUrl(`http://localhost:3001/${path}`);
+        setLogoUrl(`https://factory.samyotech.in/${path}`);
+      }
+    } catch (err) {
+      console.error("Failed to fetch logo:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  return (
+    <div className="h-full">
       <Image
-        src={darkLogo}
+        src={logoUrl||logo}
+        objectFit="contain"
         fill
-        className="hidden dark:block"
         alt="NextAdmin logo"
         role="presentation"
         quality={100}
+        unoptimized
       />
     </div>
   );

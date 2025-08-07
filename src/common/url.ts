@@ -14,7 +14,8 @@ export const urls = Object.freeze({
             employee: `${BASE_URL}${API_VERSION}/employee`,
             login: `${BASE_URL}${API_VERSION}/employee/login`,
             getAll: `${BASE_URL}${API_VERSION}/employee`,
-            logout: `${BASE_URL}${API_VERSION}/employee/logout`
+            logout: `${BASE_URL}${API_VERSION}/employee/logout`,
+            logo:`${BASE_URL}${API_VERSION}/employee/logo`
         },
         vendor: {
             vendor: `${BASE_URL}${API_VERSION}/vendor`,
