@@ -4,7 +4,7 @@ import { OverviewCard } from "./card";
 import * as icons from "./icons";
 
 export async function OverviewCardsGroup() {
-  const { orders, profit, products, customers, inventory, rawMaterial, machines,employees } = await getOverviewData();
+  const { orders, profit, products, customers, inventory, rawMaterial, machines, employees } = await getOverviewData();
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -21,7 +21,7 @@ export async function OverviewCardsGroup() {
         label="Total Profit"
         data={{
           ...profit,
-          value: "₹" + compactFormat(profit?.value),
+          value: compactFormat(profit?.value),
         }}
         Icon={icons.Profit}
       />

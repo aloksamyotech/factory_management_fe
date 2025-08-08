@@ -14,7 +14,7 @@ import { getRoleFromToken } from "@/common/api";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box } from "@mui/material";
-import './style.css'
+import './loader.css'
 
 export default function RootLayout({ children }: PropsWithChildren) {
   const [login, setLogin] = useState<any>(null);
