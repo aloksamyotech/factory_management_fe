@@ -7,7 +7,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
-  employeeId: Yup.number().required('Employee ID is required'),
+  employeeId: Yup.string().required('Employee ID is required'),
   nextMaintenance: Yup.date()
     .min(new Date(), "Next Maintenance date must be today or later.")
     .required("Next Maintenance date is required")
@@ -23,7 +23,7 @@ const Forum = (props: any) => {
     const emps = await getApi(urls?.endpoints?.employee?.getAll);
     const formatted = emps?.data?.data[0].map((res: any) => ({
       id: res.id,
-      fullName: res.firstName + " " + res.lastName,
+      fullName: res.firstName + " " + (res.lastName ? res.lastName : ""),
     }));
     setEmployees(formatted || []);
   }
@@ -43,8 +43,8 @@ const Forum = (props: any) => {
     setIsSubmit(true);
     const payload = {
       ...values,
-      employeeId: Number(values.employeeId),
-      machineId: Number(machineId),
+      employeeId: String(values.employeeId),
+      machineId: String(machineId),
       nextMaintenance: new Date(values.nextMaintenance).toISOString(),
     }
     const url = urls?.endpoints?.machine.maintenance;
@@ -74,7 +74,7 @@ const Forum = (props: any) => {
                       options={employees}
                       loading={loading}
                       getOptionLabel={(option: any) => option.fullName}
-                      value={employees.find((e: { id: any }) => e.id === Number(values.employeeId)) || null}
+                      value={employees.find((e: { id: any }) => e.id === String(values.employeeId)) || null}
                       onChange={(e, val) => setFieldValue('employeeId', val?.id || '')}
                       renderInput={(params) => (
                         <TextField

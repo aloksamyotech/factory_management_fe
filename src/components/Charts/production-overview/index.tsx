@@ -48,10 +48,10 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
   const {statusCounts, productsInProduction} = await getProductionStatusOverview();
 
   const chartData = [
-    {name: 'Pending', amount: statusCounts["pending"]},
-    {name: 'In Progress', amount: statusCounts["in_progress"]},
-    {name: 'Completed', amount: statusCounts["completed"]},
-  ]?.filter(item => item.amount > 0);
+    {name: 'Pending', amount: statusCounts["pending"] || 0},
+    {name: 'In Progress', amount: statusCounts["in_progress"] || 0},
+    {name: 'Completed', amount: statusCounts["completed"] || 0},
+  ];
   return (
     <div className={cn("grid grid-cols-1 grid-rows-[auto_1fr] gap-9 rounded-[10px] bg-white p-7.5 shadow-1 dark:bg-gray-dark dark:shadow-card",className)}>
       <div className="flex justify-between items-center mb-3 ml-2 mr-2">
@@ -65,7 +65,7 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
         {/* table */}
         <div className="flex-1 overflow-x-auto overflow-y-auto max-h-96 production-print" id="print-section">
           <h1 className="only-print-heading hidden text-xl font-bold mb-4 text-center">Todays Production</h1>  
-          <table className="min-w-[650px] border rounded production-table">
+          <table className="min-w-full border rounded production-table">
             <thead className="sticky top-0 bg-gray-100 dark:bg-gray-dark z-10">
               <tr className="bg-gray-100 dark:bg-gray-dark dark:text-white dark:border-y">
                 <th className="px-4 py-2 text-left">Product Name</th>

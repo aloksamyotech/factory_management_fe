@@ -55,7 +55,7 @@ export async function OrderStatus({
         <PeriodPicker defaultValue={timeFrame} sectionKey="order_status" />
       </div>
 
-      <div className="grid place-items-center">
+      <div className="flex justify-center items-center w-full min-h-[250px]">
         <DonutChart data={data} />
       </div>
     </div>
