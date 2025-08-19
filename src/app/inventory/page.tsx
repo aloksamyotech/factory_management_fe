@@ -98,15 +98,15 @@ const Order = () => {
             flex: 1,
             align: 'center',
             headerAlign: 'center',
-            renderCell: (params: any) =>
-                <Grid container>
-                    <Grid size={12} textAlign='center'>
-                        <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
-                        </Button>
-                    </Grid>
-                </Grid>
-        }
+            renderCell: (params: any) =>(
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height:'100%' }}>
+                     <RemoveRedEyeIcon
+                         color="primary"
+                         sx={{ fontSize: '20px', cursor: 'pointer' }}
+                         onClick={() => handleNavigate(params.row.id)}
+                     />
+                </Box>
+    )}
     ];
 
     useEffect(() => {
@@ -127,11 +127,11 @@ const Order = () => {
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <GridToolbarQuickFilter />
-                    <AddCircleOutlineIcon fontSize='large' sx={{
+                    {/* <AddCircleOutlineIcon fontSize='large' sx={{
                         // color: '#5750f1',
                         // cursor: 'pointer'
                         color: '#9d9e9f',
-                    }} />
+                    }} /> */}
                 </Box>
             </GridToolbarContainer>
         );

@@ -22,7 +22,7 @@ interface DecodedToken{
   email: string
 }
 const getuser = (setUser:any)=>{
-  const token = localStorage.getItem("jwt");
+  const token = localStorage.getItem("9x4kz5t7e2m1lqf");
   if(!token){
     return "N/A";
   }

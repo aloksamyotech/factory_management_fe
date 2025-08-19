@@ -108,13 +108,11 @@ const Product = () => {
             align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid size={12} textAlign='center'>
+                <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
                         <Button>
-                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                            <RemoveRedEyeIcon color="inherit" sx={{ fontSize: '20px',cursor:'pointer' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
-                    </Grid>
-                </Grid>
+                </Box>
         }
     ];
 

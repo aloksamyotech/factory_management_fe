@@ -132,7 +132,8 @@ const Production = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline'
+                        display: 'inline-flex',
+                        marginTop: '12px',
                     }}>
                         {format(params.value)}
                     </Typography>
@@ -146,16 +147,14 @@ const Production = () => {
             align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid size={12} textAlign='center'>
+                <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
                         <Button disabled={params.row.status === 'completed' || params.row.status === 'cancelled'}>
                             <PendingActionsIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => {
                                 setSelectedId(params.row.id)
                                 handleStatusUpdate();
                             }} />
                         </Button>
-                    </Grid>
-                </Grid>
+                </Box>
         }
     ];
 

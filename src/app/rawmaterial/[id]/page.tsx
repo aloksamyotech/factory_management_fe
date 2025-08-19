@@ -137,7 +137,8 @@ const RawViewPage = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline'
+                        display: 'inline-flex',
+                        marginTop:'12px'
                     }}>{format(params.value)}</Typography>
                 );
             }
@@ -156,8 +157,9 @@ const RawViewPage = () => {
             align: 'center',
             flex: 1,
             renderCell: (params: any) =>
+                <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
                 <ExitToAppIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params?.row?.id)} />
-
+                </Box>
         }
     ];
 
