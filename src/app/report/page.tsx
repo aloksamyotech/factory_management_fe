@@ -88,7 +88,12 @@ const Report = () => {
         {
             field: 'machineName',
             headerName: 'Machine Detail',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
+            renderCell: (params)=>{
+                return params?.value || "-"
+            }
         },
         {
             field: 'quantity',
@@ -332,7 +337,7 @@ const Report = () => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                         {/* <ReportCards title="Total Profit" value={`₹${totals.profitTotal}`} color={totals.profitTotal > 0 ? "#00dc4f": totals.profitTotal == 0 ?"black":"#f01d00"}/> */}
-                        <ReportCards title="Total Sales" value={`₹${totals.sales}`} />
+                        <ReportCards title="Total Sales" value={`₹${compactFormat(totals.sales)}`} />
                     </Grid>
                 </Grid>
             </Box>

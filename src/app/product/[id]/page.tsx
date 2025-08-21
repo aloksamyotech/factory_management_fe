@@ -136,7 +136,7 @@ const ProductViewPage = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         display: 'inline-flex',
-                        marginTop:'12px'
+                        marginTop:'12px',
                         fontWeight: 'bold',
                     }}>{format(params.value)}</Typography>
                 )
