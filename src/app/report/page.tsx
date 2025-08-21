@@ -128,7 +128,8 @@ const Report = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline'
+                        display: 'inline-flex',
+                        marginTop: '12px'
                     }}>
                         {format(params.value)}
                     </Typography>
@@ -204,7 +205,8 @@ const Report = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline'
+                        display: 'inline-flex',
+                        marginTop: '12px'
                     }}>
                         {format(params.value)}
                     </Typography>
@@ -280,7 +282,8 @@ const Report = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        display: 'inline'
+                        display: 'inline-flex',
+                        marginTop: '12px'
                     }}>
                         {format(params.value)}
                     </Typography>

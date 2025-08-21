@@ -93,11 +93,9 @@ const VendorManagement = () => {
             headerAlign: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width:'100%', height:'100%' }}>
                         <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
-                    </Grid>
-                </Grid>
+                </Box>
         }
     ];
 

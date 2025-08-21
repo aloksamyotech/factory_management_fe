@@ -6,7 +6,8 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
-  Grid
+  Grid,
+  FormLabel
 } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -81,22 +82,22 @@ const Formm = (props: any) => {
               <Form noValidate>
                 <Grid container spacing={1}>
                   <Grid size={6}>
+                    <FormLabel>Name*</FormLabel>
                     <TextField
-                      label="Name"
                       name="name"
                       fullWidth
-                      margin="normal"
+                      size="small"
                       value={values.name}
                       onChange={handleChange}
                       error={touched.name && Boolean(errors.name)}
                       helperText={touched.name && errors.name}
                     /></Grid>
                   <Grid size={6}>
+                    <FormLabel>Category*</FormLabel>
                     <TextField
-                      label="Category"
                       name="category"
                       fullWidth
-                      margin="normal"
+                      size="small"
                       value={values.category}
                       onChange={handleChange}
                       error={touched.category && Boolean(errors.category)}
@@ -104,18 +105,19 @@ const Formm = (props: any) => {
                     />
                   </Grid>
                   <Grid size={6}>
+                    <FormLabel>Price*</FormLabel>
                     <TextField
-                      label="Price"
                       name="price"
                       type="number"
                       fullWidth
-                      margin="normal"
+                      size="small"
                       value={values.price}
                       onChange={handleChange}
                       error={touched.price && Boolean(errors.price)}
                       helperText={touched.price && errors.price}
                     /></Grid>
                   <Grid size={6}>
+                    <FormLabel>Raw Materials*</FormLabel>
                     <Autocomplete
                       multiple
                       options={materials}
@@ -125,8 +127,7 @@ const Formm = (props: any) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Raw Materials"
-                          margin="normal"
+                          size="small"
                           fullWidth
                           error={touched.rawMaterial && Boolean(errors.rawMaterial)}
                           helperText={touched.rawMaterial && errors.rawMaterial}
@@ -144,13 +145,12 @@ const Formm = (props: any) => {
                     />
                   </Grid>
                   <Grid size={12}>
+                    <FormLabel>Description</FormLabel>
                     <TextField
-                      label="Description"
                       name="description"
                       multiline
                       rows={3}
                       fullWidth
-                      margin="normal"
                       value={values.description}
                       onChange={handleChange}
                       error={touched.description && Boolean(errors.description)}

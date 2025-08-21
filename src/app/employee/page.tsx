@@ -103,6 +103,7 @@ const EmployeeManagement = () => {
       align: 'center',
       flex: 1,
       renderCell: (params: any) =>
+        <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
         <RemoveRedEyeIcon
           // color="primary"
           sx={{
@@ -110,6 +111,7 @@ const EmployeeManagement = () => {
             color:'#e5e7eb'
             // cursor: 'pointer'
           }} />
+        </Box>
     }
   ];
   
