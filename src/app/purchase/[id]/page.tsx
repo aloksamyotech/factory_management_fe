@@ -9,6 +9,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
+import { compactFormat } from "@/lib/format-number";
 
 const GetDetails = async (setData: any, setDetails: any, id: any) => {
     const url = `${urls?.endpoints?.purchase?.purchase}/${id}`
@@ -65,7 +66,7 @@ const PurchaseViewPage = () => {
             align: 'center',
             headerAlign: 'center',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             },
             flex: 1
         },

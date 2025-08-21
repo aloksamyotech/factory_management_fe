@@ -8,6 +8,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
+import { compactFormat } from "@/lib/format-number";
 
 const getData = async (setData:any,setDataRaw:any,setRowCount:any,page:any,PageSize:any) => {
     const url = `${urls?.endpoints?.inventory?.inventory}?page=${page + 1}&limit=${PageSize}`;
@@ -89,7 +90,7 @@ const Order = () => {
             align: 'center',
             headerAlign: 'center',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             },
         },
         {
@@ -127,11 +128,6 @@ const Order = () => {
                 <GridToolbarExport />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <GridToolbarQuickFilter />
-                    <AddCircleOutlineIcon fontSize='large' sx={{
-                        // color: '#5750f1',
-                        // cursor: 'pointer'
-                        color: '#9d9e9f',
-                    }} />
                 </Box>
             </GridToolbarContainer>
         );

@@ -79,7 +79,10 @@ const Production = () => {
             headerName: "Machine Details",
             headerAlign: 'center',
             align: 'center',
-            flex: 1
+            flex: 1,
+            renderCell: (params)=>{
+                return params?.value || "-" 
+            }
         },
         {
             field: 'estimateTime',
@@ -88,7 +91,7 @@ const Production = () => {
             align: 'center',
             flex: 1,
             valueFormatter: (value) => {
-                return value + ' hr.';
+                return value + ' HR.';
             },
         },
         {

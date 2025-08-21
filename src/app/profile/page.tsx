@@ -239,7 +239,7 @@ export default function Page() {
               </p>
             </div>
 
-            <SocialAccounts />
+            {/* <SocialAccounts /> */}
           </div>
         </div>
       </div>

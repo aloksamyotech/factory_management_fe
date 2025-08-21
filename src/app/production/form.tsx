@@ -34,12 +34,12 @@ type DropdownOption = {
 
 const validationSchema = Yup.object().shape({
   product: Yup.string().required("Product is required"),
-  quantity: Yup.number()
+  quantity: Yup.number().positive("Quantity cannot be negative.")
     .typeError("Quantity must be a number")
     .required("Quantity is required"),
   estimationTime: Yup.string()
     .required("Estimate time is required")
-    .matches(/^(\d{1,2}):([0-5][0-9])$/, "Enter time in HH:MM format"),
+    .matches(/^(0?[0-9]|1[0-2]):([0-5][0-9])$/, "Enter time in HH:MM format"),
 });
 
 const Formm = ({ open, handleClose, getData }: any) => {

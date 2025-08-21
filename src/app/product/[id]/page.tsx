@@ -9,6 +9,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { compactFormat } from "@/lib/format-number";
 
 const GetDetails = async (setDetails: any, id: any) => {
     const url = `${urls?.endpoints?.product?.product}/${id}`
@@ -101,7 +102,7 @@ const ProductViewPage = () => {
             align: 'center',
             flex: 1,
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {
@@ -136,7 +137,7 @@ const ProductViewPage = () => {
                         fontSize: '12px',
                         fontWeight: 'bold',
                         display: 'inline'
-                    }}>{params.value}</Typography>
+                    }}>{format(params.value)}</Typography>
                 )
             }
         },

@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
+import { compactFormat } from "@/lib/format-number";
 
 const GetDetails = async (setDetails:any,id:any) => {
     const url = `${urls?.endpoints?.customer?.customer}/${id}`
@@ -83,7 +84,7 @@ const CustomerViewPage = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.item?.map((item: any) => item?.productId?.name).join(', ') || 'N/A';
+                const itemIds = params.row.item?.map((item: any) => item?.productId?.name).join(', ') || '-';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -92,7 +93,10 @@ const CustomerViewPage = () => {
             headerName: 'Total Amount',
             headerAlign: 'center',
             align: 'center',
-            flex: 1
+            flex: 1,
+            valueFormatter: (value) => {
+                return '₹' + compactFormat(value);
+            },
         },
         {
             field: 'status',
@@ -122,7 +126,7 @@ const CustomerViewPage = () => {
                         color: params.value === 'pending'? '#ffd300': 
                                params.value === 'completed'? '#00dc4f':
                                params.value === 'in_progress'? '#19bdff':
-                               params.value === 'cancelled'? '#01d00': '',
+                               params.value === 'cancelled'? '#f01d00': '',
                         fontSize: '12px',
                         fontWeight: 'bold',
                         display: 'inline'

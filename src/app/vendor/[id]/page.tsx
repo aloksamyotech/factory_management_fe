@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
+import { compactFormat } from "@/lib/format-number";
 
 interface VendorInterface {
     id: any,
@@ -105,7 +106,7 @@ const VendorViewPage = () => {
             align: 'center',
             headerAlign: 'center',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {
@@ -177,7 +178,7 @@ const VendorViewPage = () => {
                                                 <Typography variant="h6" fontWeight={'bold'}><span>Name:</span> {Details?.firstName || '-'}</Typography>
                                                 <Typography><span style={{ fontWeight: 'bold' }}>Email: </span>{Details?.email || '-'}</Typography>
                                                 <Typography><span style={{ fontWeight: 'bold' }}>Phone: </span> {Details?.phoneNumber || '-'}</Typography>
-                                                <Typography><span style={{ fontWeight: 'bold' }}>Address: </span>{Details?.address !== null ? Details?.address : ' - '}</Typography>
+                                                <Typography><span style={{ fontWeight: 'bold' }}>Address: </span>{Details?.address !== null ? Details?.address : '—'}</Typography>
                                             </CardContent>
                                         </Grid>
                                         <Grid size={4} sx={{ display: 'flex', alignItems: 'center' }}>

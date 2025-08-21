@@ -9,6 +9,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { compactFormat } from "@/lib/format-number";
 
 const GetDetails = async (setDetails: any, id: any) => {
     const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}/${id}`
@@ -103,7 +104,7 @@ const RawViewPage = () => {
             align: 'center',
             flex: 1,
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {

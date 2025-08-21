@@ -11,6 +11,7 @@ import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import moment from "moment";
+import { compactFormat } from "@/lib/format-number";
 
 const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
     const url = `${urls?.endpoints?.purchase?.purchase}?page=${page + 1}&limit=${PageSize}`;
@@ -83,7 +84,7 @@ const Purchase = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             renderCell: (params) => {
-                const itemIds = params.row.items?.map((item: any) => item.rawMaterial.title).join(', ') || 'N/A';
+                const itemIds = params.row.items?.map((item: any) => item.rawMaterial.title).join(', ') || '-';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -94,7 +95,7 @@ const Purchase = () => {
             align: 'center',
             flex: 1,
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {
