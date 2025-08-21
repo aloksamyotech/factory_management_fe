@@ -112,13 +112,14 @@ const OrderViewPage = () => {
             renderCell: (params) =>
                 <Typography
                     sx={{
-                        m: 2,
-                        display: 'inline',
                         padding: '5px 10px',
                         borderRadius: '10px',
                         bgcolor: (params.value == 'Out of Stock') ? '#ffc1b9' : '#cdffdf',
                         color: (params.value == 'Out of Stock') ? '#f01d00' : '#00dc4f',
-                        fontSize: '13px'
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        display: 'inline-flex',
+                        marginTop:'12px',
                     }}>
                     {params.value}</Typography>
         },
@@ -129,13 +130,11 @@ const OrderViewPage = () => {
             align: 'center',
             flex: 1,
             renderCell: (params: any) =>
-                <Grid container>
-                    <Grid size={12} textAlign='center'>
+                <Box sx={{display:'flex', justifyContent:'center', alignItems:'center', width:'100%', height:'100%'}}>
                         <Button>
-                            <ExitToAppIcon color="inherit" sx={{ fontSize: '20px' }} onClick={() => handleNavigate(params.row.id)} />
+                            <ExitToAppIcon color="inherit" sx={{ fontSize: '20px', cursor:'pointer' }} onClick={() => handleNavigate(params.row.id)} />
                         </Button>
-                    </Grid>
-                </Grid>
+                </Box>
         }
     ];
 

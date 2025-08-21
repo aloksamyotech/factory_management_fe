@@ -22,7 +22,7 @@ const getData = async (setData: any, setRowCount: any, page: any, PageSize: any)
         machine: item?.name,
         description: item?.description,
         type: item?.type,
-        status: item?.status ? 'Active' : 'Inactive',
+        status: item?.status ? "Active" : "Inactive",
     }));
     setData(modifiedData);
     setRowCount(response?.data?.data[1]);
@@ -81,13 +81,14 @@ const MachineManagement = () => {
             flex: 1,
             renderCell: (params) =>
                 <Typography sx={{
+                    display: 'inline-flex', 
+                    marginTop: '12px',
                     padding: '5px 15px',
                     borderRadius: '10px',
                     bgcolor: params.value === true ? '#ffc1b9' : '#cdffdf',
                     color: params.value === true ? '#f01d00' : '#00dc4f',
                     fontSize: '12px',
                     fontWeight: 'bold',
-                    display: 'inline',
                 }}>{params.value}</Typography>
         },
         {
@@ -96,9 +97,15 @@ const MachineManagement = () => {
             headerAlign: 'center',
             align: 'center',
             flex: 1,
-            renderCell: (params: any) =>
-                <RemoveRedEyeIcon color="primary" sx={{ fontSize: '20px', cursor: 'pointer' }} onClick={() => handleNavigate(params.row.id)} />
-        }
+            renderCell: (params: any) =>(
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height:'100%' }}>
+                     <RemoveRedEyeIcon
+                         color="primary"
+                         sx={{ fontSize: '20px', cursor: 'pointer' }}
+                         onClick={() => handleNavigate(params.row.id)}
+                     />
+                </Box>
+    )}
     ];
 
 
