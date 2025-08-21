@@ -3,6 +3,7 @@ import { getApi } from "@/common/api"
 import { urls } from "@/common/url"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb"
 import { DateFilter, ReportCards } from "@/components/Filter"
+import { compactFormat } from "@/lib/format-number"
 import { Box, Card, Grid, Tab, Tabs, Typography } from "@mui/material"
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarExport, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import moment from "moment"
@@ -157,9 +158,11 @@ const Report = () => {
         {
             field: 'productName',
             headerName: 'Product Details',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params) => {
-                const itemIds = params.row.item?.map((item: any) => item.productId.name).join(', ') || 'N/A';
+                const itemIds = params.row.item?.map((item: any) => item.productId.name).join(', ') || '-';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -171,7 +174,7 @@ const Report = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             },
         },
         {
@@ -234,9 +237,11 @@ const Report = () => {
         {
             field: 'rawMaterial',
             headerName: 'Raw Material',
+            headerAlign: 'center',
+            align: 'center',
             flex: 1,
             renderCell: (params) => {
-                const itemIds = params.row.item?.map((item: any) => item.rawMaterial.title).join(', ') || 'N/A';
+                const itemIds = params.row.item?.map((item: any) => item.rawMaterial.title).join(', ') || '-';
                 return <span>{(itemIds?.length > 15) ? itemIds?.substr(0, 15) + "..." : itemIds}</span>;
             }
         },
@@ -248,7 +253,7 @@ const Report = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             },
         },
         {

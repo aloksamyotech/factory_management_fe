@@ -11,6 +11,7 @@ import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import { Props } from "react-apexcharts";
 import Image from "next/image";
+import { compactFormat } from "@/lib/format-number";
 
 const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
     const url = `${urls?.endpoints?.rawMaterial?.rawMaterial}?page=${page + 1}&limit=${PageSize}`;
@@ -81,7 +82,7 @@ const Rawmaterial = () => {
             align: 'center',
             flex: 0.5,
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {

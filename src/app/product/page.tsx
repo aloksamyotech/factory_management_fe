@@ -10,6 +10,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { compactFormat } from "@/lib/format-number";
 
 const getData = async (setData: any, setRowCount: any, page: any, PageSize: any) => {
     const url = `${urls?.endpoints?.product?.product}?page=${page + 1}&limit=${PageSize}`;
@@ -79,7 +80,7 @@ const Product = () => {
             flex: 1,
             cellClassName: 'name-column--cell name-column--cell--capitalize',
             valueFormatter: (value) => {
-                return '₹' + value;
+                return '₹' + compactFormat(value);
             }
         },
         {

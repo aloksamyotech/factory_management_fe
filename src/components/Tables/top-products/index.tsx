@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
 import { getTopProducts } from "../fetch";
+import { compactFormat } from "@/lib/format-number";
 
 export async function TopProducts() {
   const data = await getTopProducts();
@@ -29,7 +30,8 @@ export async function TopProducts() {
         </TableHeader>
 
         <TableBody>
-          {data?.map((product:any) => (
+          {data && data?.length > 0 ? ( 
+            data?.map((product:any) => (
             <TableRow
               className="text-base font-medium text-dark dark:text-white"
               key={product?.name + product?.profit}
@@ -49,15 +51,22 @@ export async function TopProducts() {
 
               <TableCell>{product?.category}</TableCell>
 
-              <TableCell>₹{product?.price}</TableCell>
+              <TableCell>₹{compactFormat(product?.price)}</TableCell>
 
               <TableCell>{product?.sold}</TableCell>
 
               <TableCell className="pr-5 text-right text-green-light-1 sm:pr-6 xl:pr-7.5">
-                ₹{product?.profit}
+                ₹{compactFormat(product?.profit)}
               </TableCell>
             </TableRow>
-          ))}
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+              No products available
+            </TableCell>
+          </TableRow>
+        )}
         </TableBody>
       </Table>
     </div>

@@ -9,6 +9,7 @@ import { urls } from "@/common/url";
 import { getApi } from "@/common/api";
 import moment from "moment";
 import Update from "./update";
+import { compactFormat } from "@/lib/format-number";
 
 const getDetails = async (setData: any, setDetails: any, id: any) => {
     const url = `${urls?.endpoints?.order?.order}/${id}`;
@@ -82,7 +83,10 @@ const OrderViewPage = () => {
             headerName: 'Price',
             headerAlign: 'center',
             align: 'center',
-            flex: 1
+            flex: 1,
+            valueFormatter: (value) => {
+                return '₹' + compactFormat(value);
+            },
         },
         {
             field: 'inventoryQuantity',
@@ -179,7 +183,7 @@ const OrderViewPage = () => {
                                                         {moment(details?.createdAt).format('ll') || "-"}
                                                     </Typography>
                                                     <Typography> <span style={{ fontWeight: 'bold' }}>Total Amount: </span>
-                                                        ₹{details?.totalAmount || "-"}
+                                                        ₹ {details?.totalAmount || "0"}
                                                     </Typography>
                                                     <Typography variant="body1" sx={{ mt: '5px' }}><span style={{ fontWeight: 'bold' }}>Status: </span> <span style={{
                                                         borderRadius: '5px',

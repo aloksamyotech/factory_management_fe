@@ -61,7 +61,10 @@ const MachineManagement = () => {
             headerName: 'Description',
             headerAlign: 'center',
             align: 'center',
-            flex: 1
+            flex: 1,
+            renderCell: (params)=>{
+                return params?.value || "-"
+            }
         },
         {
             field: 'type',

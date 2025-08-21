@@ -81,7 +81,10 @@ const MachineMaintanence = () => {
       flex: 1,
       headerAlign: 'center',
       align: 'center',
-      cellClassName: 'name-column--cell name-column--cell--capitalize'
+      cellClassName: 'name-column--cell name-column--cell--capitalize',
+      renderCell: (params)=>{
+        return params?.value || "-"
+      }
     },
     {
       field: 'createdAt',
