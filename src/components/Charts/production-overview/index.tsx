@@ -79,17 +79,17 @@ export async function ProductionOverview({className} : ProductionOverviewProps) 
             <tbody>
               {productsInProduction?.length > 0 ? (
                 productsInProduction?.map((prod:any)=>(
-                  <tr key={prod.id}>
-                    <td className="px-4 py-2">{prod?.productName}</td>
-                    <td className="px-4 py-2">{prod?.machineName}</td>
-                    <td className="px-4 py-2">{prod?.quantity}</td>
+                  <tr key={prod.id} className="text-center">
+                    <td className="px-4 py-2">{prod?.productName || "-"}</td>
+                    <td className="px-4 py-2">{prod?.machineName || "-"}</td>
+                    <td className="px-4 py-2">{prod?.quantity || "-"}</td>
                     <td className="px-4 py-2">{
                       <span className={prod?.status === 'pending' ? 'text-yellow-400': 'text-blue-500'}>
                         {prod?.status === 'pending' ? "Pending":"In Progress"}
                         </span>
                       }
                     </td>
-                    <td className='px-4 py-2'>{prod?.estimateTime}</td>
+                    <td className='px-4 py-2'>{prod?.estimateTime || "-"}</td>
                     <td className='px-4 py-2 only-print hidden'></td>
                   </tr>
                 ))

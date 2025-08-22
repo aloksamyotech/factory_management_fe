@@ -136,7 +136,7 @@ const ProductViewPage = () => {
                                     params.value === 'cancelled' ? '#f01d00' : "",
                         fontSize: '12px',
                         display: 'inline-flex',
-                        marginTop:'12px'
+                        marginTop:'12px',
                         fontWeight: 'bold',
                     }}>{format(params.value)}</Typography>
                 )
@@ -192,7 +192,8 @@ const ProductViewPage = () => {
                                             <CardMedia
                                                 component="img"
                                                 sx={{ height: '100px' }}
-                                                image="https://img.freepik.com/free-psd/juicy-orange-with-green-leaf-refreshing-citrus-fruit_632498-51007.jpg?t=st=1744201469~exp=1744205069~hmac=2883e16363471cdca30a1892445f7c9210fd357d9b363ae5991c467fcf7f5659&w=900"
+                                                image="/images/product/Product-inside2.png"
+                                                // image="https://img.freepik.com/free-psd/juicy-orange-with-green-leaf-refreshing-citrus-fruit_632498-51007.jpg?t=st=1744201469~exp=1744205069~hmac=2883e16363471cdca30a1892445f7c9210fd357d9b363ae5991c467fcf7f5659&w=900"
                                                 alt="Profile Image"
                                             />
                                         </Grid>

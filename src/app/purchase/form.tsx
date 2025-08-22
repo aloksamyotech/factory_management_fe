@@ -43,7 +43,17 @@ const Form = (props: any) => {
     });
 
     const validationSchema = yup.object({
-        vendor: yup.string().required('Please Select Vendor.')
+        vendor: yup.string().required('Please Select Vendor.'),
+        items: yup.array().of(
+            yup.object().shape({
+                productId: yup.string().required("Please select a product."),
+                quantity: yup
+                    .number()
+                    .typeError("Quantity must be a number")
+                    .positive("Quantity must be greater than 0")
+                    .required("Quantity is required"),
+            })
+        )
     });
 
     const fetchVendors = async () => {
@@ -171,7 +181,8 @@ const Form = (props: any) => {
                                                                         setFieldValue(`items[${index}].productId`, val?.id || '')
                                                                     }
                                                                     renderInput={(params) => (
-                                                                        <TextField {...params} placeholder="Select Product" />
+                                                                        <TextField {...params} placeholder="Select Product" 
+                                                                        error={(touched.items?.[index]?.productId)} />
                                                                     )}
                                                                 />
                                                             </FormControl>
@@ -185,6 +196,7 @@ const Form = (props: any) => {
                                                                     name={`items[${index}].quantity`}
                                                                     value={item.quantity}
                                                                     onChange={handleChange}
+                                                                    error={(touched.items?.[index]?.quantity)}
                                                                     endAdornment={
                                                                         <InputAdornment position="end">{products.find(p => p.id === item.productId)?.unit || ''}</InputAdornment>}
                                                                 />
@@ -206,6 +218,10 @@ const Form = (props: any) => {
                                                     variant="outlined"
                                                     onClick={() => push({ productId: '', quantity: 1 })}
                                                     sx={{ mt: 2 }}
+                                                    disabled={
+                                                        !values.items[values.items.length - 1]?.productId || 
+                                                        Number(values.items[values.items.length - 1]?.quantity) <= 0
+                                                    }
                                                 >
                                                     + Add Item
                                                 </Button>
