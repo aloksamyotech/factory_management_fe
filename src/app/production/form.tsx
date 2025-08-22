@@ -40,14 +40,14 @@ const validationSchema = Yup.object().shape({
   estimationTime: Yup.string()
     .required("Estimate time is required")
     .matches(/^(0?[0-9]|1[0-2]):([0-5][0-9])$/, "Enter time in HH:MM format"),
-  items: Yup.array().of(
-        Yup.object().shape({
-          quantity: Yup
-          .number()
-          .typeError("Quantity must be a number")
-          .positive("Quantity must be greater than 0")
-    })
-  ),
+  // items: Yup.array().of(
+  //       Yup.object().shape({
+  //         quantity: Yup
+  //         .number()
+  //         .typeError("Quantity must be a number")
+  //         .positive("Quantity must be greater than 0")
+  //   })
+  // ),
 });
 
 const Formm = ({ open, handleClose, getData }: any) => {
@@ -298,7 +298,7 @@ const Formm = ({ open, handleClose, getData }: any) => {
                                 name={`items[${index}].quantity`}
                                 value={item?.quantity}
                                 onChange={handleChange}
-                                error={(touched.items?.[index]?.quantity)}
+                                // error={(touched.items?.[index]?.quantity)}
                                 endAdornment={
                                   <InputAdornment position="end">
                                     {rawMaterial?.find(
