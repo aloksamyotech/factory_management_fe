@@ -46,21 +46,19 @@ export default function SignIn() {
           <div className="hidden w-full p-7.5 xl:block xl:w-1/2">
             <div className="custom-gradient-1 overflow-hidden rounded-2xl px-12.5 pt-12.5 dark:!bg-dark-2 dark:bg-none">
               <Link className="mb-10 inline-block" href="/">
-                <Image
+                <img
                   className="hidden dark:block"
                   src={logoUrl || "/images/logo/logo.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
-                  unoptimized={true}
                 />
-                <Image
+                <img
                   className="dark:hidden"
                   src={logoUrl || "/images/logo/logo-dark.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
-                  unoptimized={true}
                 />
               </Link>
               <p className="mb-3 text-xl font-medium text-dark dark:text-white">
