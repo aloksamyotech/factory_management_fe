@@ -19,7 +19,7 @@ export default function SignIn() {
       try {
         const url = `${urls?.endpoints?.employee?.logo}`;
         const response = await getApi(url);
-        const path = response?.data?.data?.url;
+        const path = await response?.data?.data?.url;
         
         if (path!=='') {
           // setLogoUrl(`http://localhost:3001/${path}`);
@@ -52,6 +52,7 @@ export default function SignIn() {
                   alt="Logo"
                   width={176}
                   height={32}
+                  unoptimized={true}
                 />
                 <Image
                   className="dark:hidden"
@@ -59,6 +60,7 @@ export default function SignIn() {
                   alt="Logo"
                   width={176}
                   height={32}
+                  unoptimized={true}
                 />
               </Link>
               <p className="mb-3 text-xl font-medium text-dark dark:text-white">
