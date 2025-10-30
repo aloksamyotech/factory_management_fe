@@ -1,14 +1,38 @@
+'use client'
+import { getApi } from "@/common/api";
+import { urls } from "@/common/url";
 import Signin from "@/components/Auth/Signin";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "Sign in",
-};
+// export const metadata: Metadata = {
+//   title: "Sign in",
+// };
 
 export default function SignIn() {
+   const [logoUrl, setLogoUrl] = useState('');
+  
+    const getData = useCallback(async () => {
+      try {
+        const url = `${urls?.endpoints?.employee?.logo}`;
+        const response = await getApi(url);
+        const path = response?.data?.data?.url;
+        
+        if (path!=='') {
+          setLogoUrl(`http://localhost:3001/${path}`);
+          // setLogoUrl(`https://factory.samyotech.in/${path}`);
+        }
+      } catch (err) {
+        console.error("Failed to fetch logo:", err);
+      }
+    }, []);
+  
+    useEffect(() => {
+      getData();
+    }, [getData]);
   return (
     <>
       <div className="rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card">
@@ -24,14 +48,14 @@ export default function SignIn() {
               <Link className="mb-10 inline-block" href="/">
                 <Image
                   className="hidden dark:block"
-                  src={"/images/logo/logo.svg"}
+                  src={logoUrl || "/images/logo/logo.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
                 />
                 <Image
                   className="dark:hidden"
-                  src={"/images/logo/logo-dark.svg"}
+                  src={logoUrl || "/images/logo/logo-dark.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
