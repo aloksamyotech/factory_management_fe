@@ -22,8 +22,8 @@ export default function SignIn() {
         const path = response?.data?.data?.url;
         
         if (path!=='') {
-          setLogoUrl(`http://localhost:3001/${path}`);
-          // setLogoUrl(`https://factory.samyotech.in/${path}`);
+          // setLogoUrl(`http://localhost:3001/${path}`);
+          setLogoUrl(`https://factory.samyotech.in/${path}`);
         }
       } catch (err) {
         console.error("Failed to fetch logo:", err);
